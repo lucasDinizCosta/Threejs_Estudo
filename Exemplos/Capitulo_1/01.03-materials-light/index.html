@@ -32,9 +32,19 @@
                 //Cria o renderizador para atribuir o tamanho
                 var renderer = new THREE.WebGLRenderer();                   //Instancia um renderizador para os elementos a serem desenhados
 
-                renderer.setClearColor(new THREE.Color("rgb(220,220,220)"/*0xEEEEEE*/));     //Cor de fundo da tela
+                renderer.setClearColor(new THREE.Color(0xEEEEEE));          //Cor de fundo da tela
                 renderer.setSize(window.innerWidth, window.innerHeight);    //Tamanho
                 renderer.shadowMap.enabled = true;                          //Ativa o sombreado no "mundo"
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;           //Suavização das sombras
+                
+                /**
+                    Tipos de sombras que o renderer pode trabalhar:
+
+                    THREE.BasicShadowMap
+                    THREE.PCFShadowMap (default)
+                    THREE.PCFSoftShadowMap
+                    THREE.VSMShadowMap
+                */
 
                 var axes = THREE.AxisHelper(20);
                 scene.add(axes);
@@ -66,11 +76,11 @@
                 var sphereGeometry = new THREE.SphereGeometry(4, 20, 20); //radius, widthSegments, HeightSegments
                 var sphereMaterial = new THREE.MeshLambertMaterial({color:0x7777ff});
                 var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-                sphere.castShadow = true;                           //Gera sombras em outros objetos
     
                 sphere.position.x = 20;
                 sphere.position.y = 4;
                 sphere.position.z = 2;
+                sphere.castShadow = true;                           //Gera sombras em outros objetos
 
                 scene.add(sphere);
                 
@@ -80,10 +90,22 @@
                 camera.lookAt(scene.position);  //Direciona a câmera pra posição (0,0,0)
 
                 //Cria a luz responsável por iluminar o ambiente e gerar sombras
-                var spotLight = new THREE.SpotLight(0xffffff);
+                var spotLight = new THREE.SpotLight(0xffffff, 0.8);
                 spotLight.position.set(-40, 60, -10);
                 spotLight.castShadow = true;
+                
+
+                // Propriedades das sombras proporcionadas pela luz
+                spotLight.shadow.mapSize.width = 2048;      //Quanto maior o parâmetro, maior e melhor será a forma da sombra
+                spotLight.shadow.mapSize.height = 2048; 
+                spotLight.shadow.camera.near = 0.1;      
+                spotLight.shadow.camera.far = 1000;      
+                spotLight.angle = Math.PI / 8.0;         //Angulação da luz
+
                 scene.add(spotLight);
+
+                //var helper = new THREE.CameraHelper( spotLight.shadow.camera );
+                //scene.add( helper );
 
                 document.getElementById("WebGL-output").appendChild(renderer.domElement);
                 renderer.render(scene, camera);
