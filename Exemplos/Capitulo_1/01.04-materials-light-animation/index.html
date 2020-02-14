@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Example 01.04 - Materials - Light - Animation</title>
+        <script src="../libs/three.js"></script>
+        <script src="../libs/stats.js"></script>
+        <style>
+            body{
+                /* set margin to 0 and overflow to hidden, to use the
+                complete page */
+                margin: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="Stats-output"></div>
+
+        <!-- Div which will hold the Output -->
+        <div id="WebGL-output">
+        </div>
+        <!-- Javascript code that runs our Three.js examples -->
+
+        <script>
+            //Cria a cena que irá guardar todos os elementos
+            var scene = new THREE.Scene();
+
+            //Cria a câmera que define onde será visto no "mundo"
+            var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000); //fov(campo de visão vertical), aspect Ratio(proporção de tela), near, far
+
+            //Cria o renderizador para atribuir o tamanho
+            var renderer = new THREE.WebGLRenderer();                   //Instancia um renderizador para os elementos a serem desenhados
+
+            var cubeGeometry = new THREE.BoxGeometry(4, 4, 4); // {width: 4, height: 4, depth: 4, widthSegments: undefined, heightSegments: undefined, depthSegments: undefined}
+            var cubeMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
+            var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+            cube.castShadow = true;                             //Gera sombras em outros objetos
+            
+            cube.position.x = -4;
+            cube.position.y = 3;
+            cube.position.z = 0;
+
+            var stats = initStats();
+
+            function initStats() {
+                var stats = new Stats();
+                stats.setMode(0);
+                stats.domElement.style.position = 'absolute';
+                stats.domElement.style.left = '0px';
+                stats.domElement.style.top = '0px';
+                document.getElementById("Stats-output")
+                .appendChild( stats.domElement );
+                return stats;
+            }
+
+            // once everything is loaded, we run our Three.js stuff.
+            function init() {
+
+                renderer.setClearColor(new THREE.Color(0x000000));          //Cor de fundo da tela
+                renderer.setSize(window.innerWidth, window.innerHeight);    //Tamanho
+                renderer.shadowMap.enabled = true;                          //Ativa o sombreado no "mundo"
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;           //Suavização das sombras
+                
+                /**
+                    Tipos de sombras que o renderer pode trabalhar:
+
+                    THREE.BasicShadowMap
+                    THREE.PCFShadowMap (default)
+                    THREE.PCFSoftShadowMap
+                    THREE.VSMShadowMap
+                */
+
+                var axes = THREE.AxisHelper(20);
+                scene.add(axes);
+
+                var planeGeometry = new THREE.PlaneGeometry(60, 20);  //Width, Height, WidthSegments, HeightSegments
+                var planeMaterial = new THREE.MeshLambertMaterial({color:
+                0xffffff});
+                var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+                plane.receiveShadow = true;         //Recebe sombras
+
+                plane.rotation.x = -0.5 * Math.PI;
+                plane.position.x = 15;
+                plane.position.y = 0;
+                plane.position.z = 0;
+
+                scene.add(plane);
+
+                var cubeGeometry = new THREE.BoxGeometry(4, 4, 4); // {width: 4, height: 4, depth: 4, widthSegments: undefined, heightSegments: undefined, depthSegments: undefined}
+                var cubeMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
+                var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+                cube.castShadow = true;                             //Gera sombras em outros objetos
+                
+                cube.position.x = -4;
+                cube.position.y = 3;
+                cube.position.z = 0;
+
+                scene.add(cube);
+
+                var sphereGeometry = new THREE.SphereGeometry(4, 20, 20); //radius, widthSegments, HeightSegments
+                var sphereMaterial = new THREE.MeshLambertMaterial({color:0x7777ff});
+                var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    
+                sphere.position.x = 20;
+                sphere.position.y = 4;
+                sphere.position.z = 2;
+                sphere.castShadow = true;                           //Gera sombras em outros objetos
+
+                scene.add(sphere);
+                
+                camera.position.x = -30;
+                camera.position.y = 40;
+                camera.position.z = 30;
+                camera.lookAt(scene.position);  //Direciona a câmera pra posição (0,0,0)
+
+                //Cria a luz responsável por iluminar o ambiente e gerar sombras
+                var spotLight = new THREE.SpotLight(0xffffff, 0.8);
+                spotLight.position.set(-40, 60, -10);
+                spotLight.castShadow = true;
+                
+
+                // Propriedades das sombras proporcionadas pela luz
+                spotLight.shadow.mapSize.width = 2048;      //Quanto maior o parâmetro, maior e melhor será a forma da sombra
+                spotLight.shadow.mapSize.height = 2048; 
+                spotLight.shadow.camera.near = 0.1;      
+                spotLight.shadow.camera.far = 1000;      
+                spotLight.angle = Math.PI / 8.0;         //Angulação da luz
+
+                scene.add(spotLight);
+
+                //var helper = new THREE.CameraHelper( spotLight.shadow.camera );
+                //scene.add( helper );
+
+                //document.getElementById("WebGL-output").appendChild(renderer.domElement);
+                //renderer.render(scene, camera);
+            };
+            init();
+
+            function renderScene() {
+                stats.update();
+                cube.rotation.x += 0.02;
+                cube.rotation.y += 0.02;
+                cube.rotation.z += 0.02;
+                requestAnimationFrame(renderScene);
+                renderer.render(scene, camera);
+            }
+
+            document.getElementById("WebGL-output").appendChild(renderer.domElement);
+            renderScene();
+        </script>
+    </body>
+</html>
