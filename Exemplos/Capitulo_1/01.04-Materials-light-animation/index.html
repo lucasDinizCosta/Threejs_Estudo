@@ -15,28 +15,53 @@
     </head>
     <body>
 
+        <!--Div responsável por disparar o elementos dos status de FPS-->
         <div id="Stats-output"></div>
 
-        <!-- Div which will hold the Output -->
+        <!-- Div responsável por manter e exibir a interface gerada pela biblioteca -->
         <div id="WebGL-output">
         </div>
-        <!-- Javascript code that runs our Three.js examples -->
 
         <script>
+            
+            /********************************************************************************
+             *                                                                              *
+             * Criação das variáveis fora da função de inicialização para poder ter acesso  *
+             * em qualquer parte do código                                                  *
+             *                                                                              *
+             ********************************************************************************/
+
             //Cria a cena que irá guardar todos os elementos
             var scene = new THREE.Scene();
 
             //Cria a câmera que define onde será visto no "mundo"
             var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000); //fov(campo de visão vertical), aspect Ratio(proporção de tela), near, far
 
-            //Cria o renderizador para atribuir o tamanho
+            //Cria o renderizador de elementos na interface
             var renderer = new THREE.WebGLRenderer();                   //Instancia um renderizador para os elementos a serem desenhados
 
-            var cubeGeometry;
+            //Materiais
             var cubeMaterial;
+            var planeMaterial;
+            var sphereMaterial;
+
+            //Geometria de objetos
+            var cubeGeometry;
+            var planeGeometry;
+            var sphereGeometry;
+
+            //Objetos
             var cube;
+            var plane;
+            var sphere;
+
+            var axes;
+            var spotLight;
 
             var stats = initStats();
+
+            //Controle da bola
+            var step = 0;
 
             function initStats() {
                 var stats = new Stats();
@@ -66,13 +91,12 @@
                     THREE.VSMShadowMap
                 */
 
-                var axes = THREE.AxisHelper(20);
+                axes = THREE.AxisHelper(20);
                 scene.add(axes);
 
-                var planeGeometry = new THREE.PlaneGeometry(60, 20);  //Width, Height, WidthSegments, HeightSegments
-                var planeMaterial = new THREE.MeshLambertMaterial({color:
-                0xffffff});
-                var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+                planeGeometry = new THREE.PlaneGeometry(60, 20);  //Width, Height, WidthSegments, HeightSegments
+                planeMaterial = new THREE.MeshLambertMaterial({color:0xffffff});
+                plane = new THREE.Mesh(planeGeometry, planeMaterial);
                 plane.receiveShadow = true;         //Recebe sombras
 
                 plane.rotation.x = -0.5 * Math.PI;
@@ -93,9 +117,9 @@
 
                 scene.add(cube);
 
-                var sphereGeometry = new THREE.SphereGeometry(4, 20, 20); //radius, widthSegments, HeightSegments
-                var sphereMaterial = new THREE.MeshLambertMaterial({color:0x7777ff});
-                var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+                sphereGeometry = new THREE.SphereGeometry(4, 20, 20); //radius, widthSegments, HeightSegments
+                sphereMaterial = new THREE.MeshLambertMaterial({color:0x7777ff});
+                sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     
                 sphere.position.x = 20;
                 sphere.position.y = 4;
@@ -110,7 +134,7 @@
                 camera.lookAt(scene.position);  //Direciona a câmera pra posição (0,0,0)
 
                 //Cria a luz responsável por iluminar o ambiente e gerar sombras
-                var spotLight = new THREE.SpotLight(0xffffff, 0.8);
+                spotLight = new THREE.SpotLight(0xffffff, 0.8);
                 spotLight.position.set(-40, 60, -10);
                 spotLight.castShadow = true;
                 
@@ -124,15 +148,31 @@
 
                 scene.add(spotLight);
             };
-            init();
+
+            window.onload = init();         //Inicializa os elementos
+
+            /************************************************************************
+             *                   renderScene:                                       *
+             * Função que controla o loop de animação, a interface será atualizada  *
+             * a cada frame.                                                        *
+             *                                                                      *
+             ************************************************************************/
 
             function renderScene() {
                 stats.update();
+                moveObjects();
+                requestAnimationFrame(renderScene);         //Chama novamente a função a cada frame de atualização
+                renderer.render(scene, camera);
+            }
+
+            function moveObjects(){
                 cube.rotation.x += 0.02;
                 cube.rotation.y += 0.02;
                 cube.rotation.z += 0.02;
-                requestAnimationFrame(renderScene);
-                renderer.render(scene, camera);
+
+                step += 0.04;
+                sphere.position.x = 20 +( 10 * (Math.cos(step)));
+                sphere.position.y = 2  +( 10 * Math.abs(Math.sin(step)));
             }
 
             document.getElementById("WebGL-output").appendChild(renderer.domElement);
