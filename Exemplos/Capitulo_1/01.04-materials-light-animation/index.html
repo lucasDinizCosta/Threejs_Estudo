@@ -32,14 +32,9 @@
             //Cria o renderizador para atribuir o tamanho
             var renderer = new THREE.WebGLRenderer();                   //Instancia um renderizador para os elementos a serem desenhados
 
-            var cubeGeometry = new THREE.BoxGeometry(4, 4, 4); // {width: 4, height: 4, depth: 4, widthSegments: undefined, heightSegments: undefined, depthSegments: undefined}
-            var cubeMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
-            var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-            cube.castShadow = true;                             //Gera sombras em outros objetos
-            
-            cube.position.x = -4;
-            cube.position.y = 3;
-            cube.position.z = 0;
+            var cubeGeometry;
+            var cubeMaterial;
+            var cube;
 
             var stats = initStats();
 
@@ -57,7 +52,7 @@
             // once everything is loaded, we run our Three.js stuff.
             function init() {
 
-                renderer.setClearColor(new THREE.Color(0x000000));          //Cor de fundo da tela
+                renderer.setClearColor(new THREE.Color(0xEEEEEE));          //Cor de fundo da tela
                 renderer.setSize(window.innerWidth, window.innerHeight);    //Tamanho
                 renderer.shadowMap.enabled = true;                          //Ativa o sombreado no "mundo"
                 renderer.shadowMap.type = THREE.PCFSoftShadowMap;           //Suavização das sombras
@@ -87,11 +82,11 @@
 
                 scene.add(plane);
 
-                var cubeGeometry = new THREE.BoxGeometry(4, 4, 4); // {width: 4, height: 4, depth: 4, widthSegments: undefined, heightSegments: undefined, depthSegments: undefined}
-                var cubeMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
-                var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-                cube.castShadow = true;                             //Gera sombras em outros objetos
-                
+                cubeGeometry = new THREE.BoxGeometry(4, 4, 4); // {width: 4, height: 4, depth: 4, widthSegments: undefined, heightSegments: undefined, depthSegments: undefined}
+                cubeMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
+                cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+
+                cube.castShadow = true;                             //Gera sombras em outros objetos                
                 cube.position.x = -4;
                 cube.position.y = 3;
                 cube.position.z = 0;
@@ -128,12 +123,6 @@
                 spotLight.angle = Math.PI / 8.0;         //Angulação da luz
 
                 scene.add(spotLight);
-
-                //var helper = new THREE.CameraHelper( spotLight.shadow.camera );
-                //scene.add( helper );
-
-                //document.getElementById("WebGL-output").appendChild(renderer.domElement);
-                //renderer.render(scene, camera);
             };
             init();
 
