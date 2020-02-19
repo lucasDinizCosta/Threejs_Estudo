@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Example 02.04 - Geometries</title>
+        <script type="text/javascript" src="../../libs/three.js"></script>
+        <script type="text/javascript" src="../../libs/ParametricGeometries.js"></script>
+        <script type="text/javascript" src="../../libs/ConvexGeometry.js"></script>
+        <script type="text/javascript" src="../../libs/SceneUtils.js"></script>
+
+        <script type="text/javascript" src="../../libs/stats.js"></script>
+        <script type="text/javascript" src="../../libs/dat-gui.js"></script>
+
+        <style>
+            body{
+                /* set margin to 0 and overflow to hidden, to use the
+                complete page */
+                margin: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+
+        <!--Div responsável por disparar o elementos dos status de FPS-->
+        <div id="Stats-output"></div>
+
+        <!-- Div responsável por manter e exibir a interface gerada pela biblioteca -->
+        <div id="WebGL-output">
+        </div>
+
+        <script>
+            
+            /********************************************************************************
+             *                                                                              *
+             * Criação das variáveis fora da função de inicialização para poder ter acesso  *
+             * em qualquer parte do código                                                  *
+             *                                                                              *
+             ********************************************************************************/
+
+            //Cria a cena que irá guardar todos os elementos
+            var scene;
+
+            //Cria a câmera que define onde será visto no "mundo"
+            var camera;
+
+            //Cria o renderizador de elementos na interface
+            var renderer;
+
+            //GUI de controle e ajuste de valores
+            var gui;
+
+            var controls;
+
+            //Materiais
+            var planeMaterial;
+
+            //Geometria de objetos
+            var planeGeometry;
+
+            //Objetos
+            var plane;
+            
+            //Luzes
+            var ambientLight;
+            var spotLight;
+            
+            var axes;
+            var stats = initStats();
+
+            //Controle da bola
+            var step = 0;
+
+            function initStats() {
+                var stats = new Stats();
+                stats.setMode(0);   //0: FPS, 1: milissegundos
+
+                //Alinhamento com o topo
+                stats.domElement.style.position = 'absolute';
+                stats.domElement.style.left = '0px';
+                stats.domElement.style.top = '0px';
+                document.getElementById("Stats-output")
+                .appendChild( stats.domElement );
+                return stats;
+            }
+
+            //Reajuste da renderização com base na mudança da janela
+            
+            function onResize(){
+                camera.aspect = window.innerWidth / window.innerHeight;  //Atualiza o aspect da camera com relação as novas dimensões
+                camera.updateProjectionMatrix();                         //Atualiza a matriz de projeção
+                renderer.setSize(window.innerWidth, window.innerHeight); //Define os novos valores para o renderizador
+            }
+
+            window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
+
+            //Inicializa as propriedades
+            function init() {
+
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000); //fov(campo de visão vertical), aspect Ratio(proporção de tela), near, far
+                renderer = new THREE.WebGLRenderer();                   //Instancia um renderizador para os elementos a serem desenhados
+                gui = new dat.GUI();
+
+                renderer.setClearColor(new THREE.Color(0xEEEEEE));          //Cor de fundo da tela
+                renderer.setSize(window.innerWidth, window.innerHeight);    //Tamanho
+                renderer.shadowMap.enabled = true;                          //Ativa o sombreado no "mundo"
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;           //Suavização das sombras
+                
+                /**
+                    Tipos de sombras que o renderer pode trabalhar:
+
+                    THREE.BasicShadowMap
+                    THREE.PCFShadowMap (default)
+                    THREE.PCFSoftShadowMap
+                    THREE.VSMShadowMap
+                */
+
+                axes = THREE.AxisHelper(20);
+                scene.add(axes);
+
+                planeGeometry = new THREE.PlaneGeometry(60, 40, 1 ,1);  //Width, Height, WidthSegments, HeightSegments
+                planeMaterial = new THREE.MeshLambertMaterial({color:0xffffff});
+                plane = new THREE.Mesh(planeGeometry, planeMaterial);
+                plane.name = "Plano";
+                plane.receiveShadow = true;         //Recebe sombras
+
+                plane.rotation.x = -0.5 * Math.PI;
+                plane.position.x = 0;
+                plane.position.y = 0;
+                plane.position.z = 0;
+
+                scene.add(plane);
+                
+                //Posicionamento da camera
+                camera.position.x = -50;
+                camera.position.y = 30;
+                camera.position.z = 20;
+                camera.lookAt(new THREE.Vector3(-10, 0, 0));  //Direciona a câmera pra posição (0,0,0)
+
+                //Adicionando luz ambiente
+                ambientLight = new THREE.AmbientLight(0x090909);
+                scene.add(ambientLight);
+
+                //Cria a luz responsável por iluminar o ambiente e gerar sombras
+                spotLight = new THREE.SpotLight(0xffffff, 0.8);
+                spotLight.position.set(-40, 60, -10);
+                spotLight.castShadow = true;
+
+                // Propriedades das sombras proporcionadas pela luz
+                spotLight.shadow.mapSize.width = 2048;      //Quanto maior o parâmetro, maior e melhor será a forma da sombra
+                spotLight.shadow.mapSize.height = 2048; 
+                spotLight.shadow.camera.near = 0.1;      
+                spotLight.shadow.camera.far = 1000;      
+                spotLight.angle = Math.PI / 8.0;         //Angulação da luz
+
+                scene.add(spotLight);
+
+                addGeometries();
+            };
+
+            window.onload = init();         //Inicializa os elementos
+
+            function addGeometries(){
+                var geoms = [];
+
+                //Cilindro básico
+                geoms.push(new THREE.CylinderGeometry(1, 4, 4));    //Raio do topo, Raio da base e altura
+
+                //Cubo básico
+                geoms.push(new THREE.BoxGeometry(2, 2, 2));         //largura, altura e profundidade
+
+                //Esfera básica
+                geoms.push(new THREE.SphereGeometry(2));            //Raio
+
+                geoms.push(new THREE.IcosahedronGeometry(4));       //Raio, detail: 0 (padrão), 1(esfera)    
+
+
+                // Criando uma forma convexa usando pontos
+                // Cubo
+                var points = [
+                    new THREE.Vector3(2, 2, 2),
+                    new THREE.Vector3(2, 2, -2),
+                    new THREE.Vector3(-2, 2, -2),
+                    new THREE.Vector3(-2, 2, 2),
+                    new THREE.Vector3(2, -2, 2),
+                    new THREE.Vector3(2, -2, -2),
+                    new THREE.Vector3(-2, -2, -2),
+                    new THREE.Vector3(-2, -2, 2)
+                ];
+                
+                geoms.push(new THREE.ConvexGeometry(points));
+
+                // create a lathgeometry
+                //http://en.wikipedia.org/wiki/Lathe_(graphics)
+                var pts = [];       //points array - the path profile points will be stored here
+                var detail = .1;    //half-circle detail - how many angle increments will be used to generate points
+                var radius = 3;     //radius for half_sphere
+                for (var angle = 0.0; angle < Math.PI; angle += detail)//loop from 0.0 radians to PI (0 - 180 degrees)
+                    pts.push(new THREE.Vector3(Math.cos(angle) * radius, 0, Math.sin(angle) * radius));//angle/radius to x,z
+                geoms.push(new THREE.LatheGeometry(pts, 12));
+
+                // create a OctahedronGeometry
+                geoms.push(new THREE.OctahedronGeometry(3));
+
+                // create a geometry based on a function
+                //geoms.push(new THREE.ParametricGeometry(THREE.ParametricGeometries.mobius3d, 20, 10));
+                geoms.push(new THREE.ParametricGeometry(new THREE.Vector3(10, 20, 10)));
+
+                //Tetraedro
+                geoms.push(new THREE.TetrahedronGeometry(3));
+
+                geoms.push(new THREE.TorusGeometry(3, 1, 10, 10));
+
+                geoms.push(new THREE.TorusKnotGeometry(3, 0.5, 50, 20));
+
+                var j = 0;
+                for (var i = 0; i < geoms.length; i++) {
+                    var cubeMaterial = new THREE.MeshLambertMaterial({wireframe: true, color: Math.random() * 0xffffff});
+
+                    var materials = [
+
+                        new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff, shading: THREE.FlatShading}),
+                        new THREE.MeshBasicMaterial({color: 0x000000, wireframe: true})
+
+                    ];
+
+                    var mesh = THREE.SceneUtils.createMultiMaterialObject(geoms[i], materials);
+                    mesh.traverse(function (e) {
+                        e.castShadow = true
+                    });
+
+                    //var mesh = new THREE.Mesh(geoms[i],materials[i]);
+                    //mesh.castShadow=true;
+                    mesh.position.x = -24 + ((i % 4) * 12);
+                    mesh.position.y = 4;
+                    mesh.position.z = -8 + (j * 12);
+
+                    if ((i + 1) % 4 == 0) j++;
+                    scene.add(mesh);
+                }
+            }
+
+            /************************************************************************
+             *                               render:                                *
+             * Função que controla o loop de animação, a interface será atualizada  *
+             * a cada frame.                                                        *
+             *                                                                      *
+             ************************************************************************/
+
+            function render() {
+                stats.update();
+                requestAnimationFrame(render);         //Chama novamente a função a cada frame de atualização
+                renderer.render(scene, camera);
+            }
+
+
+            document.getElementById("WebGL-output").appendChild(renderer.domElement);
+            render();
+        </script>
+    </body>
+</html>
