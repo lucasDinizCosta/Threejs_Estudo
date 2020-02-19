@@ -143,7 +143,7 @@
 
                 //Cria a luz responsável por iluminar o ambiente e gerar sombras
                 spotLight = new THREE.SpotLight(0xffffff, 0.8);
-                spotLight.position.set(-40, 60, -10);
+                spotLight.position.set(-40, 40, 50);
                 spotLight.castShadow = true;
 
                 // Propriedades das sombras proporcionadas pela luz
@@ -151,7 +151,7 @@
                 spotLight.shadow.mapSize.height = 2048; 
                 spotLight.shadow.camera.near = 0.1;      
                 spotLight.shadow.camera.far = 1000;      
-                spotLight.angle = Math.PI / 8.0;         //Angulação da luz
+                //spotLight.angle = Math.PI / 8.0;         //Angulação da luz
 
                 scene.add(spotLight);
 
@@ -204,7 +204,7 @@
 
                 // create a geometry based on a function
                 //geoms.push(new THREE.ParametricGeometry(THREE.ParametricGeometries.mobius3d, 20, 10));
-                geoms.push(new THREE.ParametricGeometry(new THREE.Vector3(10, 20, 10)));
+                geoms.push(new THREE.ParametricGeometry(new THREE.Vector3(30, 20, 10)));
 
                 //Tetraedro
                 geoms.push(new THREE.TetrahedronGeometry(3));
