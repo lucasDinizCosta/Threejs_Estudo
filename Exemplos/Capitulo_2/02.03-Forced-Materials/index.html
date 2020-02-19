@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Example 02.03 - Forced Materials</title>
+        <script src="../../libs/three.js"></script>
+        <script src="../../libs/stats.js"></script>
+        <script src="../../libs/dat-gui.js"></script>
+
+        <style>
+            body{
+                /* set margin to 0 and overflow to hidden, to use the
+                complete page */
+                margin: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+
+        <!--Div responsável por disparar o elementos dos status de FPS-->
+        <div id="Stats-output"></div>
+
+        <!-- Div responsável por manter e exibir a interface gerada pela biblioteca -->
+        <div id="WebGL-output">
+        </div>
+
+        <script>
+            
+            /********************************************************************************
+             *                                                                              *
+             * Criação das variáveis fora da função de inicialização para poder ter acesso  *
+             * em qualquer parte do código                                                  *
+             *                                                                              *
+             ********************************************************************************/
+
+            //Cria a cena que irá guardar todos os elementos
+            var scene;
+
+            //Cria a câmera que define onde será visto no "mundo"
+            var camera;
+
+            //Cria o renderizador de elementos na interface
+            var renderer;
+
+            //GUI de controle e ajuste de valores
+            var gui;
+
+            var controls;
+
+            //Materiais
+            var planeMaterial;
+
+            //Geometria de objetos
+            var planeGeometry;
+
+            //Objetos
+            var plane;
+            
+            //Luzes
+            var ambientLight;
+            var spotLight;
+            
+            var axes;
+            var stats = initStats();
+
+            //Controle da bola
+            var step = 0;
+
+            function initStats() {
+                var stats = new Stats();
+                stats.setMode(0);   //0: FPS, 1: milissegundos
+
+                //Alinhamento com o topo
+                stats.domElement.style.position = 'absolute';
+                stats.domElement.style.left = '0px';
+                stats.domElement.style.top = '0px';
+                document.getElementById("Stats-output")
+                .appendChild( stats.domElement );
+                return stats;
+            }
+
+            //Reajuste da renderização com base na mudança da janela
+            
+            function onResize(){
+                camera.aspect = window.innerWidth / window.innerHeight;  //Atualiza o aspect da camera com relação as novas dimensões
+                camera.updateProjectionMatrix();                         //Atualiza a matriz de projeção
+                renderer.setSize(window.innerWidth, window.innerHeight); //Define os novos valores para o renderizador
+            }
+
+            window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
+
+            //Inicializa as propriedades
+            function init() {
+
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000); //fov(campo de visão vertical), aspect Ratio(proporção de tela), near, far
+                renderer = new THREE.WebGLRenderer();                   //Instancia um renderizador para os elementos a serem desenhados
+                gui = new dat.GUI();
+
+                renderer.setClearColor(new THREE.Color(0xEEEEEE));          //Cor de fundo da tela
+                renderer.setSize(window.innerWidth, window.innerHeight);    //Tamanho
+                renderer.shadowMap.enabled = true;                          //Ativa o sombreado no "mundo"
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;           //Suavização das sombras
+                
+                /**
+                    Tipos de sombras que o renderer pode trabalhar:
+
+                    THREE.BasicShadowMap
+                    THREE.PCFShadowMap (default)
+                    THREE.PCFSoftShadowMap
+                    THREE.VSMShadowMap
+                */
+
+                axes = THREE.AxisHelper(20);
+                scene.add(axes);
+
+                planeGeometry = new THREE.PlaneGeometry(60, 40, 1 ,1);  //Width, Height, WidthSegments, HeightSegments
+                planeMaterial = new THREE.MeshLambertMaterial({color:0xffffff});
+                plane = new THREE.Mesh(planeGeometry, planeMaterial);
+                plane.name = "Plano";
+                plane.receiveShadow = true;         //Recebe sombras
+
+                plane.rotation.x = -0.5 * Math.PI;
+                plane.position.x = 0;
+                plane.position.y = 0;
+                plane.position.z = 0;
+
+                scene.add(plane);
+                
+                //Posicionamento da camera
+                camera.position.x = -50;
+                camera.position.y = 60;
+                camera.position.z = 50;
+                camera.lookAt(scene.position);  //Direciona a câmera pra posição (0,0,0)
+
+                //Adicionando luz ambiente
+                ambientLight = new THREE.AmbientLight(0x0c0c0c);
+                scene.add(ambientLight);
+
+                //Cria a luz responsável por iluminar o ambiente e gerar sombras
+                spotLight = new THREE.SpotLight(0xffffff, 0.8);
+                spotLight.position.set(-40, 60, -10);
+                spotLight.castShadow = true;
+
+                // Propriedades das sombras proporcionadas pela luz
+                spotLight.shadow.mapSize.width = 2048;      //Quanto maior o parâmetro, maior e melhor será a forma da sombra
+                spotLight.shadow.mapSize.height = 2048; 
+                spotLight.shadow.camera.near = 0.1;      
+                spotLight.shadow.camera.far = 1000;      
+                spotLight.angle = Math.PI / 8.0;         //Angulação da luz
+
+                scene.add(spotLight);
+
+                controls = new function () {
+                    this.rotationSpeed = 0.02;
+                    this.numberOfObjects = scene.children.length;
+                    this.fog = false;
+
+                    this.removeCube = function () {
+                        var allChildren = scene.children;
+                        var lastObject = allChildren[allChildren.length - 1];
+                        if (lastObject instanceof THREE.Mesh) {
+                            scene.remove(lastObject);
+                            this.numberOfObjects = scene.children.length;
+                        }
+                    };
+
+                    this.addCube = function () {
+                        var cubeSize = Math.ceil((Math.random() * 3));
+                        var cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+                        var cubeMaterial = new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff});
+                        var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+                        cube.castShadow = true;
+                        cube.name = "cube-" + scene.children.length;
+
+                        // Posicionando aleatoriamente na scene
+
+                        cube.position.x = -30 + Math.round((Math.random() * planeGeometry.parameters.width));
+                        cube.position.y = Math.round((Math.random() * 5));
+                        cube.position.z = -20 + Math.round((Math.random() * planeGeometry.parameters.height));
+
+                        // Adicionando os cubos na scene
+                        scene.add(cube);
+                        this.numberOfObjects = scene.children.length;
+                    };
+
+                    this.addFogLinear = function (){
+                        if(this.fog){
+                            console.log("Fog já está ativo!!!");
+                            alert("Fog já está ativo!!!");
+                        }
+                        else{
+                            this.fog = true;
+                            scene.fog = new THREE.Fog( 0xffffff, 0.015, 200 );  //Cor, near, far
+                        }
+                    }
+
+                    this.addFogExp = function (){
+                        if(this.fog){
+                            console.log("Fog já está ativo!!!");
+                            alert("Fog já está ativo!!!");
+                        }
+                        else{
+                            this.fog = true;
+                            //Névoa cresce exponencialmente
+                            scene.fog = new THREE.FogExp2( 0xffffff, 0.011);    //Cor, densidade
+                        }
+                    }
+
+                    this.removeFog = function(){
+                        console.log("Fog desativado!!!");
+                        this.fog = false;
+                        scene.fog = null;
+                    }
+
+                    this.outputObjects = function () {
+                        console.log(scene.children);        //Dispara uma mensagem no console de todos os filhos da scene
+                    }
+                };
+
+                //Adicionando as propriedades na GUI
+                gui.add(controls, 'rotationSpeed', 0, 0.5);
+                gui.add(controls, 'addCube');
+                gui.add(controls, 'removeCube');
+                gui.add(controls, 'outputObjects');
+                gui.add(controls, 'numberOfObjects').listen();  //Fica "escutando" o valor da variavel e atualizando a todo instante
+                gui.add(controls, 'addFogLinear');
+                gui.add(controls, 'addFogExp');
+                gui.add(controls, 'removeFog');
+                gui.add(controls, 'fog').listen();
+
+                /************************************************************
+                *   Forçando um material em todos os elementos do "mundo"   *
+                *************************************************************/
+                scene.overrideMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});  
+            };
+
+
+            window.onload = init();         //Inicializa os elementos
+
+            /************************************************************************
+             *                   render:                                            *
+             * Função que controla o loop de animação, a interface será atualizada  *
+             * a cada frame.                                                        *
+             *                                                                      *
+             ************************************************************************/
+
+            function render() {
+                stats.update();
+
+                // Rotaciona os cubos no proprio eixo
+                scene.traverse(function (e) {
+                    if (e instanceof THREE.Mesh && e != plane) {    /// Analisa todos do tipo Mesh e que sejam diferentes do plano
+
+                        e.rotation.x += controls.rotationSpeed;
+                        e.rotation.y += controls.rotationSpeed;
+                        e.rotation.z += controls.rotationSpeed;
+                    }
+                });
+                requestAnimationFrame(render);         //Chama novamente a função a cada frame de atualização
+                renderer.render(scene, camera);
+            }
+
+
+            document.getElementById("WebGL-output").appendChild(renderer.domElement);
+            render();
+        </script>
+    </body>
+</html>
