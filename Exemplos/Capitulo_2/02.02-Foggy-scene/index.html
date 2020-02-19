@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Example 02.01 - Basic Scene</title>
+        <title>Example 02.02 - Foggy scene</title>
         <script src="../../libs/three.js"></script>
         <script src="../../libs/stats.js"></script>
         <script src="../../libs/dat-gui.js"></script>
@@ -128,9 +128,9 @@
                 scene.add(plane);
                 
                 //Posicionamento da camera
-                camera.position.x = -30;
-                camera.position.y = 40;
-                camera.position.z = 30;
+                camera.position.x = -50;
+                camera.position.y = 60;
+                camera.position.z = 50;
                 camera.lookAt(scene.position);  //Direciona a câmera pra posição (0,0,0)
 
                 //Adicionando luz ambiente
@@ -154,6 +154,7 @@
                 controls = new function () {
                     this.rotationSpeed = 0.02;
                     this.numberOfObjects = scene.children.length;
+                    this.fog = false;
 
                     this.removeCube = function () {
                         var allChildren = scene.children;
@@ -183,6 +184,35 @@
                         this.numberOfObjects = scene.children.length;
                     };
 
+                    this.addFogLinear = function (){
+                        if(this.fog){
+                            console.log("Fog já está ativo!!!");
+                            alert("Fog já está ativo!!!");
+                        }
+                        else{
+                            this.fog = true;
+                            scene.fog = new THREE.Fog( 0xffffff, 0.015, 200 );  //Cor, near, far
+                        }
+                    }
+
+                    this.addFogExp = function (){
+                        if(this.fog){
+                            console.log("Fog já está ativo!!!");
+                            alert("Fog já está ativo!!!");
+                        }
+                        else{
+                            this.fog = true;
+                            //Névoa cresce exponencialmente
+                            scene.fog = new THREE.FogExp2( 0xffffff, 0.011);    //Cor, densidade
+                        }
+                    }
+
+                    this.removeFog = function(){
+                        console.log("Fog desativado!!!");
+                        this.fog = false;
+                        scene.fog = null;
+                    }
+
                     this.outputObjects = function () {
                         console.log(scene.children);        //Dispara uma mensagem no console de todos os filhos da scene
                     }
@@ -194,6 +224,10 @@
                 gui.add(controls, 'removeCube');
                 gui.add(controls, 'outputObjects');
                 gui.add(controls, 'numberOfObjects').listen();  //Fica "escutando" o valor da variavel e atualizando a todo instante
+                gui.add(controls, 'addFogLinear');
+                gui.add(controls, 'addFogExp');
+                gui.add(controls, 'removeFog');
+                gui.add(controls, 'fog').listen();
             };
 
 
