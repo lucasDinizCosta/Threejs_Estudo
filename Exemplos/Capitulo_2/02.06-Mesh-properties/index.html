@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Example 02.02 - Foggy scene</title>
-        <script src="../../libs/three.js"></script>
-        <script src="../../libs/stats.js"></script>
-        <script src="../../libs/dat-gui.js"></script>
+        <title>Example 02.06 - Mesh properties</title>
+        <script type="text/javascript" src="../../libs/three.js"></script>
+        <script type="text/javascript" src="../../libs/SceneUtils.js"></script> <!--È necessário incluir a biblioteca separado pois ao utilizar o THREE.SceneUtils ocorre erros-->
+
+        <script type="text/javascript" src="../../libs/stats.js"></script>
+        <script type="text/javascript" src="../../libs/dat-gui.js"></script>
 
         <style>
             body{
@@ -45,16 +47,21 @@
             //GUI de controle e ajuste de valores
             var gui;
 
-            var controls;
+            //Controles dos pontos do objeto criado
+            var controlPoints = [];
+            var control;
 
             //Materiais
             var planeMaterial;
+            var cubeMaterial;
 
             //Geometria de objetos
             var planeGeometry;
+            var cubeGeometry;
 
             //Objetos
             var plane;
+            var cube;
             
             //Luzes
             var ambientLight;
@@ -62,7 +69,7 @@
             
             var axes;
             var stats = initStats();
-            
+
             function initStats() {
                 var stats = new Stats();
                 stats.setMode(0);   //0: FPS, 1: milissegundos
@@ -71,8 +78,7 @@
                 stats.domElement.style.position = 'absolute';
                 stats.domElement.style.left = '0px';
                 stats.domElement.style.top = '0px';
-                document.getElementById("Stats-output")
-                .appendChild( stats.domElement );
+                document.getElementById("Stats-output").appendChild( stats.domElement );
                 return stats;
             }
 
@@ -125,18 +131,18 @@
                 scene.add(plane);
                 
                 //Posicionamento da camera
-                camera.position.x = -50;
-                camera.position.y = 60;
-                camera.position.z = 50;
-                camera.lookAt(scene.position);  //Direciona a câmera pra posição (0,0,0)
+                camera.position.x = -20;
+                camera.position.y = 25;
+                camera.position.z = 20;
+                camera.lookAt(new THREE.Vector3(5, 0, 0));  //Direciona a câmera pra posição determinada
 
                 //Adicionando luz ambiente
-                ambientLight = new THREE.AmbientLight(0x0c0c0c);
+                ambientLight = new THREE.AmbientLight(0x090909);
                 scene.add(ambientLight);
 
                 //Cria a luz responsável por iluminar o ambiente e gerar sombras
                 spotLight = new THREE.SpotLight(0xffffff, 0.8);
-                spotLight.position.set(-40, 60, -10);
+                spotLight.position.set(-40, 40, 50);
                 spotLight.castShadow = true;
 
                 // Propriedades das sombras proporcionadas pela luz
@@ -144,94 +150,103 @@
                 spotLight.shadow.mapSize.height = 2048; 
                 spotLight.shadow.camera.near = 0.1;      
                 spotLight.shadow.camera.far = 1000;      
-                spotLight.angle = Math.PI / 8.0;         //Angulação da luz
+                //spotLight.angle = Math.PI / 8.0;         //Angulação da luz
 
                 scene.add(spotLight);
 
-                controls = new function () {
-                    this.rotationSpeed = 0.02;
-                    this.numberOfObjects = scene.children.length;
-                    this.fog = false;
+                //Adicionando o cubo na scene
+                cubeMaterial = new THREE.MeshLambertMaterial({color: 0x44ff44});
+                cubeGeometry = new THREE.BoxGeometry(5, 8, 3);
+                cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+                cube.position.y = 4;
+                cube.castShadow = true;
+                scene.add(cube);
 
-                    this.removeCube = function () {
-                        var allChildren = scene.children;
-                        var lastObject = allChildren[allChildren.length - 1];
-                        if (lastObject instanceof THREE.Mesh) {
-                            scene.remove(lastObject);
-                            this.numberOfObjects = scene.children.length;
-                        }
+                //Adicionando o controle dos pontos do objeto
+
+                controls = new  function(){
+                    this.visible = true;
+
+                    this.scaleX = 1;
+                    this.scaleY = 1;
+                    this.scaleZ = 1;
+
+                    this.positionX = 0;
+                    this.positionY = 4;
+                    this.positionZ = 0;
+
+                    this.rotationX = 0;
+                    this.rotationY = 0;
+                    this.rotationZ = 0;
+
+                    this.translateX = 0;
+                    this.translateY = 0;
+                    this.translateZ = 0;
+                    
+                    this.scale = 1;
+
+                    this.translate = function () {
+
+                        cube.translateX(controls.translateX);
+                        cube.translateY(controls.translateY);
+                        cube.translateZ(controls.translateZ);
+
+                        controls.positionX = cube.position.x;
+                        controls.positionY = cube.position.y;
+                        controls.positionZ = cube.position.z;
                     };
+                }
 
-                    this.addCube = function () {
-                        var cubeSize = Math.ceil((Math.random() * 3));
-                        var cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
-                        var cubeMaterial = new THREE.MeshLambertMaterial({color: Math.random() * 0xffffff});
-                        var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-                        cube.castShadow = true;
-                        cube.name = "cube-" + scene.children.length;
+                //Ajusta os parâmetros na GUI
 
-                        // Posicionando aleatoriamente na scene
+                var guiScale = gui.addFolder('scale');
+                guiScale.add(controls, 'scaleX', 0, 5);
+                guiScale.add(controls, 'scaleY', 0, 5);
+                guiScale.add(controls, 'scaleZ', 0, 5);
 
-                        cube.position.x = -30 + Math.round((Math.random() * planeGeometry.parameters.width));
-                        cube.position.y = Math.round((Math.random() * 5));
-                        cube.position.z = -20 + Math.round((Math.random() * planeGeometry.parameters.height));
+                var guiPosition = gui.addFolder('position');
+                var contX = guiPosition.add(controls, 'positionX', -10, 10);
+                var contY = guiPosition.add(controls, 'positionY', -4, 20);
+                var contZ = guiPosition.add(controls, 'positionZ', -10, 10);
+                
 
-                        // Adicionando os cubos na scene
-                        scene.add(cube);
-                        this.numberOfObjects = scene.children.length;
-                    };
+                //Verifica a todo instante a mudança na variavel posição
+                contX.listen();
+                contX.onChange(function(value){
+                    cube.position.x = controls.positionX;
+                });
 
-                    this.addFogLinear = function (){
-                        if(this.fog){
-                            console.log("Fog já está ativo!!!");
-                            alert("Fog já está ativo!!!");
-                        }
-                        else{
-                            this.fog = true;
-                            scene.fog = new THREE.Fog( 0xffffff, 0.015, 200 );  //Cor, near, far
-                        }
-                    }
+                contY.listen();
+                contY.onChange(function(value){
+                    cube.position.y = controls.positionY;
+                });
 
-                    this.addFogExp = function (){
-                        if(this.fog){
-                            console.log("Fog já está ativo!!!");
-                            alert("Fog já está ativo!!!");
-                        }
-                        else{
-                            this.fog = true;
-                            //Névoa cresce exponencialmente
-                            scene.fog = new THREE.FogExp2( 0xffffff, 0.011);    //Cor, densidade
-                        }
-                    }
+                contZ.listen();
+                contZ.onChange(function(value){
+                    cube.position.z = controls.positionZ;
+                });
 
-                    this.removeFog = function(){
-                        console.log("Fog desativado!!!");
-                        this.fog = false;
-                        scene.fog = null;
-                    }
+                guiRotation = gui.addFolder('rotation');
+                guiRotation.add(controls, 'rotationX', -4, 4);
+                guiRotation.add(controls, 'rotationY', -4, 4);
+                guiRotation.add(controls, 'rotationZ', -4, 4);
 
-                    this.outputObjects = function () {
-                        console.log(scene.children);        //Dispara uma mensagem no console de todos os filhos da scene
-                    }
-                };
+                guiTranslate = gui.addFolder('translate');
 
-                //Adicionando as propriedades na GUI
-                gui.add(controls, 'rotationSpeed', 0, 0.5);
-                gui.add(controls, 'addCube');
-                gui.add(controls, 'removeCube');
-                gui.add(controls, 'outputObjects');
-                gui.add(controls, 'numberOfObjects').listen();  //Fica "escutando" o valor da variavel e atualizando a todo instante
-                gui.add(controls, 'addFogLinear');
-                gui.add(controls, 'addFogExp');
-                gui.add(controls, 'removeFog');
-                gui.add(controls, 'fog').listen();
+                guiTranslate.add(controls, 'translateX', -10, 10);
+                guiTranslate.add(controls, 'translateY', -10, 10);
+                guiTranslate.add(controls, 'translateZ', -10, 10);
+                guiTranslate.add(controls, 'translate');
+
+                gui.add(controls, 'visible');
+
             };
-
 
             window.onload = init();         //Inicializa os elementos
 
+            
             /************************************************************************
-             *                   render:                                       *
+             *                               render:                                *
              * Função que controla o loop de animação, a interface será atualizada  *
              * a cada frame.                                                        *
              *                                                                      *
@@ -240,17 +255,18 @@
             function render() {
                 stats.update();
 
-                // Rotaciona os cubos no proprio eixo
-                scene.traverse(function (e) {
-                    if (e instanceof THREE.Mesh && e != plane) {    /// Analisa todos do tipo Mesh e que sejam diferentes do plano
+                updateObject();                         //Atualiza os dados do objeto com base na GU
 
-                        e.rotation.x += controls.rotationSpeed;
-                        e.rotation.y += controls.rotationSpeed;
-                        e.rotation.z += controls.rotationSpeed;
-                    }
-                });
                 requestAnimationFrame(render);         //Chama novamente a função a cada frame de atualização
                 renderer.render(scene, camera);
+            }
+
+            function updateObject(){
+                cube.visible = controls.visible;
+                cube.rotation.x = controls.rotationX;
+                cube.rotation.y = controls.rotationY;
+                cube.rotation.z = controls.rotationZ;
+                cube.scale.set(controls.scaleX, controls.scaleY, controls.scaleZ);
             }
 
 
