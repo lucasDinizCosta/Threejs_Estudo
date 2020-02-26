@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Example 02.06 - Mesh properties</title>
+        <title>Example 02.07 - Cameras</title>
         <script type="text/javascript" src="../../libs/three.js"></script>
         <script type="text/javascript" src="../../libs/SceneUtils.js"></script> <!--È necessário incluir a biblioteca separado pois ao utilizar o THREE.SceneUtils ocorre erros-->
 
@@ -48,23 +48,21 @@
             var gui;
 
             //Controles dos pontos do objeto criado
+            var controlPoints = [];
             var control;
 
             //Materiais
             var planeMaterial;
-            var cubeMaterial;
 
             //Geometria de objetos
             var planeGeometry;
-            var cubeGeometry;
 
             //Objetos
             var plane;
-            var cube;
             
             //Luzes
             var ambientLight;
-            var spotLight;
+            var directionalLight;
             
             var axes;
             var stats = initStats();
@@ -113,134 +111,96 @@
                     THREE.VSMShadowMap
                 */
 
+                //Posicionamento da camera
+                camera.position.x = 120;
+                camera.position.y = 60;
+                camera.position.z = 180;
+                camera.lookAt(new THREE.Vector3(0, 0, 0));  //Direciona a câmera pro centro de coordenadas
+
                 axes = THREE.AxisHelper(20);
                 scene.add(axes);
 
-                //Define os dados do plano
-                planeGeometry = new THREE.PlaneGeometry(60, 40, 1 ,1);  //Width, Height, WidthSegments, HeightSegments
+                //Definindo dados do plano
+                planeGeometry = new THREE.PlaneGeometry(180, 180, 1 ,1);  //Width, Height, WidthSegments, HeightSegments
                 planeMaterial = new THREE.MeshLambertMaterial({color:0xffffff});
                 plane = new THREE.Mesh(planeGeometry, planeMaterial);
-                plane.name = "Plano";
-                plane.receiveShadow = true;                         //Recebe sombras
+                plane.name = "Plano";                                     5//Nome para o plano
 
-                //Posicionamento e rotação do plano
-                plane.rotation.x = -0.5 * Math.PI;                  //Ângulo em radianos
+                //Posição e rotação do plano
+                plane.rotation.x = -0.5 * Math.PI;
                 plane.position.x = 0;
                 plane.position.y = 0;
                 plane.position.z = 0;
 
                 scene.add(plane);
-                
-                //Posicionamento da camera
-                camera.position.x = -20;
-                camera.position.y = 25;
-                camera.position.z = 20;
-                camera.lookAt(new THREE.Vector3(5, 0, 0));  //Direciona a câmera pra posição determinada
+
+                //Cria uma geometria padrão de cubo para ser replicado sobre uma matriz de cubos
+                var cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
+
+                //Cria uma matriz de cubos que encobre o plano todo
+                for (var j = 0; j < (planeGeometry.parameters.height / 5); j++) {
+                    for (var i = 0; i < planeGeometry.parameters.width / 5; i++) {
+                        var rnd = Math.random() * 0.75 + 0.25;
+                        var cubeMaterial = new THREE.MeshLambertMaterial();
+                        cubeMaterial.color = new THREE.Color(rnd, 0, 0);
+                        var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+
+                        cube.position.z = -((planeGeometry.parameters.height) / 2) + 2 + (j * 5);
+                        cube.position.x = -((planeGeometry.parameters.width) / 2) + 2 + (i * 5);
+                        cube.position.y = 2;
+
+                        scene.add(cube);
+                    }
+                }
 
                 //Adicionando luz ambiente
-                ambientLight = new THREE.AmbientLight(0x090909);
+                ambientLight = new THREE.AmbientLight(0x292929);
                 scene.add(ambientLight);
 
-                //Cria a luz responsável por iluminar o ambiente e gerar sombras
-                spotLight = new THREE.SpotLight(0xffffff, 0.8);
-                spotLight.position.set(-40, 40, 50);
-                spotLight.castShadow = true;
+                //Cria a luz responsável por iluminar o ambiente
+                directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);   //Cor, intensidade
+                directionalLight.position.set(-20, 40, 60);
+                scene.add(directionalLight);
 
-                // Propriedades das sombras proporcionadas pela luz
-                spotLight.shadow.mapSize.width = 2048;      //Quanto maior o parâmetro, maior e melhor será a forma da sombra
-                spotLight.shadow.mapSize.height = 2048; 
-                spotLight.shadow.camera.near = 0.1;      
-                spotLight.shadow.camera.far = 1000;      
-                //spotLight.angle = Math.PI / 8.0;         //Angulação da luz
-
-                scene.add(spotLight);
-
-                //Adicionando o cubo na scene
-                cubeMaterial = new THREE.MeshLambertMaterial({color: 0x44ff44});
-                cubeGeometry = new THREE.BoxGeometry(5, 8, 3);
-                cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-                cube.position.y = 4;
-                cube.castShadow = true;
-                scene.add(cube);
-
-                //Adicionando o controle dos pontos do objeto
-
+                //Adicionando o controle da câmera
                 controls = new  function(){
-                    this.visible = true;
+                    this.perspective = "Perspective";
+                    this.switchCamera = function () {
+                        if (camera instanceof THREE.PerspectiveCamera) {
+                            
+                            /********************************************************************
+                             *                    Camera Ortográfica:                           *
+                             *                                                                  *
+                             *  Não importa o campo de visão e também o váriação de aspect,     *
+                             *  visto que todos os objetos possuirão o mesmo tamanho            *
+                             *                                                                  *
+                             ********************************************************************/
 
-                    this.scaleX = 1;
-                    this.scaleY = 1;
-                    this.scaleZ = 1;
+                            camera = new THREE.OrthographicCamera(window.innerWidth / -16, window.innerWidth / 16, 
+                            window.innerHeight / 16, window.innerHeight / -16, -200, 500);  
+                            // Left, Right, top, Bottom, near, far
+                            // Left, Right, top, Bottom são distâncias em relação ao plano visual próximo
 
-                    this.positionX = 0;
-                    this.positionY = 4;
-                    this.positionZ = 0;
+                            camera.position.x = 120;
+                            camera.position.y = 60;
+                            camera.position.z = 180;
+                            camera.lookAt(scene.position);
+                            this.perspective = "Orthographic";
+                        } else {
+                            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+                            camera.position.x = 120;
+                            camera.position.y = 60;
+                            camera.position.z = 180;
 
-                    this.rotationX = 0;
-                    this.rotationY = 0;
-                    this.rotationZ = 0;
-
-                    this.translateX = 0;
-                    this.translateY = 0;
-                    this.translateZ = 0;
-                    
-                    this.scale = 1;
-
-                    this.translate = function () {
-
-                        cube.translateX(controls.translateX);
-                        cube.translateY(controls.translateY);
-                        cube.translateZ(controls.translateZ);
-
-                        controls.positionX = cube.position.x;
-                        controls.positionY = cube.position.y;
-                        controls.positionZ = cube.position.z;
+                            camera.lookAt(scene.position);
+                            this.perspective = "Perspective";
+                        }
                     };
                 }
 
                 //Ajusta os parâmetros na GUI
-
-                var guiScale = gui.addFolder('scale');
-                guiScale.add(controls, 'scaleX', 0, 5);
-                guiScale.add(controls, 'scaleY', 0, 5);
-                guiScale.add(controls, 'scaleZ', 0, 5);
-
-                var guiPosition = gui.addFolder('position');
-                var contX = guiPosition.add(controls, 'positionX', -10, 10);
-                var contY = guiPosition.add(controls, 'positionY', -4, 20);
-                var contZ = guiPosition.add(controls, 'positionZ', -10, 10);
-                
-
-                //Verifica a todo instante a mudança na variavel posição
-                contX.listen();
-                contX.onChange(function(value){
-                    cube.position.x = controls.positionX;
-                });
-
-                contY.listen();
-                contY.onChange(function(value){
-                    cube.position.y = controls.positionY;
-                });
-
-                contZ.listen();
-                contZ.onChange(function(value){
-                    cube.position.z = controls.positionZ;
-                });
-
-                guiRotation = gui.addFolder('rotation');
-                guiRotation.add(controls, 'rotationX', -4, 4);
-                guiRotation.add(controls, 'rotationY', -4, 4);
-                guiRotation.add(controls, 'rotationZ', -4, 4);
-
-                guiTranslate = gui.addFolder('translate');
-
-                guiTranslate.add(controls, 'translateX', -10, 10);
-                guiTranslate.add(controls, 'translateY', -10, 10);
-                guiTranslate.add(controls, 'translateZ', -10, 10);
-                guiTranslate.add(controls, 'translate');
-
-                gui.add(controls, 'visible');
-
+                gui.add(controls, 'switchCamera');
+                gui.add(controls, 'perspective').listen();
             };
 
             window.onload = init();         //Inicializa os elementos
@@ -255,19 +215,8 @@
 
             function render() {
                 stats.update();
-
-                updateObject();                         //Atualiza os dados do objeto com base na GU
-
                 requestAnimationFrame(render);         //Chama novamente a função a cada frame de atualização
                 renderer.render(scene, camera);
-            }
-
-            function updateObject(){
-                cube.visible = controls.visible;
-                cube.rotation.x = controls.rotationX;
-                cube.rotation.y = controls.rotationY;
-                cube.rotation.z = controls.rotationZ;
-                cube.scale.set(controls.scaleX, controls.scaleY, controls.scaleZ);
             }
 
 
