@@ -1,1 +1,21 @@
-# Threejs_Estudo
+# Threejs_Estudo - Estudo sobre a biblioteca e exemplos resolvidos do livro
+
+## Utilização do gitIO:
+https://lucasdinizcosta.github.io/Threejs_Estudo/Exemplos/Capitulo_2/02.08-Cameras-Lookat/index.html
+
+## Configurações de uso do servidor:
+* Para executar os exemplos, especialmente os que tem textura e/ou carregamento de modelos externos, é preciso rodar em um servidor local por questão do sistema de segurança dos navegadores. 
+
+* Uma possibilidade interessante é utilizar um servidor Python. Para tal, tem que fazer o seguinte (Linux):
+
+1) Verificar se o Python instalado;
+2) Abrir a pasta onde estão os códigos e de lá abrir um terminal e executar o seguinte:
+   python -m SimpleHTTPServer
+   ou 
+   python -m http.server
+   ou (executar o script criado)
+   sh PythonServer.sh
+3) Abre o browser e execute o seguinte link:
+   http://localhost:8000/
+
+
