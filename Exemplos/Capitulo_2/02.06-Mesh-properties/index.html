@@ -96,8 +96,8 @@
 
                 scene = new THREE.Scene();
                 camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000); //fov(campo de visão vertical), aspect Ratio(proporção de tela), near, far
-                renderer = new THREE.WebGLRenderer();                       //Instancia um renderizador para os elementos a serem desenhados
-                gui = new dat.GUI();                                        //Instancia o objeto responsável pela interface lateral
+                renderer = new THREE.WebGLRenderer();                   //Instancia um renderizador para os elementos a serem desenhados
+                gui = new dat.GUI();                                        
 
                 renderer.setClearColor(new THREE.Color(0xEEEEEE));          //Cor de fundo da tela
                 renderer.setSize(window.innerWidth, window.innerHeight);    //Tamanho

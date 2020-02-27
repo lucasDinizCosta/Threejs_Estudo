@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Example 02.07 - Cameras</title>
+        <title>Example 02.07 - Cameras Lookat</title>
         <script type="text/javascript" src="../../libs/three.js"></script>
         <script type="text/javascript" src="../../libs/SceneUtils.js"></script> <!--È necessário incluir a biblioteca separado pois ao utilizar o THREE.SceneUtils ocorre erros-->
 
@@ -52,12 +52,19 @@
 
             //Materiais
             var planeMaterial;
+            var sphereMaterial;
 
             //Geometria de objetos
             var planeGeometry;
+            var sphereGeometry;
 
             //Objetos
             var plane;
+            var sphere;
+
+            //Fisica do objeto
+            var velSphere = 140;
+            var dt = timeAnterior = 0;
             
             //Luzes
             var ambientLight;
@@ -141,7 +148,7 @@
                     for (var i = 0; i < planeGeometry.parameters.width / 5; i++) {
                         var rnd = Math.random() * 0.75 + 0.25;
                         var cubeMaterial = new THREE.MeshLambertMaterial();
-                        cubeMaterial.color = new THREE.Color(rnd, 0, 0);
+                        cubeMaterial.color = new THREE.Color(0, rnd, 0);
                         var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
 
                         cube.position.z = -((planeGeometry.parameters.height) / 2) + 2 + (j * 5);
@@ -151,6 +158,17 @@
                         scene.add(cube);
                     }
                 }
+
+                sphereMaterial = new THREE.MeshLambertMaterial();
+                sphereMaterial.color = new THREE.Color(0xcff0000);
+                sphereGeometry = new THREE.SphereGeometry(2, 32, 32); // Raio, WidtSegments, HeightSegments
+                sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+                sphere.castShadow = true;
+                sphere.position.x = 0;
+                sphere.position.y = 20;
+                sphere.position.z = 0;
+
+                scene.add(sphere);
 
                 //Adicionando luz ambiente
                 ambientLight = new THREE.AmbientLight(0x292929);
@@ -204,7 +222,34 @@
 
             window.onload = init();         //Inicializa os elementos
 
-            
+            addEventListener('keydown', function(e){
+                console.log(e.keyCode);
+                switch(e.keyCode){
+                    case 38:
+                        //console.log("cima");
+                        sphere.position.z = sphere.position.z - velSphere * dt;
+                        break;
+                    case 39:
+                        //console.log("direita");
+                        sphere.position.x = sphere.position.x + velSphere * dt;
+                        break;
+                    case 40:
+                        //console.log("baixo");
+                        sphere.position.z = sphere.position.z + velSphere * dt;
+                        break;
+                    case 37:
+                        //console.log("esquerda");
+                        sphere.position.x = sphere.position.x - velSphere * dt;
+                        break;
+                    case 32:
+                        //console.log("espaco");
+                        camera.lookAt(new THREE.Vector3(sphere.position.x, sphere.position.y, sphere.position.z));
+                        break;
+                    default:
+                        console.log("Tecla não mapeada");
+                }
+            });
+
             /************************************************************************
              *                               render:                                *
              * Função que controla o loop de animação, a interface será atualizada  *
@@ -212,10 +257,12 @@
              *                                                                      *
              ************************************************************************/
 
-            function render() {
+            function render(t) {
+                dt = (t - timeAnterior) / 1000;        //Calcula a variação de tempo entre frames
                 stats.update();
                 requestAnimationFrame(render);         //Chama novamente a função a cada frame de atualização
                 renderer.render(scene, camera);
+                timeAnterior = t;                      //Atualiza o tempo
             }
 
 
