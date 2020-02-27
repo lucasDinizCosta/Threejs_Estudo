@@ -164,6 +164,8 @@
                 sphereGeometry = new THREE.SphereGeometry(2, 32, 32); // Raio, WidtSegments, HeightSegments
                 sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
                 sphere.castShadow = true;
+
+                //Posicionamento inicial da esfera
                 sphere.position.x = 0;
                 sphere.position.y = 20;
                 sphere.position.z = 0;
@@ -182,6 +184,20 @@
                 //Adicionando o controle da câmera
                 controls = new  function(){
                     this.perspective = "Perspective";
+                    this.spherePositionX = sphere.position.x;
+                    this.spherePositionY = sphere.position.y;
+                    this.spherePositionZ = sphere.position.z;
+
+                    this.updatePosition = function(sphere){
+                        this.spherePositionZ = sphere.position.z;
+                        this.spherePositionX = sphere.position.x;
+                        this.spherePositionY = sphere.position.y;
+                    }
+
+                    this.lookAtSphere = function(){
+                        camera.lookAt(new THREE.Vector3(sphere.position.x, sphere.position.y, sphere.position.z));
+                    }
+
                     this.switchCamera = function () {
                         if (camera instanceof THREE.PerspectiveCamera) {
                             
@@ -216,14 +232,23 @@
                 }
 
                 //Ajusta os parâmetros na GUI
-                gui.add(controls, 'switchCamera');
-                gui.add(controls, 'perspective').listen();
+                var fCamera = gui.addFolder('Camera');
+                fCamera.add(controls, 'switchCamera');
+                fCamera.add(controls, 'perspective').listen();
+                
+                //Posicao da Esfera e lookAt
+                var guiSphere = gui.addFolder('Sphere (Move with {Arrows, +, -})');
+                guiSphere.add(controls, 'spherePositionX').listen();
+                guiSphere.add(controls, 'spherePositionY').listen();          //Atualiza os dados de posição no menu lateral
+                guiSphere.add(controls, 'spherePositionZ').listen();
+                guiSphere.add(controls, 'lookAtSphere');
+                
             };
 
             window.onload = init();         //Inicializa os elementos
 
             addEventListener('keydown', function(e){
-                //console.log(e.keyCode);
+                console.log(e.keyCode);
                 switch(e.keyCode){
                     case 38:
                         //console.log("cima");
@@ -241,11 +266,13 @@
                         //console.log("esquerda");
                         sphere.position.x = sphere.position.x - velSphere * dt;
                         break;
-                    case 107 || 187:
+                    case 107:
+                    case 187:
                         //console.log("+");
                         sphere.position.y = sphere.position.y + velSphere * dt;
                         break;
-                    case 109 || 189:
+                    case 109:
+                    case 189:
                         //console.log("-");
                         sphere.position.y = sphere.position.y - velSphere * dt;
                         break;
@@ -268,9 +295,16 @@
             function render(t) {
                 dt = (t - timeAnterior) / 1000;        //Calcula a variação de tempo entre frames
                 stats.update();
+                
+                updateObject();
+
                 requestAnimationFrame(render);         //Chama novamente a função a cada frame de atualização
                 renderer.render(scene, camera);
                 timeAnterior = t;                      //Atualiza o tempo
+            }
+
+            updateObject = function(){
+                controls.updatePosition(sphere);
             }
 
 
