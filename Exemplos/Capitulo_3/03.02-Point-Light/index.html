@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Example 03.01 - Ambient Light</title>
+        <title>Example 03.02 - Point Light</title>
         <script src="../../libs/three.js"></script>
         <script src="../../libs/dat-gui.js"></script>
         <script src="../../libs/stats.js"></script>
@@ -51,21 +51,30 @@
             var cubeMaterial;
             var planeMaterial;
             var sphereMaterial;
+            var sphereLightMaterial;
 
             //Geometria de objetos
             var cubeGeometry;
             var planeGeometry;
             var sphereGeometry;
+            var sphereLightGeometry;
 
             //Objetos
             var cube;
             var plane;
             var sphere;
+            var sphereLight;
 
             //Luzes
             var spotLight;
             var ambiColor;
             var ambientLight;
+            var pointColor;
+            var pointLight;
+
+            //Para determinar a posição da luz pontual
+            var invert = 1;
+            var phase = 0;
 
             var axes;
             var stats = initStats();
@@ -128,6 +137,7 @@
                 axes = THREE.AxisHelper(20);
                 scene.add(axes);
 
+                //Criação do plano
                 planeGeometry = new THREE.PlaneGeometry(60, 20);  //Width, Height, WidthSegments, HeightSegments
                 planeMaterial = new THREE.MeshLambertMaterial({color:0xffffff});
                 plane = new THREE.Mesh(planeGeometry, planeMaterial);
@@ -141,6 +151,7 @@
 
                 scene.add(plane);
 
+                //Criação do cubo
                 cubeGeometry = new THREE.BoxGeometry(4, 4, 4); // {width: 4, height: 4, depth: 4, widthSegments: undefined, heightSegments: undefined, depthSegments: undefined}
                 cubeMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
                 cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
@@ -152,7 +163,8 @@
                 cube.position.z = 0;
 
                 scene.add(cube);
-
+                
+                //Criação da esfera
                 sphereGeometry = new THREE.SphereGeometry(4, 20, 20); //radius, widthSegments, HeightSegments
                 sphereMaterial = new THREE.MeshLambertMaterial({color:0x7777ff});
                 sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
@@ -174,28 +186,47 @@
                 //Adicionando uma luz ambiente
                 ambiColor = "#0c0c0c";
                 ambientLight = new THREE.AmbientLight(ambiColor);
-                scene.add(ambientLight);
+                //scene.add(ambientLight);
 
                 //Cria a luz responsável por iluminar o ambiente e gerar sombras
-                spotLight = new THREE.SpotLight(0xffffff, 0.8);
-                spotLight.position.set(-40, 60, -10);
-                spotLight.castShadow = true;
+                //spotLight = new THREE.SpotLight(0xffffff, 0.8);
+                //spotLight.position.set(-40, 60, -10);
+                //spotLight.castShadow = true;
 
                 //Propriedades das sombras proporcionadas pela luz
-                spotLight.shadow.mapSize.width = 2048;      //Quanto maior o parâmetro, maior e melhor será a forma da sombra
-                spotLight.shadow.mapSize.height = 2048; 
-                spotLight.shadow.camera.near = 0.1;      
-                spotLight.shadow.camera.far = 1000;      
-                spotLight.angle = Math.PI / 8.0;         //Angulação da luz
+                //spotLight.shadow.mapSize.width = 2048;      //Quanto maior o parâmetro, maior e melhor será a forma da sombra
+                //spotLight.shadow.mapSize.height = 2048; 
+                //spotLight.shadow.camera.near = 0.1;      
+                //spotLight.shadow.camera.far = 1000;      
+                //spotLight.angle = Math.PI / 8.0;         //Angulação da luz
 
-                scene.add(spotLight);
+                //scene.add(spotLight);
+
+                //Criação da luz pontual
+                pointColor = "#ccffcc";
+                pointLight = new THREE.PointLight(pointColor);
+                pointLight.distance = 100;          //Distancia de alcance
+                scene.add(pointLight);
+
+                //Pequena esfera que simula uma luz pontual
+                sphereLightGeometry = new THREE.SphereGeometry(0.2);
+                sphereLightMaterial = new THREE.MeshBasicMaterial({color: 0xac6c25});
+                sphereLight = new THREE.Mesh(sphereLightGeometry, sphereLightMaterial);
+                sphereLight.castShadow = true;
+
+                sphereLight.position = new THREE.Vector3(3, 0, 3);
+                scene.add(sphereLight);
+
 
                 //Funções de controle do menu lateral
                 controls = new function() {
                     this.rotationSpeed = 0.02;
                     this.bouncingSpeed = 0.03;
                     this.ambientColor = ambiColor;
-                    this.disableSpotLight = true;
+                    this.pointColor = pointColor;
+                    //this.disableSpotLight = true;
+                    this.intensity = 1;
+                    this.distance = 0;
                 }
 
                 //Adicionando elementos no menu lateral
@@ -204,8 +235,17 @@
                 guiLight.add(controls, 'ambientColor').onChange(function (e) {
                     ambientLight.color = new THREE.Color(e);
                 });
-                guiLight.add(controls, 'disableSpotLight').onChange(function (e) {
+                guiLight.add(controls, 'pointColor').onChange(function (e) {
+                    pointLight.color = new THREE.Color(e);
+                });
+                /*guiLight.add(controls, 'disableSpotLight').onChange(function (e) {
                     spotLight.visible = !e;
+                });*/
+                guiLight.add(controls, 'intensity', 0, 3).onChange(function (e) {
+                    pointLight.intensity = e;
+                });
+                guiLight.add(controls, 'distance', 0, 100).onChange(function (e) {
+                    pointLight.distance = e;
                 });
 
                 var guiPhysics = gui.addFolder("Physics");
@@ -239,6 +279,24 @@
                 step += controls.bouncingSpeed;
                 sphere.position.x = 20 +( 10 * (Math.cos(step)));
                 sphere.position.y = 2  +( 10 * Math.abs(Math.sin(step)));
+
+                //Movimentação da luz pontual
+                if (phase > 2 * Math.PI) {
+                    invert = invert * -1;
+                    phase -= 2 * Math.PI;
+                } else {
+                    phase += controls.rotationSpeed;
+                }
+                sphereLight.position.z = +(7 * (Math.sin(phase)));
+                sphereLight.position.x = +(14 * (Math.cos(phase)));
+                sphereLight.position.y = 5;
+
+                if (invert < 0) {
+                    var pivot = 14;
+                    sphereLight.position.x = (invert * (sphereLight.position.x - pivot)) + pivot;
+                }
+
+                pointLight.position.copy(sphereLight.position);
             }
 
             document.getElementById("WebGL-output").appendChild(renderer.domElement);
