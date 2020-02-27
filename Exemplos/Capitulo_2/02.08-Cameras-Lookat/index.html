@@ -223,7 +223,7 @@
             window.onload = init();         //Inicializa os elementos
 
             addEventListener('keydown', function(e){
-                console.log(e.keyCode);
+                //console.log(e.keyCode);
                 switch(e.keyCode){
                     case 38:
                         //console.log("cima");
@@ -240,6 +240,14 @@
                     case 37:
                         //console.log("esquerda");
                         sphere.position.x = sphere.position.x - velSphere * dt;
+                        break;
+                    case 107 || 187:
+                        //console.log("+");
+                        sphere.position.y = sphere.position.y + velSphere * dt;
+                        break;
+                    case 109 || 189:
+                        //console.log("-");
+                        sphere.position.y = sphere.position.y - velSphere * dt;
                         break;
                     case 32:
                         //console.log("espaco");
