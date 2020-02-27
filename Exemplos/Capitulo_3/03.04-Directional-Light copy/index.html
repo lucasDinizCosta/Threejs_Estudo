@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Example 03.04 - Directional Light</title>
+        <script src="../../libs/three.js"></script>
+        <script src="../../libs/dat-gui.js"></script>
+        <script src="../../libs/stats.js"></script>
+        <style>
+            body{
+                /* set margin to 0 and overflow to hidden, to use the
+                complete page */
+                margin: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+
+        <!--Div responsável por disparar o elementos dos status de FPS-->
+        <div id="Stats-output"></div>
+
+        <!-- Div responsável por manter e exibir a interface gerada pela biblioteca -->
+        <div id="WebGL-output">
+        </div>
+
+        <script>
+            
+            /********************************************************************************
+             *                                                                              *
+             * Criação das variáveis fora da função de inicialização para poder ter acesso  *
+             * em qualquer parte do código                                                  *
+             *                                                                              *
+             ********************************************************************************/
+
+            //Cria a cena que irá guardar todos os elementos
+            var scene = new THREE.Scene();
+
+            //Cria a câmera que define onde será visto no "mundo"
+            var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000); //fov(campo de visão vertical), aspect Ratio(proporção de tela), near, far
+
+            //GUI de controle e ajuste de valores
+            var gui;
+
+            //Funções de controle do menu lateral
+            var controls;
+
+            //Cria o renderizador de elementos na interface
+            var renderer = new THREE.WebGLRenderer();                   //Instancia um renderizador para os elementos a serem desenhados
+
+            //Materiais
+            var cubeMaterial;
+            var planeMaterial;
+            var sphereMaterial;
+            var sphereLightMaterial;
+
+            //Geometria de objetos
+            var cubeGeometry;
+            var planeGeometry;
+            var sphereGeometry;
+            var sphereLightGeometry;
+
+            //Objetos
+            var cube;
+            var plane;
+            var sphere;
+            var sphereLight;
+            var target;
+
+            //Luzes
+            var directionalLight;            
+            var ambientLight;
+
+            //Atributos de luzes
+            var stopMovingLight = false;
+            var ambiColor;
+            var pointColor;
+
+            //Para determinar a posição da luz pontual
+            var invert = 1;
+            var phase = 0;
+
+            var axes;
+            var stats = initStats();
+
+            //Controle da bola
+            var step = 0;
+
+            function initStats() {
+                var stats = new Stats();
+                stats.setMode(0);       //0 - FPS; 1 - ms
+
+                //Posiciona na parte superior esquerda da janela
+                stats.domElement.style.position = 'absolute';
+                stats.domElement.style.left = '0px';
+                stats.domElement.style.top = '0px';
+                document.getElementById("Stats-output").appendChild( stats.domElement );
+                return stats;
+            }
+
+            //Reajuste da renderização com base na mudança da janela
+            
+            function onResize(){
+                camera.aspect = window.innerWidth / window.innerHeight;  //Atualiza o aspect da camera com relação as novas dimensões
+                camera.updateProjectionMatrix();                         //Atualiza a matriz de projeção
+                renderer.setSize(window.innerWidth, window.innerHeight); //Define os novos valores para o renderizador
+            }
+
+            window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
+
+            // once everything is loaded, we run our Three.js stuff.
+            function init() {
+
+                renderer.setClearColor(new THREE.Color(0xEEEEEE));          //Cor de fundo da tela
+                renderer.setSize(window.innerWidth, window.innerHeight);    //Tamanho
+                renderer.shadowMap.enabled = true;                          //Ativa o sombreado no "mundo"
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;           //Suavização das sombras
+                
+                /**
+                    Tipos de sombras que o renderer pode trabalhar:
+
+                    THREE.BasicShadowMap
+                    THREE.PCFShadowMap (default)
+                    THREE.PCFSoftShadowMap
+                    THREE.VSMShadowMap
+                */
+
+                /******************************************************************************
+                 *                          Tipos de Luz:                                     *
+                 *                                                                            *
+                 *  -> Ambient Light: Emite luz de um ponto específico em todas as direções;  *
+                 *  -> Spot Light: Emite uma luz de um ponto específico em formato de cone    *
+                 *     a partir de uma determinada angulação;                                 *
+                 *  -> Directional Light: Emite a luz em uma direção específica com raios de  *
+                 *     luz paralelos em um plano 2D;                                          *
+                 *                                                                            *
+                 *****************************************************************************/
+
+                gui = new dat.GUI();                                        //Inicializando o menu lateral
+
+                axes = THREE.AxisHelper(20);
+                scene.add(axes);
+
+                //Criação do plano
+                planeGeometry = new THREE.PlaneGeometry(600, 200, 20,20);  //Width, Height, WidthSegments, HeightSegments
+                planeMaterial = new THREE.MeshLambertMaterial({color:0xffffff});
+                plane = new THREE.Mesh(planeGeometry, planeMaterial);
+                plane.receiveShadow = true;         //Recebe sombras
+
+                //Posicionamento do plano
+                plane.rotation.x = -0.5 * Math.PI;
+                plane.position.x = 15;
+                plane.position.y = -5;
+                plane.position.z = 0;
+
+                scene.add(plane);
+
+                //Criação do cubo
+                cubeGeometry = new THREE.BoxGeometry(4, 4, 4); // {width: 4, height: 4, depth: 4, widthSegments: undefined, heightSegments: undefined, depthSegments: undefined}
+                cubeMaterial = new THREE.MeshLambertMaterial({color: 0xff3333});
+                cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+                cube.castShadow = true;                             //Gera sombras em outros objetos                
+
+                //Posicionamento do cubo
+                cube.position.x = -4;
+                cube.position.y = 3;
+                cube.position.z = 0;
+
+                scene.add(cube);
+                
+                //Criação da esfera
+                sphereGeometry = new THREE.SphereGeometry(4, 20, 20); //radius, widthSegments, HeightSegments
+                sphereMaterial = new THREE.MeshLambertMaterial({color:0x7777ff});
+                sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    
+                //Posicionamento da esfera
+                sphere.position.x = 20;
+                sphere.position.y = 0;
+                sphere.position.z = 2;
+                sphere.castShadow = true;                           //Gera sombras em outros objetos
+
+                scene.add(sphere);
+                
+                //Posicionamento da câmera
+                camera.position.x = -35;
+                camera.position.y = 30;
+                camera.position.z = 25;
+                camera.lookAt(new THREE.Vector3(10, 0, 0));  //Direciona a câmera pra posição (0,0,0)
+
+                //Adicionando uma luz ambiente
+                ambiColor = "#1c1c1c";
+                ambientLight = new THREE.AmbientLight(ambiColor);
+                scene.add(ambientLight);
+
+                //Atribuindo um alvo para a luz
+                target = new THREE.Object3D();
+                target.position = new THREE.Vector3(5, 0, 0);
+
+                //Cria a luz responsável por iluminar o ambiente e gerar sombras
+
+                pointColor = "#ff5808";
+                directionalLight = new THREE.DirectionalLight(pointColor);
+                directionalLight.position.set(-40, 60, -10);
+                directionalLight.castShadow = true;             //Gera sombras
+                directionalLight.shadow.camera.near = 2;          //Proximidade minima para gerar sombra
+                directionalLight.shadow.camera.far = 200;         //Longe o suficiente para gerar sombra
+                directionalLight.shadow.camera.left = -50;
+                directionalLight.shadow.camera.right = 50;
+                directionalLight.shadow.camera.top = 50;
+                directionalLight.shadow.camera.bottom = -50;
+
+                directionalLight.distance = 0;
+                directionalLight.intensity = 0.5;
+                directionalLight.shadow.mapSize.height = 1024;
+                directionalLight.shadow.mapSize.width = 1024;
+
+                scene.add(directionalLight);
+
+                //Pequena esfera que simula uma luz pontual
+                sphereLightGeometry = new THREE.SphereGeometry(0.2);
+                sphereLightMaterial = new THREE.MeshBasicMaterial({color: 0xac6c25});
+                sphereLight = new THREE.Mesh(sphereLightGeometry, sphereLightMaterial);
+                sphereLight.castShadow = true;
+                sphereLight.position = new THREE.Vector3(3, 20, 3);
+                scene.add(sphereLight);
+
+                //Funções de controle do menu lateral
+                controls = new function() {
+                    this.rotationSpeed = 0.02;
+                    this.bouncingSpeed = 0.03;
+                    this.ambientColor = ambiColor;
+                    this.pointColor = pointColor;
+                    this.disableDirectionalLight = true;
+                    this.intensity = 1;
+                    this.distance = 0;
+                    this.exponent = 30;
+                    this.penumbra = 0;
+                    this.debug = false;
+                    this.castShadow = true;
+                    this.onlyShadow = false;
+                    this.target = "Plane";
+                    this.stopMovingLight = false;
+                }
+
+                //Adicionando elementos no menu lateral
+                var guiLight = gui.addFolder("Light");
+                guiLight.add(controls, 'ambientColor').onChange(function (e) {
+                    ambientLight.color = new THREE.Color(e);
+                });
+
+                guiLight.add(controls, 'pointColor').onChange(function (e) {
+                    directionalLight.color = new THREE.Color(e);
+                });
+
+                guiLight.add(controls, 'intensity', 0, 5).onChange(function (e) {
+                    directionalLight.intensity = e;
+                });
+
+                guiLight.add(controls, 'distance', 0, 200).onChange(function (e) {
+                    directionalLight.distance = e;
+                });
+
+                guiLight.add(controls, 'exponent', 0, 100).onChange(function (e) {      //Representa o quão rápida a luz decai de intensidade com a distancia no cone de luz
+                    directionalLight.exponent = e;
+                });
+
+                guiLight.add(controls, 'penumbra', 0, 5).onChange(function (e) {
+                    directionalLight.penumbra = e;
+                });
+
+                guiLight.add(controls, 'debug').onChange(function (e) {
+                    directionalLight.shadow.camera.visible = e;
+                });
+
+                guiLight.add(controls, 'castShadow').onChange(function (e) {
+                    directionalLight.castShadow = e;
+                });
+
+                guiLight.add(controls, 'onlyShadow').onChange(function (e) {
+                    directionalLight.onlyShadow = e;
+                });
+
+                guiLight.add(controls, 'target', ['Plane', 'Sphere', 'Cube']).onChange(function (e) {
+                    console.log(e);
+                    switch (e) {
+                        case "Plane":
+                            directionalLight.target = plane;
+                            break;
+                        case "Sphere":
+                            directionalLight.target = sphere;
+                            break;
+                        case "Cube":
+                            directionalLight.target = cube;
+                            break;
+                    }
+                });
+
+                guiLight.add(controls, 'stopMovingLight').onChange(function (e) {
+                    stopMovingLight = e;
+                });
+
+                guiLight.add(controls, 'disableDirectionalLight').onChange(function (e) {
+                    if(controls.disableDirectionalLight){
+                        directionalLight.visible = true;
+                    }
+                    else{
+                        directionalLight.visible = false;
+                    }
+                });
+
+                var guiPhysics = gui.addFolder("Physics");
+                guiPhysics.add(controls, 'rotationSpeed');
+                guiPhysics.add(controls, 'bouncingSpeed');                
+            };
+
+            window.onload = init();         //Inicializa os elementos
+
+            /************************************************************************
+             *                   renderScene:                                       *
+             * Função que controla o loop de animação, a interface será atualizada  *
+             * a cada frame.                                                        *
+             *                                                                      *
+             ************************************************************************/
+
+            function renderScene() {
+                stats.update();
+                moveObjects();
+                requestAnimationFrame(renderScene);         //Chama novamente a função a cada frame de atualização
+                renderer.render(scene, camera);
+            }
+
+            function moveObjects(){
+                //Rotação do cubo
+                cube.rotation.x += controls.rotationSpeed;
+                cube.rotation.y += controls.rotationSpeed;
+                cube.rotation.z += controls.rotationSpeed;
+
+                //Controle da esfera
+                step += controls.bouncingSpeed;
+                sphere.position.x = 20 +( 10 * (Math.cos(step)));
+                sphere.position.y = 2  +( 10 * Math.abs(Math.sin(step)));
+
+                //Posicionamento e movimentação da esfera de luz
+                if(!stopMovingLight){
+                    sphereLight.position.z = -8;
+                    sphereLight.position.y = +(27 * (Math.sin(step / 3)));
+                    sphereLight.position.x = 10 + (26 * (Math.cos(step / 3)));
+
+                    directionalLight.position.copy(sphereLight.position);
+                }                
+            }
+
+            document.getElementById("WebGL-output").appendChild(renderer.domElement);
+            renderScene();
+        </script>
+    </body>
+</html>
