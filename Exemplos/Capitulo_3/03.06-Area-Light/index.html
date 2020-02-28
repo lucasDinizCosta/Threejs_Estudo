@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Example 03.06 - Area Light</title>
+        <script src="../../libs/three.js"></script>
+
+        <script src="../../libs/dat-gui.js"></script>
+        <script src="../../libs/stats.js"></script>
+
+        <!--
+            Area Light não é incluida por padrão na biblioteca, logo sendo necessario a importação das
+            bibliotecas abaixo
+        -->
+
+        <script type="text/javascript" src="../../libs/WebGLDeferredRenderer.js"></script>
+        <script type="text/javascript" src="../../libs/ShaderDeferred.js"></script>
+        <script type="text/javascript" src="../../libs/RenderPass.js"></script>
+        <script type="text/javascript" src="../../libs/EffectComposer.js"></script>
+        <script type="text/javascript" src="../../libs/CopyShader.js"></script>
+        <script type="text/javascript" src="../../libs/ShaderPass.js"></script>
+        <script type="text/javascript" src="../../libs/FXAAShader.js"></script>
+        <script type="text/javascript" src="../../libs/MaskPass.js"></script>
+        <style>
+            body{
+                /* set margin to 0 and overflow to hidden, to use the
+                complete page */
+                margin: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+
+        <!--Div responsável por disparar o elementos dos status de FPS-->
+        <div id="Stats-output"></div>
+
+        <!-- Div responsável por manter e exibir a interface gerada pela biblioteca -->
+        <div id="WebGL-output">
+        </div>
+
+        <script>
+            
+            /********************************************************************************
+             *                                                                              *
+             * Criação das variáveis fora da função de inicialização para poder ter acesso  *
+             * em qualquer parte do código                                                  *
+             *                                                                              *
+             ********************************************************************************/
+
+            //Cria a cena que irá guardar todos os elementos
+            var scene = new THREE.Scene();
+
+            //Cria a câmera que define onde será visto no "mundo"
+            var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000); //fov(campo de visão vertical), aspect Ratio(proporção de tela), near, far
+
+            //GUI de controle e ajuste de valores
+            var gui;
+
+            //Funções de controle do menu lateral
+            var controls;
+
+            //Cria o renderizador de elementos na interface
+            //var renderer = new THREE.WebGLRenderer();                   //Instancia um renderizador para os elementos a serem desenhados
+            var renderer = new THREE.WebGLDeferredRenderer({
+                width: window.innerWidth,
+                height: window.innerHeight,
+                scale: 1, antialias: true,
+                tonemapping: THREE.FilmicOperator, brightness: 2.5
+            });
+
+            //Materiais
+            var planeMaterial;
+            var planeMaterial1;
+            var planeMaterial2;
+            var planeMaterial3;
+
+            //Geometria de objetos
+            var planeGeometry;
+            var planeGeometry1;
+            var planeGeometry2;
+            var planeGeometry3;
+
+            //Objetos
+            var plane;
+            var plane1;
+            var plane2;
+            var plane3;
+
+            //Luzes
+            var directionalLight;            
+            var spotLight0;
+            var areaLight1;
+            var areaLight2;
+            var areaLight3;
+            var hemiLight;
+
+            //Atributos de luzes
+            var pointColor;
+
+            //Texturas
+            var textureGrass;
+
+            //Para determinar a posição da luz pontual
+            var invert = 1;
+            var phase = 0;
+
+            var axes;
+            var stats = initStats();
+
+            //Controle da bola
+            var step = 0;
+
+            function initStats() {
+                var stats = new Stats();
+                stats.setMode(0);       //0 - FPS; 1 - ms
+
+                //Posiciona na parte superior esquerda da janela
+                stats.domElement.style.position = 'absolute';
+                stats.domElement.style.left = '0px';
+                stats.domElement.style.top = '0px';
+                document.getElementById("Stats-output").appendChild( stats.domElement );
+                return stats;
+            }
+
+            //Reajuste da renderização com base na mudança da janela
+            
+            function onResize(){
+                camera.aspect = window.innerWidth / window.innerHeight;  //Atualiza o aspect da camera com relação as novas dimensões
+                camera.updateProjectionMatrix();                         //Atualiza a matriz de projeção
+                renderer.setSize(window.innerWidth, window.innerHeight); //Define os novos valores para o renderizador
+            }
+
+            window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
+
+            // once everything is loaded, we run our Three.js stuff.
+            function init() {
+
+                gui = new dat.GUI();                                        //Inicializando o menu lateral
+
+                axes = THREE.AxisHelper(20);
+                scene.add(axes);
+
+                //Criação do plano
+                planeGeometry = new THREE.PlaneGeometry(70, 70, 1, 1);  //Width, Height, WidthSegments, HeightSegments
+                planeMaterial = new THREE.MeshPhongMaterial({color: 0xffffff, specular: 0xffffff, shininess: 200}); //Cor, iluminação especular e brilho
+                plane = new THREE.Mesh(planeGeometry, planeMaterial);
+                //plane.receiveShadow = true;         //Recebe sombras
+
+                //Posicionamento do plano
+                plane.rotation.x = -0.5 * Math.PI;
+                plane.position.x = 0;
+                plane.position.y = 0;
+                plane.position.z = 0;
+
+                scene.add(plane);
+
+                //Posicionamento da câmera
+                camera.position.x = 20;
+                camera.position.y = 30;
+                camera.position.z = 21;
+                camera.lookAt(new THREE.Vector3(0, 0, -30));
+
+                //Adicionando spotlight pra ter um pouco de luz
+                spotLight0 = new THREE.SpotLight(0xcccccc);
+                spotLight0.position.set(-40, 60, -10);
+                spotLight0.intensity = 0.1;
+                spotLight0.lookAt(plane);
+                scene.add(spotLight0);
+
+                //Atribuindo as luzes de area
+
+                areaLight1 = new THREE.AreaLight(0xff0000, 3);
+                areaLight1.position.set(-10, 10, -35);
+                areaLight1.rotation.set(-Math.PI / 2, 0, 0);
+                areaLight1.width = 4;
+                areaLight1.height = 9.9;
+                scene.add(areaLight1);
+
+                areaLight2 = new THREE.AreaLight(0x00ff00, 3);
+                areaLight2.position.set(0, 10, -35);
+                areaLight2.rotation.set(-Math.PI / 2, 0, 0);
+                areaLight2.width = 4;
+                areaLight2.height = 9.9;
+                scene.add(areaLight2);
+
+                areaLight3 = new THREE.AreaLight(0x0000ff, 3);
+                areaLight3.position.set(10, 10, -35);
+                areaLight3.rotation.set(-Math.PI / 2, 0, 0);
+                areaLight3.width = 4;
+                areaLight3.height = 9.9;
+                scene.add(areaLight3);
+
+                //Adicionando os planos que serão posicionadas as luzes
+                planeGeometry1 = new THREE.BoxGeometry(4, 10, 0);
+                planeMaterial1 = new THREE.MeshBasicMaterial({color: 0xff0000});
+                plane1 = new THREE.Mesh(planeGeometry1, planeMaterial1);
+                plane1.position.copy(areaLight1.position);                  //Posiciona o plano na posição da area luz 1
+                scene.add(plane1);
+
+
+                planeGeometry2 = new THREE.BoxGeometry(4, 10, 0);
+                planeMaterial2 = new THREE.MeshBasicMaterial({color: 0x00ff00});
+                plane2 = new THREE.Mesh(planeGeometry2, planeMaterial2);
+                plane2.position.copy(areaLight2.position);
+                scene.add(plane2);
+
+                planeGeometry3 = new THREE.BoxGeometry(4, 10, 0);
+                planeMaterial3 = new THREE.MeshBasicMaterial({color: 0x0000ff});
+                plane3 = new THREE.Mesh(planeGeometry3, planeMaterial3);
+                plane3.position.copy(areaLight3.position);
+                scene.add(plane3);
+
+                //Funções de controle do menu lateral
+                controls = new function() {
+                    this.rotationSpeed = 0.02;
+
+                    this.color1 = 0xff0000;             //Luz Vermelha
+                    this.intensity1 = 2;
+                    this.color2 = 0x00ff00;             //Luz Verde
+                    this.intensity2 = 2;
+                    this.color3 = 0x0000ff;             //Luz Azul
+                    this.intensity3 = 2;
+                }
+
+                //Adicionando elementos no menu lateral
+                var guiLight = gui.addFolder("Light");
+                guiLight.addColor(controls, 'color1').onChange(function (e) {
+                    areaLight1.color = new THREE.Color(e);
+                    planeMaterial1.color = new THREE.Color(e);
+                    scene.remove(plane1);
+                    plane1 = new THREE.Mesh(planeGeometry1, planeMaterial1);
+                    plane1.position.copy(areaLight1.position);
+                    scene.add(plane1);
+
+                });
+                guiLight.add(controls, 'intensity1', 0, 5).onChange(function (e) {
+                    areaLight1.intensity = e;
+                });
+                guiLight.addColor(controls, 'color2').onChange(function (e) {
+                    areaLight2.color = new THREE.Color(e);
+                    planeMaterial2.color = new THREE.Color(e);
+                    scene.remove(plane2);
+                    plane2 = new THREE.Mesh(planeGeometry2, planeMaterial2);
+                    plane2.position.copy(areaLight2.position);
+                    scene.add(plane2);
+                });
+                guiLight.add(controls, 'intensity2', 0, 5).onChange(function (e) {
+                    areaLight2.intensity = e;
+                });
+                guiLight.addColor(controls, 'color3').onChange(function (e) {
+                    areaLight3.color = new THREE.Color(e);
+                    planeMaterial3.color = new THREE.Color(e);
+                    scene.remove(plane3);
+                    plane3 = new THREE.Mesh(planeGeometry1, planeMaterial3);
+                    plane3.position.copy(areaLight3.position);
+                    scene.add(plane3);
+                });
+                guiLight.add(controls, 'intensity3', 0, 5).onChange(function (e) {
+                    areaLight3.intensity = e;
+                });         
+            };
+
+            window.onload = init();         //Inicializa os elementos
+
+            /************************************************************************
+             *                   renderScene:                                       *
+             * Função que controla o loop de animação, a interface será atualizada  *
+             * a cada frame.                                                        *
+             *                                                                      *
+             ************************************************************************/
+
+            function renderScene() {
+                stats.update();
+                requestAnimationFrame(renderScene);         //Chama novamente a função a cada frame de atualização
+                renderer.render(scene, camera);
+            }
+
+            document.getElementById("WebGL-output").appendChild(renderer.domElement);
+            renderScene();
+        </script>
+    </body>
+</html>
