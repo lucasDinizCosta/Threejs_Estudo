@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Example 03.07 - Lensflare Light</title>
+        <script src="../../libs/three.js"></script>
+
+        <script src="../../libs/dat-gui.js"></script>
+        <script src="../../libs/stats.js"></script>
+
+        <script src="../../libs/Lensflare.js"></script>
+        <style>
+            body{
+                /* set margin to 0 and overflow to hidden, to use the
+                complete page */
+                margin: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+
+        <!--Div responsável por disparar o elementos dos status de FPS-->
+        <div id="Stats-output"></div>
+
+        <!-- Div responsável por manter e exibir a interface gerada pela biblioteca -->
+        <div id="WebGL-output">
+        </div>
+
+        <script>
+            
+            /********************************************************************************
+             *                                                                              *
+             * Criação das variáveis fora da função de inicialização para poder ter acesso  *
+             * em qualquer parte do código                                                  *
+             *                                                                              *
+             ********************************************************************************/
+
+            //Cria a cena que irá guardar todos os elementos
+            var scene = new THREE.Scene();
+
+            //Cria a câmera que define onde será visto no "mundo"
+            var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000); //fov(campo de visão vertical), aspect Ratio(proporção de tela), near, far
+
+            //GUI de controle e ajuste de valores
+            var gui;
+
+            //Funções de controle do menu lateral
+            var controls;
+
+            //Cria o renderizador de elementos na interface
+            var renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});                   //Instancia um renderizador para os elementos a serem desenhados
+                                        //AntiAlias: Remove os serrilhados em curvas na imagem
+                                        //Alpha: Transparência
+
+            //Materiais
+            var cubeMaterial;
+            var planeMaterial;
+            var sphereMaterial;
+
+            //Geometria de objetos
+            var cubeGeometry;
+            var planeGeometry;
+            var sphereGeometry;
+
+            //Objetos
+            var cube;
+            var plane;
+            var sphere;
+            var target;
+
+            //Luzes
+            var directionalLight;            
+            var spotLight0;
+            var lensFlare;
+
+            //Atributos de luzes
+            var pointColor;
+            var flareColor;
+
+            //Texturas
+            var textureGrass;
+            var textureFlare0;
+            var textureFlare3;
+
+            //Carrega as texturas
+            var textureLoader;
+
+            //Para determinar a posição da luz pontual
+            var invert = 1;
+            var phase = 0;
+
+            var axes;
+            var stats = initStats();
+
+            //Controle da bola
+            var step = 0;
+
+            function initStats() {
+                var stats = new Stats();
+                stats.setMode(0);       //0 - FPS; 1 - ms
+
+                //Posiciona na parte superior esquerda da janela
+                stats.domElement.style.position = 'absolute';
+                stats.domElement.style.left = '0px';
+                stats.domElement.style.top = '0px';
+                document.getElementById("Stats-output").appendChild( stats.domElement );
+                return stats;
+            }
+
+            //Reajuste da renderização com base na mudança da janela
+            
+            function onResize(){
+                camera.aspect = window.innerWidth / window.innerHeight;  //Atualiza o aspect da camera com relação as novas dimensões
+                camera.updateProjectionMatrix();                         //Atualiza a matriz de projeção
+                renderer.setSize(window.innerWidth, window.innerHeight); //Define os novos valores para o renderizador
+            }
+
+            window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
+
+            // once everything is loaded, we run our Three.js stuff.
+            function init() {
+
+
+                scene.fog = new THREE.Fog(0xaaaaaa, 0.010, 200);            //Cria uma neblina
+
+                renderer.setClearColor(new THREE.Color(0xaaaaff));          //Cor de fundo da tela
+                renderer.setSize(window.innerWidth, window.innerHeight);    //Tamanho
+                renderer.shadowMap.enabled = true;                          //Ativa o sombreado no "mundo"
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;           //Suavização das sombras
+                
+                /**
+                    Tipos de sombras que o renderer pode trabalhar:
+
+                    THREE.BasicShadowMap
+                    THREE.PCFShadowMap (default)
+                    THREE.PCFSoftShadowMap
+                    THREE.VSMShadowMap
+                */
+
+
+                gui = new dat.GUI();                                        //Inicializando o menu lateral
+                textureLoader = new THREE.TextureLoader();                  //Inicializando o carregador de texturas
+                axes = THREE.AxisHelper(20);
+                scene.add(axes);
+
+                //Cria e carrega a textura de grama
+                textureGrass = textureLoader.load("../../assets/textures/ground/grasslight-big.jpg");     //"THREE.ImageUtils.loadTexture" caiu em desuso ===> "THREE.TextureLoader()"
+                textureGrass.wrapS = THREE.RepeatWrapping;
+                textureGrass.wrapT = THREE.RepeatWrapping;
+                textureGrass.repeat.set(4, 4);
+
+                //Criação do plano
+                planeGeometry = new THREE.PlaneGeometry(1000, 200, 20,20);  //Width, Height, WidthSegments, HeightSegments
+                planeMaterial = new THREE.MeshLambertMaterial({map: textureGrass/*color:0xffffff*/});
+                plane = new THREE.Mesh(planeGeometry, planeMaterial);
+                plane.receiveShadow = true;         //Recebe sombras
+
+                //Posicionamento do plano
+                plane.rotation.x = -0.5 * Math.PI;
+                plane.position.x = 15;
+                plane.position.y = -5;
+                plane.position.z = 0;
+
+                scene.add(plane);
+
+                //Criação do cubo
+                cubeGeometry = new THREE.BoxGeometry(4, 4, 4); // {width: 4, height: 4, depth: 4, widthSegments: undefined, heightSegments: undefined, depthSegments: undefined}
+                cubeMaterial = new THREE.MeshLambertMaterial({color: 0xff3333});
+                cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+                cube.castShadow = true;                             //Gera sombras em outros objetos                
+
+                //Posicionamento do cubo
+                cube.position.x = -4;
+                cube.position.y = 3;
+                cube.position.z = 0;
+
+                scene.add(cube);
+                
+                //Criação da esfera
+                sphereGeometry = new THREE.SphereGeometry(4, 20, 20); //radius, widthSegments, HeightSegments
+                sphereMaterial = new THREE.MeshLambertMaterial({color:0x7777ff});
+                sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    
+                //Posicionamento da esfera
+                sphere.position.x = 20;
+                sphere.position.y = 0;
+                sphere.position.z = 2;
+                sphere.castShadow = true;                           //Gera sombras em outros objetos
+
+                scene.add(sphere);
+                
+                //Posicionamento da câmera
+                camera.position.x = -20;
+                camera.position.y = 15;
+                camera.position.z = 45;
+                camera.lookAt(new THREE.Vector3(10, 0, 0));  //Direciona a câmera pra posição (0,0,0)
+
+                //Adicionando spotlight pra ter um pouco de luz
+                spotLight0 = new THREE.SpotLight(0xcccccc);
+                spotLight0.position.set(-40, 60, -10);
+                spotLight0.lookAt(plane);
+                scene.add(spotLight0);
+
+                //Atribuindo um alvo para a luz
+                target = new THREE.Object3D();
+                target.position = new THREE.Vector3(5, 0, 0);
+
+                //Cria a luz responsável por iluminar o ambiente e gerar sombras
+
+                pointColor = "#ff5808";
+                directionalLight = new THREE.DirectionalLight(pointColor);
+                directionalLight.position.set(30, 10, 50);
+                directionalLight.castShadow = true;               //Gera sombras
+                directionalLight.shadow.camera.near = 2;          //Proximidade minima para gerar sombra
+                directionalLight.shadow.camera.far = 200;         //Longe o suficiente para gerar sombra
+                directionalLight.shadow.camera.left = -100;
+                directionalLight.shadow.camera.right = 100;
+                directionalLight.shadow.camera.top = 100;
+                directionalLight.shadow.camera.bottom = -100;
+
+                directionalLight.distance = 0;
+                directionalLight.intensity = 0.5;
+                directionalLight.shadow.mapSize.height = 2048;
+                directionalLight.shadow.mapSize.width = 2048;
+
+                scene.add(directionalLight);
+
+                //Pequena esfera que simula uma luz pontual
+                sphereLightGeometry = new THREE.SphereGeometry(0.2);
+                sphereLightMaterial = new THREE.MeshBasicMaterial({color: 0xac6c25});
+                sphereLight = new THREE.Mesh(sphereLightGeometry, sphereLightMaterial);
+                sphereLight.castShadow = true;
+                sphereLight.position = new THREE.Vector3(3, 20, 3);
+                scene.add(sphereLight);
+
+                //Funções de controle do menu lateral
+                controls = new function() {
+                    this.rotationSpeed = 0.02;
+                    this.bouncingSpeed = 0.03;
+
+                    this.color = 0x00ff00;
+                    this.pointColor = pointColor;
+                    this.disableDirectionalLight = true;
+                    this.disableLensflareLight = true;
+                    this.target = "Plane";
+                }
+
+
+                /**********************************
+                *   Criando a lensflare - light   *   
+                **********************************/
+
+                textureFlare0 = textureLoader.load("../../assets/textures/lensflare/lensflare0.png");
+                textureFlare3 = textureLoader.load("../../assets/textures/lensflare/lensflare3.png");
+
+                flareColor = new THREE.Color(0xffaacc);
+                lensFlare = new THREE.Lensflare(textureFlare0, 350, 0.0, THREE.AdditiveBlending, flareColor);
+                //Textura, tamanho, distancia, cor
+
+                lensFlare.addElement(new THREE.LensflareElement(textureFlare3, 60, 0.6, THREE.AdditiveBlending));
+                lensFlare.addElement(new THREE.LensflareElement(textureFlare3, 70, 0.7, THREE.AdditiveBlending));
+                lensFlare.addElement(new THREE.LensflareElement(textureFlare3, 120, 0.9, THREE.AdditiveBlending));
+                lensFlare.addElement(new THREE.LensflareElement(textureFlare3, 70, 1.0, THREE.AdditiveBlending));
+
+                lensFlare.position.copy(directionalLight.position);
+                spotLight0.add(lensFlare);
+                scene.add(lensFlare);
+
+
+                //Adicionando elementos no menu lateral
+                var guiLight = gui.addFolder("Light");
+
+                guiLight.addColor(controls, 'pointColor').onChange(function (e) {
+                    directionalLight.color = new THREE.Color(e);
+                });
+                
+                guiLight.add(controls, 'disableLensflareLight').onChange(function (e) {
+                    if(controls.disableLensflareLight){
+                        lensFlare.visible = true;
+                    }
+                    else{
+                        lensFlare.visible = false;
+                    }
+                });
+
+                guiLight.add(controls, 'disableDirectionalLight').onChange(function (e) {
+                    if(controls.disableDirectionalLight){
+                        directionalLight.visible = true;
+                    }
+                    else{
+                        directionalLight.visible = false;
+                    }
+                });
+
+                var guiPhysics = gui.addFolder("Physics");
+                guiPhysics.add(controls, 'rotationSpeed');
+                guiPhysics.add(controls, 'bouncingSpeed');                
+            };
+
+            window.onload = init();         //Inicializa os elementos
+
+            /************************************************************************
+             *                   renderScene:                                       *
+             * Função que controla o loop de animação, a interface será atualizada  *
+             * a cada frame.                                                        *
+             *                                                                      *
+             ************************************************************************/
+
+            function renderScene() {
+                stats.update();
+                moveObjects();
+                requestAnimationFrame(renderScene);         //Chama novamente a função a cada frame de atualização
+                renderer.render(scene, camera);
+            }
+
+            function moveObjects(){
+                //Rotação do cubo
+                cube.rotation.x += controls.rotationSpeed;
+                cube.rotation.y += controls.rotationSpeed;
+                cube.rotation.z += controls.rotationSpeed;
+
+                //Controle da esfera
+                step += controls.bouncingSpeed;
+                sphere.position.x = 20 +( 10 * (Math.cos(step)));
+                sphere.position.y = 2  +( 10 * Math.abs(Math.sin(step)));     
+            }
+
+            document.getElementById("WebGL-output").appendChild(renderer.domElement);
+            renderScene();
+        </script>
+    </body>
+</html>
