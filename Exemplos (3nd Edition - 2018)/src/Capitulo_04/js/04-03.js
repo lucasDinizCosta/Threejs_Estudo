@@ -5,8 +5,7 @@ function init() {
     var renderer = initRenderer();
 
     // Cria a cena que prende todos os elementos, sejam eles: Luzes, Texturas, Objetos e etc...
-    var scene = new THREE.Scene();
-    scene.overrideMaterial = new THREE.MeshDepthMaterial();
+    var scene = new THREE.Scene();    
 
     // Cria uma camera em perspectiva e posiciona 
     var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 50, 110);    //fov, aspect ratio, near, far
