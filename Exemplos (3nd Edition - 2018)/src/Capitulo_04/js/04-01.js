@@ -63,7 +63,7 @@ function init(){
     // Adição da esfera na cena
     scene.add(cube);
 
-    // position and point the camera to the center of the scene
+    // Posiciona a camera e o centro do foco
     camera.position.x = -20;
     camera.position.y = 50;
     camera.position.z = 40;
