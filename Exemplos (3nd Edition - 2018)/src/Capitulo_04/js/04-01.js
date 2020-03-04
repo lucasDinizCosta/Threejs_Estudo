@@ -1,13 +1,13 @@
 function init(){
 
     // Utiliza padrões de camera e status
-    var stats = initStats();                        //Status de fps ou ms da aplicação 
+    var stats = initStats();                        // Status de fps ou ms da aplicação 
     var camera = initCamera();
 
     // Cria a cena que prende todos os elementos, sejam eles: Luzes, Texturas, Objetos e etc...
     var scene = new THREE.Scene();
 
-    // Cria um renderizador e atribui um tamanho
+    // Cria um renderizador webGL e atribui um tamanho
     var webGLRenderer = new THREE.WebGLRenderer();
     webGLRenderer.setClearColor(new THREE.Color(0x000000));
     webGLRenderer.setSize(window.innerWidth, window.innerHeight);
@@ -23,6 +23,7 @@ function init(){
         THREE.VSMShadowMap
     */
 
+    // Cria um renderizador Canvas e atribui um tamanho
     var canvasRenderer = new THREE.CanvasRenderer();
     canvasRenderer.setSize(window.innerWidth, window.innerHeight);
     renderer = webGLRenderer;
@@ -113,7 +114,7 @@ function init(){
     var gui = new dat.GUI();    // GUI de controle e ajuste de valores
     var selectedMesh = cube;
 
-    addBasicMaterialSettings(gui, controls, meshMaterial);  //Adiciona no menu lateral os elementos basicos de um material
+    addBasicMaterialSettings(gui, controls, meshMaterial);  // Adiciona no menu lateral os elementos basicos de um material
 
     var spGui = gui.addFolder("THREE.MeshBasicMaterial");
     spGui.addColor(controls, 'color').onChange(function (e) {
