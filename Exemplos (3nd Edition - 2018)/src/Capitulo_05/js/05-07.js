@@ -1,9 +1,13 @@
 /**
- * radialSegments: número de lados do poligono de base
- * radiusBottom: Valor do raio da base
- * radiusTop: Valor do raio do topo
- * thetaStart: Angulo inicial de geração do solido
- * thetaLength: Angulação final de geração do sólido
+ * radialSegments: número de lados do poligono de base, quanto maior o valor mais suave e circular
+ * se torna o cilindro. Default: 8.
+ * radiusBottom: Valor do raio da base. Default: 20
+ * radiusTop: Valor do raio do topo. Default: 20
+ * heigth: Altura do cilindro. Default: 100
+ * heightSegments: Numero de partições ao longo da altura. Default: 1
+ * thetaStart: Angulo inicial de geração do solido. Default: 0
+ * thetaLength: Angulação final de geração do sólido. Default: 2*PI
+ * openEnded: Se o sólido é fechado no topo e na base. Default: false
  */
 function init() {
 
