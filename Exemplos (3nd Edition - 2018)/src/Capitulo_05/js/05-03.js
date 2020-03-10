@@ -17,34 +17,38 @@ function init() {
       var self = this;
   
       // Inicia a geometria e material de base a serem controlados pelo menu interativo
-      this.appliedMaterial = applyMeshNormalMaterial;
+      this.appliedMaterial = applyMeshNormalMaterial
       this.castShadow = true;
       this.groundPlaneVisible = true;
   
-      this.planeGeometry = new THREE.PlaneGeometry(20, 20, 4, 4);   //Width, Height, WidthSegments, HeightSegments
-      this.width = this.planeGeometry.parameters.width;
-      this.height = this.planeGeometry.parameters.height;
-      this.widthSegments = this.planeGeometry.parameters.widthSegments;
-      this.heightSegments = this.planeGeometry.parameters.heightSegments;
-  
+      this.innerRadius = 3;
+      this.outerRadius = 10;
+      this.thetaSegments = 8;
+      this.phiSegments = 8;
+      this.thetaStart = 0;
+      this.thetaLength = Math.PI * 2;
+      
       // Função que redesenha e atualiza os controles do menu e recria a geometria.
       this.redraw = function () {
-
+        
         // Função da "util.js" que cria o objeto 'mesh' dentro de controls com as propriedades basicas
         // Além disso é responsavel por redesenhar e atualizar o objeto e a interface
         redrawGeometryAndUpdateUI(gui, scene, controls, function() {
-          return new THREE.PlaneGeometry(controls.width, controls.height, Math.round(controls.widthSegments), Math.round(controls.heightSegments));
+          return new THREE.RingGeometry(controls.innerRadius, controls.outerRadius, controls.thetaSegments,
+                    controls.phiSegments, controls.thetaStart, controls.thetaLength)
         });
       };
     };
   
     // GUI de controle e ajuste de valores especificos da geometria do objeto
     var gui = new dat.GUI();
-    gui.add(controls, 'width', 0, 40).onChange(controls.redraw);
-    gui.add(controls, 'height', 0, 40).onChange(controls.redraw);
-    gui.add(controls, 'widthSegments', 0, 10).onChange(controls.redraw);
-    gui.add(controls, 'heightSegments', 0, 10).onChange(controls.redraw);
-
+    gui.add(controls, 'innerRadius', 0, 40).onChange(controls.redraw);
+    gui.add(controls, 'outerRadius', 0, 100).onChange(controls.redraw);
+    gui.add(controls, 'thetaSegments', 1, 40).step(1).onChange(controls.redraw);
+    gui.add(controls, 'phiSegments', 1, 20).step(1).onChange(controls.redraw);
+    gui.add(controls, 'thetaStart', 0, Math.PI * 2).onChange(controls.redraw);
+    gui.add(controls, 'thetaLength', 0, Math.PI * 2).onChange(controls.redraw);
+  
     // Cria uma seção de materiais aplicados
     gui.add(controls, 'appliedMaterial', {
       meshNormal: applyMeshNormalMaterial, 
