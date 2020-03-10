@@ -1,3 +1,17 @@
+/**
+ * Criado com base no CILINDRO
+ * obs: APENAS DEFINIR UM DOS RAIOS DA BASE OU TOPO SEREM ZERO
+ * 
+ * radialSegments: número de lados do poligono de base, quanto maior o valor mais suave e circular
+ * se torna o cilindro. Default: 8.
+ * radiusBottom: Valor do raio da base. Default: 0
+ * radiusTop: Valor do raio do topo. Default: 10
+ * heigth: Altura do cilindro. Default: 100
+ * heightSegments: Numero de partições ao longo da altura. Default: 1
+ * thetaStart: Angulo inicial de geração do solido. Default: 0
+ * thetaLength: Angulação final de geração do sólido. Default: 2*PI
+ * openEnded: Se o sólido é fechado no topo e na base. Default: false
+ */
 function init() {
 
     // Utiliza padrões de camera, status e renderizador
@@ -20,38 +34,41 @@ function init() {
       this.appliedMaterial = applyMeshNormalMaterial;
       this.castShadow = true;
       this.groundPlaneVisible = true;
+  
+      this.radiusTop = 10;
+      this.radiusBottom = 0;
+      this.height = 20;
+      this.radialSegments = 8;
+      this.heightSegments = 8;
+      this.openEnded = false;
+      this.thetaStart = 0;
+      this.thetaLength = 2 * Math.PI;
       
-      var baseGeom = new THREE.BoxGeometry(4, 10, 10, 4, 4, 4); // width, height, depth, widthSegments, heightSegments, depthSegments
-      this.width = baseGeom.parameters.width;
-      this.height = baseGeom.parameters.height;
-      this.depth = baseGeom.parameters.depth;
-  
-      this.widthSegments = baseGeom.parameters.widthSegments;
-      this.heightSegments = baseGeom.parameters.heightSegments;
-      this.depthSegments = baseGeom.parameters.depthSegments;
-  
       // Função que redesenha e atualiza os controles do menu e recria a geometria.
       this.redraw = function () {
-        
+
         // Função da "util.js" que cria o objeto 'mesh' dentro de controls com as propriedades basicas
         // Além disso é responsavel por redesenhar e atualizar o objeto e a interface
         redrawGeometryAndUpdateUI(gui, scene, controls, function() {
-          return new THREE.BoxGeometry(controls.width, controls.height, controls.depth, Math.round(
-                     controls.widthSegments), Math.round(controls.heightSegments), Math.round(
-                     controls.depthSegments));
+          return new THREE.CylinderGeometry(controls.radiusTop, controls.radiusBottom,
+                    controls.height, controls.radialSegments, controls.heightSegments, controls.openEnded,
+                    controls.thetaStart, controls.thetaLength
+                  )
         });
       };
     };
   
     // GUI de controle e ajuste de valores especificos da geometria do objeto
     var gui = new dat.GUI();
-    gui.add(controls, 'width', 0, 40).onChange(controls.redraw);
+    gui.add(controls, 'radiusTop', -40, 40).onChange(controls.redraw);
+    gui.add(controls, 'radiusBottom', -40, 40).onChange(controls.redraw);
     gui.add(controls, 'height', 0, 40).onChange(controls.redraw);
-    gui.add(controls, 'depth', 0, 40).onChange(controls.redraw);
-    gui.add(controls, 'widthSegments', 0, 10).onChange(controls.redraw);
-    gui.add(controls, 'heightSegments', 0, 10).onChange(controls.redraw);
-    gui.add(controls, 'depthSegments', 0, 10).onChange(controls.redraw);
-    
+    gui.add(controls, 'radialSegments', 1, 20).step(1).onChange(controls.redraw);
+    gui.add(controls, 'heightSegments', 1, 20).step(1).onChange(controls.redraw);
+    gui.add(controls, 'openEnded').onChange(controls.redraw);
+    gui.add(controls, 'thetaStart', 0, 2 * Math.PI).onChange(controls.redraw);
+    gui.add(controls, 'thetaLength', 0, 2 * Math.PI).onChange(controls.redraw);
+  
     // Cria uma seção de materiais aplicados
     gui.add(controls, 'appliedMaterial', {
       meshNormal: applyMeshNormalMaterial, 
@@ -77,5 +94,4 @@ function init() {
       requestAnimationFrame(render);
       renderer.render(scene, camera);
     }
-}
-  
+  }

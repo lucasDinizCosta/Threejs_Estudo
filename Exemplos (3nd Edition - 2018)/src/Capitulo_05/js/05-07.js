@@ -19,7 +19,7 @@ function init() {
     // Cria a cena que prende todos os elementos, sejam eles: Luzes, Texturas, Objetos e etc...
     // Adiciona uma iluminação padrão de cena
     var scene = new THREE.Scene();
-    var groundPlane = addLargeGroundPlane(scene)
+    var groundPlane = addLargeGroundPlane(scene);
     groundPlane.position.y = -30;
     initDefaultLighting(scene);
   
@@ -28,7 +28,7 @@ function init() {
       var self = this;
   
       // Inicia a geometria e material de base a serem controlados pelo menu interativo
-      this.appliedMaterial = applyMeshNormalMaterial
+      this.appliedMaterial = applyMeshNormalMaterial;
       this.castShadow = true;
       this.groundPlaneVisible = true;
   
