@@ -28,7 +28,7 @@ function init() {
     var controls = new function () {    
 
       // Inicia a geometria e material de base a serem controlados pelo menu interativo
-      this.appliedMaterial = applyMeshNormalMaterial;s
+      this.appliedMaterial = applyMeshNormalMaterial;
       this.castShadow = true;
       this.groundPlaneVisible = true;
   
