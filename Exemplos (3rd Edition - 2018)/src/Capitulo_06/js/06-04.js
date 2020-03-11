@@ -44,7 +44,11 @@ function init() {
         controls.redraw();
       };
   
+      // Função que redesenha e atualiza os controles do menu e recria a geometria.
       this.redraw = function () {
+
+        // Função da "util.js" que cria o objeto 'mesh' dentro de controls com as propriedades basicas
+        // Além disso é responsavel por redesenhar e atualizar o objeto e a interface
         redrawGeometryAndUpdateUI(gui, scene, controls, function() {
           return generatePoints(controls.points, controls.segments, controls.radius, controls.radiusSegments,
             controls.closed);

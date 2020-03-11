@@ -1,6 +1,6 @@
 function init() {
 
-    // use the defaults
+    // Inicializa dados padrão
     var stats = initStats();
     var renderer = initRenderer();
     var camera = initCamera();
@@ -12,10 +12,10 @@ function init() {
     // call the render function
     var step = 0;
   
-    // setup the control gui
+    // Funções de controle dos objetos em cena
     var controls = new function () {
   
-      this.appliedMaterial = applyMeshNormalMaterial
+      this.appliedMaterial = applyMeshNormalMaterial;
       this.castShadow = true;
       this.groundPlaneVisible = true;
   
@@ -28,8 +28,11 @@ function init() {
       this.curveSegments = 12;
       this.steps = 1;
   
-      // redraw function, updates the control UI and recreates the geometry.
+      // Função que redesenha e atualiza os controles do menu e recria a geometria.
       this.redraw = function () {
+
+        // Função da "util.js" que cria o objeto 'mesh' dentro de controls com as propriedades basicas
+        // Além disso é responsavel por redesenhar e atualizar o objeto e a interface
         redrawGeometryAndUpdateUI(gui, scene, controls, function() {
           var options = {
             amount: controls.amount,
@@ -45,7 +48,7 @@ function init() {
           geom.applyMatrix(new THREE.Matrix4().makeScale(0.05,0.05,0.05));
           geom.center();
   
-          return geom
+          return geom;
         });
       };
     };
@@ -79,18 +82,16 @@ function init() {
       return shape;
     }
   
-    
-  
     var step = 0;
     controls.redraw();
     render();
     
     function render() {
       stats.update();
-      controls.mesh.rotation.y = step+=0.005
-      controls.mesh.rotation.x = step
-      controls.mesh.rotation.z = step
-  
+      controls.mesh.rotation.y = step += 0.005;
+      controls.mesh.rotation.x = step;
+      controls.mesh.rotation.z = step;
+
       // render using requestAnimationFrame
       requestAnimationFrame(render);
       renderer.render(scene, camera);
