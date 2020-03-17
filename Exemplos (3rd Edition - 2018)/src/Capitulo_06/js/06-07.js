@@ -38,6 +38,7 @@ function init() {
       font_helvetiker_regular = response;
     });
   
+    // Funções de controle dos objetos em cena
     var controls = new function () {
   
       this.appliedMaterial = applyMeshNormalMaterial
@@ -45,6 +46,7 @@ function init() {
       this.groundPlaneVisible = true;
   
       this.stop = false;
+      this.text = "Learning Three.js";
       this.size = 90;
       this.height = 90;
       this.bevelThickness = 2;
@@ -55,19 +57,19 @@ function init() {
       this.curveSegments = 12;
       this.steps = 1;
       this.fontName = "bitstream vera sans mono";
-  
-          // redraw function, updates the control UI and recreates the geometry.
+
+      // Função que redesenha e atualiza os controles do menu e recria a geometria.
       this.redraw = function () {
   
         switch (controls.fontName) {
           case 'bitstream vera sans mono': 
-            controls.font = font_bitstream
+            controls.font = font_bitstream;
             break;
           case 'helvetiker': 
-            controls.font = font_helvetiker_regular
+            controls.font = font_helvetiker_regular;
             break;
           case 'helvetiker bold': 
-            controls.font = font_helvetiker_bold
+            controls.font = font_helvetiker_bold;
             break;
         }
   
@@ -85,7 +87,7 @@ function init() {
                 steps: controls.steps
               };
   
-              var geom = new THREE.TextGeometry("Learning Three.js", options)
+              var geom = new THREE.TextGeometry(controls.text, options)
               geom.applyMatrix(new THREE.Matrix4().makeScale(0.05,0.05,0.05));
               geom.center();
       
@@ -98,6 +100,7 @@ function init() {
   
     var gui = new dat.GUI();
     gui.add(controls, 'stop').listen();           
+    gui.add(controls, 'text').onChange(controls.redraw);         
     gui.add(controls, 'size', 0, 200).onChange(controls.redraw);
     gui.add(controls, 'height', 0, 200).onChange(controls.redraw);
     gui.add(controls, 'fontName', ['bitstream vera sans mono', 'helvetiker', 'helvetiker bold']).onChange(controls.redraw);
@@ -108,14 +111,14 @@ function init() {
     gui.add(controls, 'curveSegments', 1, 30).step(1).onChange(controls.redraw);
     gui.add(controls, 'steps', 1, 5).step(1).onChange(controls.redraw);
   
-      // add a material section, so we can switch between materials
-      gui.add(controls, 'appliedMaterial', {
-        meshNormal: applyMeshNormalMaterial, 
-        meshStandard: applyMeshStandardMaterial
-      }).onChange(controls.redraw)
-      
-      gui.add(controls, 'castShadow').onChange(function(e) {controls.mesh.castShadow = e})
-      gui.add(controls, 'groundPlaneVisible').onChange(function(e) {groundPlane.material.visible = e})
+    // add a material section, so we can switch between materials
+    gui.add(controls, 'appliedMaterial', {
+      meshNormal: applyMeshNormalMaterial, 
+      meshStandard: applyMeshStandardMaterial
+    }).onChange(controls.redraw)
+    
+    gui.add(controls, 'castShadow').onChange(function(e) {controls.mesh.castShadow = e});
+    gui.add(controls, 'groundPlaneVisible').onChange(function(e) {groundPlane.material.visible = e});
   
     function render() {
       stats.update();
