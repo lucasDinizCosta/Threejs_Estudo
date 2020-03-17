@@ -19,6 +19,7 @@ function init() {
     var text1;
     var text2;
   
+    // Carregando as fontes
     var fontload1 = new THREE.FontLoader();
     fontload1.load( '../../assets/fonts/bitstream_vera_sans_mono_roman.typeface.json', function ( response ) {
       controls.font = response;
@@ -43,6 +44,7 @@ function init() {
       this.castShadow = true;
       this.groundPlaneVisible = true;
   
+      this.stop = false;
       this.size = 90;
       this.height = 90;
       this.bevelThickness = 2;
@@ -95,6 +97,7 @@ function init() {
   
   
     var gui = new dat.GUI();
+    gui.add(controls, 'stop').listen();           
     gui.add(controls, 'size', 0, 200).onChange(controls.redraw);
     gui.add(controls, 'height', 0, 200).onChange(controls.redraw);
     gui.add(controls, 'fontName', ['bitstream vera sans mono', 'helvetiker', 'helvetiker bold']).onChange(controls.redraw);
@@ -117,10 +120,12 @@ function init() {
     function render() {
       stats.update();
   
-      controls.mesh.rotation.y = step+=0.005
-      controls.mesh.rotation.x = step
-      controls.mesh.rotation.z = step
-  
+      if(!controls.stop){
+        controls.mesh.rotation.y = step += 0.005;
+        controls.mesh.rotation.x = step;
+        controls.mesh.rotation.z = step;
+      }
+
       // render using requestAnimationFrame
       requestAnimationFrame(render);
       renderer.render(scene, camera);
