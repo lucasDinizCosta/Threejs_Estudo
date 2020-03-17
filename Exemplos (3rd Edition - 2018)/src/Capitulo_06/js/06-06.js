@@ -1,3 +1,6 @@
+/**
+ * Curvas parametricas
+ */
 function init() {
 
     // use the defaults
@@ -16,6 +19,9 @@ function init() {
     // call the render function
     var step = 0;
   
+    /**
+     * Klein Bottle - Um tipo de sólido
+     */
     klein = function (u, v, optionalTarget) {
   
       var result = optionalTarget || new THREE.Vector3();
@@ -38,6 +44,9 @@ function init() {
       return result.set( x, y, z );
     };
   
+    /**
+     * Cria uma onda radial com base em senos e cossenos
+     */
     radialWave = function (u, v, optionalTarget) {
   
       var result = optionalTarget || new THREE.Vector3();
@@ -50,17 +59,20 @@ function init() {
       return result.set( x, y, z );
     };
   
-    // setup the control gui
+    // Funções de controle dos objetos em cena
     var controls = new function () {
-      this.appliedMaterial = applyMeshNormalMaterial
+      this.appliedMaterial = applyMeshNormalMaterial;
       this.castShadow = true;
       this.groundPlaneVisible = true;
       this.slices = 50;
       this.stacks = 50;
   
-      this.renderFunction = "radialWave"
+      this.renderFunction = "radialWave";
   
+      // Função que redesenha e atualiza os controles do menu e recria a geometria.
       this.redraw = function () {
+        // Função da "util.js" que cria o objeto 'mesh' dentro de controls com as propriedades basicas
+        // Além disso é responsavel por redesenhar e atualizar o objeto e a interface
         redrawGeometryAndUpdateUI(gui, scene, controls, function() {
           switch (controls.renderFunction) {
             case "radialWave":
@@ -86,8 +98,8 @@ function init() {
     
     gui.add(controls, 'slices', 10, 120, 1).onChange(controls.redraw);
     gui.add(controls, 'stacks', 10, 120, 1).onChange(controls.redraw);
-    gui.add(controls, 'castShadow').onChange(function(e) {controls.mesh.castShadow = e})
-    gui.add(controls, 'groundPlaneVisible').onChange(function(e) {groundPlane.material.visible = e})
+    gui.add(controls, 'castShadow').onChange(function(e) {controls.mesh.castShadow = e});
+    gui.add(controls, 'groundPlaneVisible').onChange(function(e) {groundPlane.material.visible = e});
   
     var step = 0;
     controls.redraw();
@@ -95,9 +107,9 @@ function init() {
     
     function render() {
       stats.update();
-      controls.mesh.rotation.y = step+=0.005
-      controls.mesh.rotation.x = step
-      controls.mesh.rotation.z = step
+      controls.mesh.rotation.y = step += 0.005;
+      controls.mesh.rotation.x = step;
+      controls.mesh.rotation.z = step;
   
       // render using requestAnimationFrame
       requestAnimationFrame(render);
