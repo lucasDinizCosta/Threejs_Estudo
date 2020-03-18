@@ -1,5 +1,10 @@
 // TODO: There is also a different way to do fonts now
 
+/**
+ * Site Converte fontes ttf ou outros formatos para TYPEFACE.json:
+ * http://gero3.github.io/facetype.js/
+ */
+
 function init() {
 
     // use the defaults
