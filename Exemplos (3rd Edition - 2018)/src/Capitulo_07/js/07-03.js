@@ -76,6 +76,7 @@ function init() {
     controls.redraw();
     render();
   
+    // Cria nuvem de partículas
     function createParticles(size, transparent, opacity, vertexColors, sizeAttenuation, colorValue, vertexColorValue) {
       
       var geom = new THREE.Geometry();
@@ -85,12 +86,14 @@ function init() {
         opacity: opacity,
         vertexColors: vertexColors,
   
-        sizeAttenuation: sizeAttenuation,
+        sizeAttenuation: sizeAttenuation, // sizeAttenuation está apenas redimensionando o sprite com base em sua posição 
+                                          // para dar uma sensação de um "tamanho virtual". Os Object3D têm um tamanho real, então eles são dimensionados com perspectiva.
         color: new THREE.Color(colorValue)
       });
-  
-  
+
       var range = 500;
+
+      // 15000 ===> Particulas
       for (var i = 0; i < 15000; i++) {
         var particle = new THREE.Vector3(Math.random() * range - range / 2, Math.random() * range - range / 2,
           Math.random() * range - range / 2);
@@ -100,7 +103,6 @@ function init() {
         color.getHSL(asHSL);
         color.setHSL(asHSL.h, asHSL.s, asHSL.l * Math.random());
         geom.colors.push(color);
-  
       }
   
       cloud = new THREE.Points(geom, material);
