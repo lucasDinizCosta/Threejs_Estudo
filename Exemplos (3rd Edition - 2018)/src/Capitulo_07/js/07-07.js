@@ -13,14 +13,32 @@ function init() {
   
     var system1;
     var cloud;
+
+    // Cria o eixo de coordenadas
+    var axes = new THREE.AxesHelper(10);
+    axes.name = "AXES";
+    axes.visible = false;
+    scene.add(axes);
+
   
     var controls = new function () {
+      //Eixos
+      this.axes = false;
+      this.axesSize = 10;
+
       this.size = 3;
       this.transparent = true;
       this.opacity = 0.6;
       this.color = 0xffffff;
   
       this.sizeAttenuation = true;
+
+      this.updateAxes = function(){
+        scene.remove(axes);                                 //Remove o eixo antigo
+        axes = new THREE.AxesHelper(controls.axesSize);
+        axes.visible = this.axes;
+        scene.add(axes);
+      }
   
       this.redraw = function () {
         scene.remove(scene.getObjectByName("particles1"));
@@ -31,6 +49,17 @@ function init() {
     };
   
     var gui = new dat.GUI();
+    gui.add(controls, "axes").listen().onChange(function(e){
+        if(controls.axes){
+         axes.visible = true;
+        }
+        else{
+         axes.visible = false;
+        }
+    });
+    gui.add(controls, "axesSize", 1, 40).listen().onChange(function(e){
+         controls.updateAxes();
+    });
     gui.add(controls, 'size', 0, 20).onChange(controls.redraw);
     gui.add(controls, 'transparent').onChange(controls.redraw);
     gui.add(controls, 'opacity', 0, 1).onChange(controls.redraw);
