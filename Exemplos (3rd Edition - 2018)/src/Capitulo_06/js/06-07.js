@@ -37,6 +37,27 @@ function init() {
     fontload3.load( '../../assets/fonts/helvetiker_regular.typeface.json', function ( response ) {
       font_helvetiker_regular = response;
     });
+
+    // Novas fontes diferentes do exemplo
+    var fontload4 = new THREE.FontLoader();
+    fontload4.load( '../../assets/fonts/Arial_Regular.typeface.json', function ( response ) {
+      font_arial_regular = response;
+    });
+
+    var fontload5 = new THREE.FontLoader();
+    fontload5.load( '../../assets/fonts/Comic_Sans_MS_Regular.typeface.json', function ( response ) {
+      font_ComicSansMS_regular = response;
+    });
+
+    var fontload6 = new THREE.FontLoader();
+    fontload6.load( '../../assets/fonts/Georgia_Regular.typeface.json', function ( response ) {
+      font_Georgia_regular = response;
+    });
+
+    var fontload7 = new THREE.FontLoader();
+    fontload7.load( '../../assets/fonts/Times_New_Roman_Regular.typeface.json', function ( response ) {
+      font_TimesNewRoman_regular = response;
+    });
   
     // Funções de controle dos objetos em cena
     var controls = new function () {
@@ -71,6 +92,19 @@ function init() {
           case 'helvetiker bold': 
             controls.font = font_helvetiker_bold;
             break;
+          // Fontes novas
+          case 'Arial': 
+            controls.font = font_arial_regular;
+            break;
+          case 'Times New Roman': 
+            controls.font = font_TimesNewRoman_regular;
+            break;
+          case 'Comic Sans MS': 
+            controls.font = font_ComicSansMS_regular;
+            break;
+          case 'Georgia': 
+            controls.font = font_Georgia_regular;
+            break;
         }
   
         redrawGeometryAndUpdateUI(gui, scene, controls, function() {
@@ -103,7 +137,7 @@ function init() {
     gui.add(controls, 'text').onChange(controls.redraw);         
     gui.add(controls, 'size', 0, 200).onChange(controls.redraw);
     gui.add(controls, 'height', 0, 200).onChange(controls.redraw);
-    gui.add(controls, 'fontName', ['bitstream vera sans mono', 'helvetiker', 'helvetiker bold']).onChange(controls.redraw);
+    gui.add(controls, 'fontName', ['bitstream vera sans mono', 'helvetiker', 'helvetiker bold', 'Arial', 'Times New Roman', 'Comic Sans MS', 'Georgia']).onChange(controls.redraw);
     gui.add(controls, 'bevelThickness', 0, 10).onChange(controls.redraw);
     gui.add(controls, 'bevelSize', 0, 10).onChange(controls.redraw);
     gui.add(controls, 'bevelSegments', 0, 30).step(1).onChange(controls.redraw);
