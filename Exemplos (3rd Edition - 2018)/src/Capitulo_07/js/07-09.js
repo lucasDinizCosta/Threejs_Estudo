@@ -89,12 +89,12 @@ function init() {
         if (e instanceof THREE.Sprite) {
           // move the sprite along the bottom
           e.position.x = e.position.x + e.velocityX;
-          if (e.position.x > window.innerWidth) {
+          if (e.position.x + e.scale.x/2 > window.innerWidth) {
             e.velocityX = -5;
             controls.sprite += 1;
             e.material.map.offset.set(1 / 5 * (controls.sprite % 4), 0);
           }
-          if (e.position.x < 0) {
+          if (e.position.x - e.scale.x/2 < 0) {
             e.velocityX = 5;
           }
         }
