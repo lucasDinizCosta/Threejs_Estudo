@@ -28,20 +28,6 @@ function init() {
         var selectedObject = loaderScene.scene.getObjectByName("Objeto");
         loaderScene.scene.remove(selectedObject);
       }
-  
-      /*this.redraw = function () {
-        var toRemove = [];
-        scene.children.forEach(function (child) {
-          if (child instanceof THREE.Points) {
-            toRemove.push(child);
-          }
-        });
-        toRemove.forEach(function (child) {
-          scene.remove(child)
-        });
-        createPointInstances(controls.size, controls.transparent, controls.opacity, controls.sizeAttenuation,
-          controls.color);
-      };*/
     };
   
     // Menu lateral
@@ -130,7 +116,7 @@ function init() {
             });
           }
           break;
-          
+
         case "aspirin":
           {
             // also possible to use diamond.pdb
