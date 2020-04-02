@@ -7,6 +7,7 @@ function init() {
   
     THREE.DRACOLoader.setDecoderPath('../../libs/other/draco/');
     THREE.DRACOLoader.setDecoderConfig({type: 'js'});
+    
     var loader = new THREE.DRACOLoader();
   
     loader.load("../../assets/models/bunny/bunny.drc", function (geometry) {
