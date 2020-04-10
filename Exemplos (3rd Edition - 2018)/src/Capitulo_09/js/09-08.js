@@ -1,3 +1,26 @@
+/**************************************************************************************
+ * ----------------------------- Métodos e definições ------------------------------- *
+ *                                                                                    *
+ * => THREE.AnimationClip: Ao carregar um modelo que contem animações, pode-se obser- *
+ * var um campo correspondente as animações denominado "animations". Esse campo con-  *
+ * tem uma lista de objetos do tipo "THREE.AnimationClip";                            *
+ *    Um "THREE.AnimationClip" geralmente mantém os dados para uma determinada anima- *
+ * ção ou atividade que o modelo que você carregou pode executar                      *
+ *                                                                                    *
+ * => THREE.AnimationMixer: É usado para controlar o número de objetos de             *
+ * "THREE.AnimationClip". Ele garante que o tempo da animação esteja correto e possi- *
+ * bilite a sincronização conjunta de animações, ou mover de forma limpa de uma anima-*
+ * ção para outra.                                                                    *
+ *                                                                                    *
+ * => THREE.AnimationAction: O próprio THREE.AnimationMixer não expõe um grande número*
+ * de funções para controlar a animação, entretanto é feito através de objetos do tipo*
+ * "THREE.AnimationAction", no qual são retornados quando adicionamos um              *
+ * "THREE.AnimationClip" a um "THREE.AnimationMixer" (ou você pode obtê-los posterior-*
+ * mente, usando as funções fornecidas pelo THREE.AnimationMixer).                    *
+ *                                                                                    *
+ *                                                                                    *
+ **************************************************************************************/
+
 function init() {
   var stats = initStats();
   var renderer = initRenderer();
@@ -27,12 +50,46 @@ function init() {
       mesh.translateY(-10);
       mesh.translateX(10);
 
+      /***************************************************************************
+       * O construtor para esse objeto leva como argumento um "THREE.Object3D"   *
+       * (por exemplo, um THREE.Mesh de um THREE.Group).                         *
+       *                                                                         *
+       **************************************************************************/
+
       mixer = new THREE.AnimationMixer( mesh );
+
       // or create a custom clip from the set of morphtargets
       // var clip = THREE.AnimationClip.CreateFromMorphTargetSequence( 'gallop', geometry.morphTargets, 30 );
       animationClip = geometry.animations[0];
+
+      /**************************************************************************
+       * Cria um THREE.AnimationAction que pode ser usado para controlar o      *
+       * THREE.AnimationClip transmitido. Se o clipe de animação for para um    *
+       * objeto raiz diferente, você também pode transmiti-lo.                  *
+       *                                                                        *
+       * ".clipAction(animationClip, optionalRoot)"                             *
+       *************************************************************************/
+
       clipAction = mixer.clipAction( animationClip ).play();    
       
+      /**************************************************************************
+       * Atribui o tipo de loop (loopMode) e o número de repetições.            *
+       *                                                                        *
+       * "setLoop(loopMode, repetitions)"                                       *
+       *************************************************************************/
+      /**************************************************************************
+       * -------------------------- Tipos de loop ----------------------------- *
+       *                                                                        *
+       *    O tipo de loop é uma ação atribuida na função "setLoop", pode ser   *
+       * da seguinte forma:                                                     *
+       * A) THREE.LoopOnce: Executa o clip uma única vez.                       *
+       * B) THREE.LoopRepeat: Repete o clip baseado no número de repetições que *
+       * foi atribuido.                                                         *
+       * C) THREE.LoopPingPong: Executa o clip baseado no número de repetições, *
+       * mas alterna o sentido para frente e dps inverte, reproduzindo para trás*
+       *                                                                        *
+       *************************************************************************/
+
       clipAction.setLoop(THREE.LoopRepeat);
       scene.add(mesh)
 
@@ -58,8 +115,44 @@ function init() {
     effectiveWeight: 0,
     effectiveTimeScale: 0
   }
+
   // control which keyframe to show
   function enableControls() {
+    /**************************************************************************
+     * ------------------------ Funções presentes --------------------------- *
+     *                                                                        *
+     * => clampWhenFinished: Quando definida como true, a animação será       *
+     * interrompida quando atingir o último frane. O default é false.         *
+     *                                                                        *
+     * => enabled: Quando definido como false, isso desativará a ação atual   *
+     * para que não tenha efeito no modelo. Quando a ação for reativada, a    *
+     * animação continuará de onde parou.                                     *
+     *                                                                        *
+     * => paused: Quando definida como true, pausa a execução do clip.        *
+     *                                                                        *
+     * => fadeIn(durationInSeconds): Aumenta a propriedade de "weight"(peso)  *
+     * lentamente de 0 para1 dentro do intervalo de tempo passado.            *
+     *                                                                        *
+     * => fadeOut(durationInSeconds): Diminui a propriedade de "weight"(peso) *
+     * lentamente de 0 para 1, dentro do intervalo de tempo passado.          *
+     *                                                                        *
+     * => timeScale: É uma escala usada para acelara ou desacelerar a anima-  *
+     * ção. Se o valor da propriedade for 0, a animação será pausada          *
+     *                                                                        *
+     * => warp(startTimeScale, endTimeScale, durationInSeconds): Altera a     *
+     * propriedade "timeScale" de "startTimeScale" para "endTimeScale" dentro *
+     * do durationInSeconds especificado.                                     *
+     *                                                                        *
+     * => weight: O efeito que esta animação tem no modelo de uma escala de   *
+     * 0 a 1. Quando definido como 0, você não verá nenhuma transformação do  *
+     * modelo nessa animação e, quando definido como 1, verá o efeito completo*
+     * dessa animação.                                                        *
+     *                                                                        *
+     * => zeroSlopeAtStart: Quando definido como true (que é o padrão), isso  *
+     * garantirá uma transição suave entre clipes separados.                  *
+     *                                                                        *
+     *************************************************************************/
+
     var gui = new dat.GUI();
     var mixerFolder = gui.addFolder("AnimationMixer");
     mixerFolder.add(controls, "time").listen();
@@ -130,7 +223,12 @@ function init() {
     renderer.render(scene, camera);
 
     if (mixer && clipAction) {
-      mixer.update( delta );
+      /************************************************************************
+       * mixer.update(delta): é utilizado para informar ao mixer como o tempo *
+       * foi passado entre o render loop e o loop anterior                    *
+       *                                                                      *
+       ************************************************************************/
+      mixer.update( delta ); 
       controls.time = mixer.time;
       controls.effectiveTimeScale = clipAction.getEffectiveTimeScale();
       controls.effectiveWeight = clipAction.getEffectiveWeight();

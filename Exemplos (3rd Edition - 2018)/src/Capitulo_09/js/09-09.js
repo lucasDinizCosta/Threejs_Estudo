@@ -44,6 +44,10 @@ function init() {
     scene.add(mesh);
     mixer = new THREE.AnimationMixer( mesh );
 
+    /************************************************************************************
+     * CreateFromMorphTargetSequence: Isso cria um único THREE.AnimationClip a partir   *
+     * de uma sequência de morph-targets.                                               *
+     ************************************************************************************/
     animationClip = THREE.AnimationClip.CreateFromMorphTargetSequence('first', [cubeGeometry.morphTargets[0], cubeGeometry.morphTargets[1]], 1);
     animationClip2 = THREE.AnimationClip.CreateFromMorphTargetSequence('second', [cubeGeometry.morphTargets[0], cubeGeometry.morphTargets[2]], 1);
     clipAction = mixer.clipAction( animationClip ).play();  
