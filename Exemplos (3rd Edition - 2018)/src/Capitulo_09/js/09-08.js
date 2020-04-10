@@ -42,7 +42,7 @@ function init() {
   var loader = new THREE.JSONLoader();
   loader.load('../../assets/models/horse/horse.js', function (geometry, mat) {
       geometry.computeVertexNormals();
-      geometry.computeMorphNormals();
+      geometry.computeMorphNormals();       // Focado em suavização da animação
 
       var mat = new THREE.MeshLambertMaterial({morphTargets: true, vertexColors: THREE.FaceColors});
       mesh = new THREE.Mesh(geometry, mat);
