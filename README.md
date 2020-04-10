@@ -4,9 +4,9 @@
 1) Exemplos (3rd Edition - 2018)/src/Capitulo_09/09.08-morph-targets.html
 
 ## Configurações de uso do servidor:
-   Alternativas:
+   **Alternativas:**
 
-A) Servidor local python via linux:
+**A) Servidor local python via linux:**
 
 * Para executar os exemplos, especialmente os que tem textura e/ou carregamento de modelos externos, é preciso rodar em um servidor local por questão do sistema de segurança dos navegadores. 
 
@@ -22,13 +22,13 @@ A) Servidor local python via linux:
 3) Abre o browser e execute o seguinte link:
    http://localhost:8000/
 
-B) Extensão LiveServer:
+**B) Extensão LiveServer:**
 
 * Através do editor Visual Studio Code é possível criar um servidor temporário local apenas com a extensão
-"Live Server". Após a instalação, com o cursor do mouse sob o arquivo ".html" clique com o botão direito do mouse e no menu "Open With Live Server"
+**"Live Server"**. Após a instalação, com o cursor do mouse sob o arquivo ".html" clique com o botão direito do mouse e no menu "Open With Live Server"
 
-C) Aplicativo WebServer:
+**C) Aplicativo WebServer:**
 
-* Através do aplicativo "Web Server for Chrome" é possível determinar uma pasta para que ao executar um elemento, será inicializado de um servidor web local.
+* Através do aplicativo **"Web Server for Chrome"** é possível determinar uma pasta para que ao executar um elemento, será inicializado de um servidor web local.
 
 
