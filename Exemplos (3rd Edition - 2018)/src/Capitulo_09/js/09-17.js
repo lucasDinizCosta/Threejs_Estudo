@@ -1,5 +1,5 @@
 /**
- * Carregamento de arquivos retorna Esqueleo e animação ao invés de Geometria e mesh
+ * Carregamento de arquivos retorna Esqueleto e animação ao invés de Geometria e mesh
  */
 function init() {
   var stats = initStats();
