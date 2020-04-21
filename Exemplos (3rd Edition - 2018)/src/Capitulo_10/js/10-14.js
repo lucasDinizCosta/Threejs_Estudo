@@ -28,6 +28,7 @@ function init() {
   var controls = {
   };
   
+  // Fundo do cenário
   var alternativeMap = textureLoader.load("../../assets/textures/cubemap/2294472375_24a3b8ef46_o.jpg")
   alternativeMap.mapping = THREE.EquirectangularReflectionMapping;
   alternativeMap.magFilter = THREE.LinearFilter;
