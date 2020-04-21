@@ -10,7 +10,7 @@ function init() {
   // create a scene, that will hold all our elements such as objects, cameras and lights.
   // and add some simple default lights
   var scene = new THREE.Scene();
-  var groundPlane = addLargeGroundPlane(scene)
+  var groundPlane = addLargeGroundPlane(scene);
   groundPlane.position.y = -10;
   initDefaultLighting(scene);
   scene.add(new THREE.AmbientLight(0x444444));
@@ -21,11 +21,16 @@ function init() {
   // images from: http://www.anyhere.com/gward/hdrenc/pages/originals.html
   var hdrTextureLoader = new THREE.RGBELoader();
   hdrTextureLoader.load('../../assets/textures/hdr/dani_cathedral_oBBC.hdr', function(texture, metadata) {
+
+    /********************************************************************************
+     * É necessário a codificação correta, caso contrário ocorre inversão de cores  *
+     ********************************************************************************/
+
     texture.encoding = THREE.RGBEEncoding;
-    texture.flipY = true;
+    texture.flipY = true;                   // Corrige a padronização de cores e do eixo da imagem
 
     // add a simple plane to show the texture
-    var plane = new THREE.PlaneGeometry(20, 20)
+    var plane = new THREE.PlaneGeometry(20, 20);
     var planeMesh = addGeometry(scene, plane, 'plane', texture, gui, controls);
     planeMesh.material.side = THREE.DoubleSide;
 
@@ -61,7 +66,7 @@ function init() {
       "Uncharted2ToneMapping" : THREE.Uncharted2ToneMapping,
       "CineonToneMapping" : THREE.CineonToneMapping
     }).onChange(function(tm) {
-      renderer.toneMapping = parseInt(tm)
+      renderer.toneMapping = parseInt(tm);
       onToneMappingChange();
     });
   }
