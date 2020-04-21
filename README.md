@@ -1,7 +1,20 @@
 # Threejs_Estudo - Estudo sobre a biblioteca e exemplos resolvidos do livro
 
 ## Exemplos bem documentados e interessantes:
-1) Exemplos (3rd Edition - 2018)/src/Capitulo_09/09.08-morph-targets.html
+
+### Exemplos (2nd Edition - 2015):
+
+### Exemplos (3rd Edition - 2018):
+
+#### Capítulo 09:
+- 09.08 - morph - targets
+
+#### Capítulo 10:
+- 10.02 - Basic Texture - DDS
+- 10.03 - Basic Texture - PVR
+- 10.04 - Basic Texture - TGA
+- 10.05 - Basic Texture - KTX
+- 10.06 - Basic Texture - EXR
 
 ## Configurações de uso do servidor:
    **Alternativas:**
