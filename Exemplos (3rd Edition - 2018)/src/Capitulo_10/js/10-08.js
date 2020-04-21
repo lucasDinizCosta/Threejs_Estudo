@@ -1,5 +1,6 @@
 /************************************************************************************************************
- *                                                                                                          *
+ * ------------------------------------   Bumpmap  -------------------------------------------------------  *
+ *                                                                                                          * 
  * =>   Bumpmap (mapa de relevo): é usado para criar uma profundidade maior ao material, além de gerar      *
  * uma certa rugosidade no material.                                                                        *
  *      A intensidade do pixel define a altura do bump. Um mapa de relevo contém apenas a altura  relativa  *
@@ -11,6 +12,7 @@
  * Cubo esquerdo: Sem bumpmap;                                                                              *
  *                                                                                                          *
  ***********************************************************************************************************/
+
 function init() {
 
   // use the defaults

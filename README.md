@@ -10,11 +10,8 @@
 - 09.08 - morph - targets
 
 #### Capítulo 10:
-- 10.02 - Basic Texture - DDS
-- 10.03 - Basic Texture - PVR
-- 10.04 - Basic Texture - TGA
-- 10.05 - Basic Texture - KTX
-- 10.06 - Basic Texture - EXR
+- (10.02 - Basic Texture - DDS); (10.03 - Basic Texture - PVR); (10.04 - Basic Texture - TGA);(10.05 - Basic Texture - KTX);
+- (10.06 - Basic Texture - EXR); (10.08 - Bump map);
 
 ## Configurações de uso do servidor:
    **Alternativas:**
