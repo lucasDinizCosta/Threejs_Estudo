@@ -2,15 +2,11 @@
  * -----------------------------------   Displacement map  -----------------------------------------------  *
  *                                                                                                          * 
  * =>   Displacement map (mapa de deslocamento): Providencia uma estrutura que pode mudar as posições dos   *
- * vértices do modelo. Enquanto que o bump e normal criam a ilusão de profundidade, comes este muda-se a 
- * estrutura do objeto com base nas informações da textura.
- * direção da normal para cada imagem é armazenada.                                                         *
- *      Pode-se criar modelos com aparência muito detalhada que usam poucos vértices e faces.               * 
- *                                                                                                          *
- * Cubo direito: Com Normalmap;                                                                             *
- * Cubo esquerdo: Sem Normalmap;                                                                            *
+ * vértices do modelo. Enquanto que o bump e normal criam a ilusão de profundidade, com este, muda-se a     *
+ * estrutura do objeto com base nas informações da textura.                                                 *
  *                                                                                                          *
  ***********************************************************************************************************/
+
 function init() {
 
   // use the defaults
@@ -24,7 +20,7 @@ function init() {
   // and add some simple default lights
   var scene = new THREE.Scene();
   var textureLoader = new THREE.TextureLoader();
-  var groundPlane = addLargeGroundPlane(scene, true)
+  var groundPlane = addLargeGroundPlane(scene, true);
   groundPlane.position.y = -8;
 
   initDefaultLighting(scene);
