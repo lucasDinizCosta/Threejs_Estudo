@@ -21,7 +21,7 @@ function init() {
       map: textureLoader.load("../../assets/textures/earth/Earth.png"),                 // imagem da terra
       normalMap: textureLoader.load("../../assets/textures/earth/EarthNormal.png"),     // mapeamento das normais
       specularMap: textureLoader.load("../../assets/textures/earth/EarthSpec.png"),     // mapeamento da luz especular(Reflexão)
-      normalScale: new THREE.Vector2(6,6)
+      normalScale: new THREE.Vector2(6, 6)
   });
 
   var sphere = new THREE.SphereGeometry(9, 50, 50);
