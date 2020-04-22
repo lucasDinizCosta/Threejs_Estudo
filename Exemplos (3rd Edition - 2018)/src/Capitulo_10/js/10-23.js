@@ -38,7 +38,7 @@ function init() {
 
   var textureLoader = new THREE.TextureLoader();
   document.getElementById('canvas-output').appendChild(canvas);
-  var cube = new THREE.CubeGeometry(23, 10, 16)
+  var cube = new THREE.CubeGeometry(23, 10, 16);
   var cubeMaterial = new THREE.MeshStandardMaterial({
       bumpMap: new THREE.Texture(canvas),
       metalness: 0,
