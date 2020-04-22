@@ -77,7 +77,6 @@ function init() {
   cubeMesh = addGeometry(scene, cube, 'cube', textureLoader.load('../../assets/textures/general/brick-wall.jpg'), gui, controls);
   cubeMesh.position.x = -20;
 
-
   /**********************************************************************************************
    *                                                                                            *
    * Repeat X: ao caminhar no eixo X da textura pra preencher o objeto, ao invés de gerar o     *
@@ -101,8 +100,6 @@ function init() {
   gui
     .add(controls, "repeatWrapping")
     .onChange(controls.updateRepeat);
-
-  
 
   render();
   function render() {

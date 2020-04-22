@@ -7,11 +7,10 @@
 ### Exemplos (3rd Edition - 2018):
 
 #### Capítulo 09:
-- 09.08 - morph - targets
+- 08
 
 #### Capítulo 10:
-- (10.02 - Basic Texture - DDS); (10.03 - Basic Texture - PVR); (10.04 - Basic Texture - TGA);(10.05 - Basic Texture - KTX);
-- (10.06 - Basic Texture - EXR); (10.08 - Bump map);
+- 02, 03, 04, 05, 06, 08, 21;
 
 ## Configurações de uso do servidor:
    **Alternativas:**
