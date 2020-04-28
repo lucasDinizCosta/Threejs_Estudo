@@ -4,7 +4,11 @@
 
 ### Exemplos (2nd Edition - 2015):
 
+- Repositório original dos exemplos: https://github.com/josdirksen/learning-threejs
+
 ### Exemplos (3rd Edition - 2018):
+
+- Repositório original dos exemplos: https://github.com/PacktPublishing/Learn-Three.js-Third-Edition
 
 #### Capítulo 09:
 - 08
