@@ -38,12 +38,12 @@ function main(){
 	document.getElementById("webgl-output").appendChild(renderer.domElement);	//document.body.appendChild( renderer.domElement );
 	
 	// Show axes (parameter is size of each axis)
-    var axes = new THREE.AxesHelper(1);
+    var axes = new THREE.AxesHelper(0.8);
     axes.name = "AXES";
     axes.visible = false;
     scene.add(axes);
 
-    var groundPlane = createGroundPlane(1.90, 1.90); // width and height
+    var groundPlane = createGroundPlane(1, 1); // width and height
     groundPlane.rotateX(degreesToRadians(-90));
 	scene.add(groundPlane);   
 	
@@ -52,14 +52,15 @@ function main(){
 
     // Add objects to scene
     var objectArray = new Array();
-    scene.add(createTetrahedron(0.50, 0));
-    scene.add(createCube(0.5));
-    scene.add(createOctahedron(0.5, 0));
-    scene.add(createDodecahedron(0.5, 0));
-    scene.add(createIcosahedron(0.5, 0));
+    scene.add(createTetrahedron(0.28, 0));
+    scene.add(createCube(0.28));
+    scene.add(createOctahedron(0.28, 0));
+    scene.add(createDodecahedron(0.28, 0));
+    scene.add(createIcosahedron(0.28, 0));
     
     // Position of the cube
-	objectArray[1].position.y = 0.5;
+	objectArray[1].position.y = 0.25;
+	
 	
 	// Controls of sidebar
     var controls = new function () {
@@ -67,7 +68,7 @@ function main(){
 
         // Axes
         this.axes = false;
-        this.axesSize = 0.5;
+        this.axesSize = 0.8;
 
         this.updateAxes = function(){
             scene.remove(axes);                                 //Remove o eixo antigo
@@ -125,14 +126,14 @@ function main(){
             objectMaterial = new THREE.MeshPhongMaterial({color:controls.color});   // Setting the material with new color
             
             // Recreating those objects
-            scene.add(createTetrahedron(0.5, 0));
-			scene.add(createCube(0.5));
-			scene.add(createOctahedron(0.5, 0));
-			scene.add(createDodecahedron(0.5, 0));
-			scene.add(createIcosahedron(0.5, 0));
+            scene.add(createTetrahedron(0.28, 0));
+            scene.add(createCube(0.28));
+            scene.add(createOctahedron(0.28, 0));
+            scene.add(createDodecahedron(0.28, 0));
+            scene.add(createIcosahedron(0.28, 0));
             
             // Position of the cube
-            objectArray[1].position.y = 0.5;
+            objectArray[1].position.y = 0.25;
 
             controls.choosePoligon();
         }
