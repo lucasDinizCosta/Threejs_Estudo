@@ -3,21 +3,9 @@ function main(){
 	//		Init
 	//////////////////////////////////////////////////////////////////////////////////
 
-	// use the defaults
-    var scene = new THREE.Scene();                  // Create main scene
-	var stats = initStats();                        // To show FPS information
-	//var camera = new THREE.Camera();
-	var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);    //var camera = initCamera(new THREE.Vector3(0, 10, 20));
-    camera.lookAt(0, 0, 0);
-    camera.position.set(5, 15, 30);
-    camera.up.set( 0, 1, 0 );
-	scene.add(camera);
-
-    var clock = new THREE.Clock();
-	var light = initDefaultLighting(scene, new THREE.Vector3(5, 10, 0));  // Use default light
-
-
-	// init renderer
+    // use the defaults
+    
+    // init renderer
 	var renderer	= new THREE.WebGLRenderer({
 		antialias: true,
 		alpha: true
@@ -31,11 +19,22 @@ function main(){
 	renderer.domElement.style.position = 'absolute';
 	renderer.domElement.style.top = '0px';
 	renderer.domElement.style.left = '0px';
-    renderer.setSize(window.innerWidth, window.innerHeight);
-	//renderer.setSize( 640, 480 );
+    renderer.setSize(window.innerWidth, window.innerHeight);//(640, 480);
 
-	// Adiciona a saída do renderizador para um elemento da página HTML
+    // Adiciona a saída do renderizador para um elemento da página HTML
 	document.getElementById("webgl-output").appendChild(renderer.domElement);	//document.body.appendChild( renderer.domElement );
+
+    var scene = new THREE.Scene();                  // Create main scene
+	var stats = initStats();                        // To show FPS information
+	//var camera = new THREE.Camera();
+	var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);    //var camera = initCamera(new THREE.Vector3(0, 10, 20));
+    camera.lookAt(0, 0, 0);
+    camera.position.set(5, 15, 30);
+    camera.up.set( 0, 1, 0 );
+	scene.add(camera);
+
+    var clock = new THREE.Clock();
+	var light = initDefaultLighting(scene, new THREE.Vector3(5, 10, 0));  // Use default light
 	
 	// Show axes (parameter is size of each axis)
     var axes = new THREE.AxesHelper(0.8);
@@ -261,7 +260,10 @@ function main(){
 
 	// Reajustes caso a janela seja redimensionada
 	arToolkitSource.init(function onReady(){
-		onResize();
+        //onResize();
+        setTimeout(() => {
+            onResize()
+        }, 25);
 	})
 
 	// handle resize
@@ -290,8 +292,8 @@ function main(){
 		// tune the maximum rate of pose detection in the source image
 		//maxDetectionRate: 60,
 		// resolution of at which we detect pose in the source image
-		canvasWidth: window.innerWidth,	//640
-		canvasHeight: window.innerHeight,	//480
+		//canvasWidth: window.innerWidth,	//640
+		//canvasHeight: window.innerHeight,	//480
 
 		// debug - true if one should display artoolkit debug canvas, false otherwise
 		//debug: false,
