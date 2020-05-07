@@ -8,12 +8,14 @@ function main(){
 		antialias: true,
 		alpha: true
 	});
-	renderer.setClearColor(new THREE.Color('lightgrey'), 0)
+	renderer.setClearColor(new THREE.Color('lightgrey'), 0);
 	renderer.setSize( 640, 480 );
-	renderer.domElement.style.position = 'absolute'
-	renderer.domElement.style.top = '0px'
-	renderer.domElement.style.left = '0px'
-	document.body.appendChild( renderer.domElement );
+	/*renderer.domElement.style.position = 'absolute';
+	renderer.domElement.style.top = '0px';
+	renderer.domElement.style.left = '0px';*/
+
+	// Adiciona a saída do renderizador para um elemento da página HTML
+    document.getElementById("webgl-output").appendChild(renderer.domElement);	//document.body.appendChild( renderer.domElement );
 
 	// array of functions for the rendering loop
 	var onRenderFcts= [];
@@ -47,20 +49,21 @@ function main(){
 	})
 
 	arToolkitSource.init(function onReady(){
-		onResize()
+		onResize();
 	})
 
 	// handle resize
 	window.addEventListener('resize', function(){
-		onResize()
+		onResize();
 	})
 	function onResize(){
-		arToolkitSource.onResizeElement()
-		arToolkitSource.copyElementSizeTo(renderer.domElement)
+		arToolkitSource.onResizeElement();
+		arToolkitSource.copyElementSizeTo(renderer.domElement);
 		if( arToolkitContext.arController !== null ){
-			arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)
+			arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
 		}
 	}
+	
 	////////////////////////////////////////////////////////////////////////////////
 	//          initialize arToolkitContext
 	////////////////////////////////////////////////////////////////////////////////
@@ -79,7 +82,7 @@ function main(){
 
 	// update artoolkit on every frame
 	onRenderFcts.push(function(){
-		if( arToolkitSource.ready === false )	return
+		if( arToolkitSource.ready === false )	return;
 
 		arToolkitContext.update( arToolkitSource.domElement );
 
@@ -100,7 +103,7 @@ function main(){
 		changeMatrixMode: 'cameraTransformMatrix'
 	})
 	// as we do changeMatrixMode: 'cameraTransformMatrix', start with invisible scene
-	scene.visible = false
+	scene.visible = false;
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		add an object in the scene
@@ -114,17 +117,17 @@ function main(){
 		side: THREE.DoubleSide
 	});
 	var mesh	= new THREE.Mesh( geometry, material );
-	mesh.position.y	= geometry.parameters.height/2
+	mesh.position.y	= geometry.parameters.height/2;
 	scene.add( mesh );
 
 	var geometry	= new THREE.TorusKnotGeometry(0.3,0.1,64,16);
 	var material	= new THREE.MeshNormalMaterial();
 	var mesh	= new THREE.Mesh( geometry, material );
-	mesh.position.y	= 0.5
+	mesh.position.y	= 0.5;
 	scene.add( mesh );
 
 	onRenderFcts.push(function(delta){
-		mesh.rotation.x += Math.PI*delta
+		mesh.rotation.x += Math.PI * delta;
 	})
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -137,17 +140,17 @@ function main(){
 	})
 
 	// run the rendering loop
-	var lastTimeMsec= null
+	var lastTimeMsec= null;
 	requestAnimationFrame(function animate(nowMsec){
 		// keep looping
 		requestAnimationFrame( animate );
 		// measure time
-		lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
-		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
-		lastTimeMsec	= nowMsec
+		lastTimeMsec	= lastTimeMsec || nowMsec-1000/60;
+		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec);
+		lastTimeMsec	= nowMsec;
 		// call each update function
 		onRenderFcts.forEach(function(onRenderFct){
-			onRenderFct(deltaMsec/1000, nowMsec/1000)
+			onRenderFct(deltaMsec/1000, nowMsec/1000);
 		})
 	})
 }

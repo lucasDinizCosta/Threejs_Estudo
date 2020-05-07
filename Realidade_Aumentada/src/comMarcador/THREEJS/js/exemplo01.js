@@ -34,8 +34,6 @@ function main(){
 		clock = new THREE.Clock();
 		deltaTime = 0;
 		totalTime = 0;
-
-		
 		
 		////////////////////////////////////////////////////////////
 		// setup arToolkitSource
@@ -59,21 +57,21 @@ function main(){
 
 		function onResize()
 		{
-			arToolkitSource.onResizeElement()	
-			arToolkitSource.copyElementSizeTo(renderer.domElement)	
+			arToolkitSource.onResizeElement();
+			arToolkitSource.copyElementSizeTo(renderer.domElement);	
 			if ( arToolkitContext.arController !== null )
 			{
-				arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)	
+				arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
 			}
 		}
 
 		arToolkitSource.init(function onReady(){
-			onResize()
+			onResize();
 		});
 		
 		// handle resize event
 		window.addEventListener('resize', function(){
-			onResize()
+			onResize();
 		});
 		
 		////////////////////////////////////////////////////////////
