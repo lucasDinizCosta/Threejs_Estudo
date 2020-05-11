@@ -139,7 +139,7 @@ function main(){
 	}
 	
 	// GUI de controle e ajuste de valores especificos da geometria do objeto
-	var gui = new dat.GUI();
+	/*var gui = new dat.GUI();
 
     var guiFolder = gui.addFolder("Properties");
     guiFolder.open();                                       // Open the folder
@@ -163,7 +163,7 @@ function main(){
 
     guiFolder.add(controls, 'type', ['Tetrahedron','Cube', 'Octahedron', 'Dodecahedron', 'Icosahedron']).onChange(function(e){
         controls.choosePoligon();
-    });
+    });*/
 
     controls.choosePoligon();               // Update de selection of the polygon
 
@@ -254,21 +254,25 @@ function main(){
 		//sourceHeight: 480,
 
 		// resolution displayed for the source
-		displayWidth: window.innerWidth,  //window.innerWidth,
-		displayHeight: window.innerHeight//window.innerHeight
+		//displayWidth: window.innerWidth,  //window.innerWidth,
+		//displayHeight: window.innerHeight//window.innerHeight
 	})
 
-	// Reajustes caso a janela seja redimensionada
+	// Reajustes caso a janela seja redimensionada --- Render de AR
 	arToolkitSource.init(function onReady(){
         //onResize();
-        setTimeout(() => {
+
+        // Esse timeout força a interface de AR se redimensionar com base no tempo passado
+        /*setTimeout(() => {
             onResize()
-        }, 25);
-	})
+        }, 150);   //25
+        */
+       setTimeout(onResize, 150);
+    });
 
 	// handle resize
 	window.addEventListener('resize', function(){
-		onResize();
+        onResize();
 	});
 
 	function onResize(){
