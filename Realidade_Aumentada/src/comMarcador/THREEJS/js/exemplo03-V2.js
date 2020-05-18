@@ -346,7 +346,7 @@ function main(){
 
 	// create atToolkitContext
 	var arToolkitContext = new THREEx.ArToolkitContext({
-		cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../data/data/camera_para.dat',
+		cameraParametersUrl: THREEx.ArToolkitContext.baseURL + '../    data/data/camera_para.dat',
 		detectionMode: 'mono',
 
 		// tune the maximum rate of pose detection in the source image
