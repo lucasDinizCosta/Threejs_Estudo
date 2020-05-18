@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Platonic Solids</title>
+        <meta charset="UTF-8">
+        <!-- Tag that adapt the dimensions(width, height) of interface for mobile devices:
+            https://developer.mozilla.org/pt-BR/docs/Mozilla/Mobile/Viewport_meta_tag
+        -->
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden;
+            } 
+
+            a {
+                color: var(--color-blue);
+                cursor: pointer;
+                text-decoration: none;
+            }
+
+            #newWindow {
+				display: block;
+				position: absolute;
+				bottom: 0.3em;
+				left: 0.4em;
+				color: #fff;
+			}
+        </style>
+
+        <!-- Libraries of configuration (Default) -->
+        <script type="text/javascript" charset="UTF-8" src="../../../libs/three.js"></script>
+        <script type="text/javascript" charset="UTF-8" src="../../../libs/Stats.js"></script>
+        <script type="text/javascript" charset="UTF-8" src="../../../libs/dat.gui.js"></script>
+        <link rel="stylesheet" href="../../../libs/dat.gui.css">
+
+        <!-- Library of Augmented Reality that uses Three.js -->
+        <script type="text/javascript" charset="UTF-8" src="../../../libs/MarkerTracking--LocationBasedAR/THREE/ar.js"></script>
+        <script>THREEx.ArToolkitContext.baseURL = "../../"</script>  <!-- Define o local do contexto -->
+        
+        <!-- There are many useful functionss -->
+        <script type="text/javascript" charset="UTF-8" src="../../../libs/util.js"></script>
+
+        <!-- Library of example -->
+        <script type="text/javascript" charset="UTF-8" src="./js/exemplo03-V2.js"></script>
+
+    </head>
+
+    <body>
+        <div id="webgl-output"></div>
+        <script type="text/javascript" charset="UTF-8"> 
+            main();
+        </script>
+
+        <!-- Open the application on another tab -->
+        <a id="newWindow" href="./platonic-solids-application-AR.html" target="_blank">Open in New Window</a>
+    </body>
+
+</html>
