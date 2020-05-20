@@ -27,7 +27,7 @@
                     console.log("Carregou a cena");
                     var self = this;               
 
-                    // Após a leitura do arquivo html e inicilização da cena, agora cria-se os elementos
+                    // Após a leitura do arquivo html e inicialização da cena, agora cria-se os elementos
                     createScene(self);
                 }
             });
@@ -134,7 +134,8 @@
                 }
 
                 // Loop usado para VR
-                renderer.setAnimationLoop(render);
+                //renderer.setAnimationLoop(render);
+
                 /*function render(){
                     mesh = objectArray[meshNumber];
 
@@ -276,6 +277,20 @@
                         break;
                 }
             });
+
+            addEventListener("keydown", function (e) {
+                switch(e.keyCode){
+                    case 32: // Espaço
+                        objectArray[meshNumber].visible = false;
+                        meshNumber++;
+                        if(meshNumber >= 5){
+                            meshNumber = 0;
+                        }
+                        objectArray[meshNumber].visible = true;
+                        break;
+                }
+            });
+
         </script>
     </body>
 </html>

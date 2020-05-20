@@ -66,7 +66,8 @@ function main(){
 		}
 
 		arToolkitSource.init(function onReady(){
-			onResize();
+			// Esse timeout força a interface de AR se redimensionar com base no tempo passado
+			setTimeout(onResize, 1000);
 		});
 		
 		// handle resize event
