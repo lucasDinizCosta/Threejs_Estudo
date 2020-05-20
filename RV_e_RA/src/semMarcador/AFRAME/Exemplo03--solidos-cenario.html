@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt">
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript" src="../../../libs/aframe-master.js"></script>
+        <script>
+            // Remove a versão interna do Three.js que tem dentro do aframe e coloca a nova
+            window._THREE = THREE;
+            delete window.THREE;
+        </script>
+        <script type="text/javascript" src="../../../libs/three/three.js"></script>
+        <script>
+            console.log("Three.js version: ",_THREE.REVISION, THREE.REVISION);
+        </script>
+        <!-- https://stackoverflow.com/questions/51183006/using-a-frame-with-three-js-will-affect-three-js -->
+
+        <title>Virtual Reality - Solids</title>
+    </head>
+    <body>
+        <script type="text/javascript">
+            // A função de inicialização da cena é recomendada ficar antes do <a-scene>
+            // Após ler todo o documento html é inicilizada a cena, por isso ocorre erro de não identificação da scene algumas vezes fora deste script
+            // https://github.com/aframevr/aframe/issues/2000
+            AFRAME.registerComponent('main', {
+                init: function(){
+                    console.log("Carregou a cena");
+                    var self = this;               
+
+                    // Após a leitura do arquivo html e inicilização da cena, agora cria-se os elementos
+                    createScene(self);
+
+                    //self.el.sceneEl.object3D.add(createTetrahedron(1.0, 0));
+                    //scene.add(createTetrahedron(1.0, 0));
+                    //scene.add(createTetrahedron(2.0, 0));
+                    
+                    
+                }
+            });
+        </script>
+        <a-scene main renderer="antialias: true; alpha: true; maxCanvasWidth: 1920; maxCanvasHeight: 1920;">
+            
+            <!--
+            <a-tetrahedron position="-1 0.5 -3"  color="#FF926B" radius="1"></a-tetrahedron>
+            <a-box name="cube" position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+            <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+            <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D" castShadow="true"></a-cylinder>        
+            <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4" receiveShadow="true"></a-plane>
+            <a-sky color="gray"></a-sky>
+            -->
+            <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4" receiveShadow="true"></a-plane>
+        </a-scene>
+        
+        <script type="text/javascript">
+
+            var scene;
+            var renderer;
+            var camera;
+
+            function createScene(self){
+                // Elementos básicos de cena
+                scene = self.el.sceneEl.object3D;               
+                renderer = self.el.renderer;
+                camera = document.querySelector("[camera]").getObject3D('camera');
+
+                //camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);    //var camera = initCamera(new THREE.Vector3(0, 10, 20));
+                camera.lookAt(0, 0, -4);
+                camera.position.set(0.5, 2.5, 3.0);
+                camera.up.set( 0, 1, 0 );
+                scene.add(camera);
+
+                // Propriedades de sombreado
+                renderer.shadowMap.enabled = true;
+                renderer.shadowMapSoft = true;
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                renderer.setClearColor(new THREE.Color("black"));
+                renderer.shadowMap.enabled = true;
+
+                // Object Material for all objects
+                var objectMaterial = new THREE.MeshPhongMaterial({ color: "rgb(255, 0, 0)" });
+
+                // 4 faces
+                function createTetrahedron(radius, detail) {
+                    var geometry = new THREE.TetrahedronGeometry(radius, detail);
+                    var object = new THREE.Mesh(geometry, objectMaterial);
+                    object.castShadow = true;
+                    object.position.set(-1, 0.5, -3);
+                    object.visible = true;
+                    object.name = "Tetrahedron";
+                    //objectArray.push(object);
+                    //var grupo = new THREE.Group();
+                    //grupo.add(object);
+                    //grupo.visible = true;
+                    return object;
+                }
+
+                // Show axes (parameter is size of each axis)
+                var axes = new THREE.AxesHelper(50);
+                axes.name = "AXES";
+                axes.visible = true;
+                scene.add(axes);
+
+                var mesh = createTetrahedron(0.75, 0);
+                var rotation = 0.02;
+                scene.add(mesh);
+
+                // Loop de animação
+                render();
+                function render(){
+                    // Rotating the mesh selected
+                    /*controls.mesh.rotation.x += controls.rotation;
+                    controls.mesh.rotation.y += controls.rotation;
+                    controls.mesh.rotation.z += controls.rotation;*/
+                    mesh.rotation.x += rotation;
+                    mesh.rotation.y += rotation;
+                    mesh.rotation.z += rotation;
+
+                    renderer.render(scene, camera);
+                    requestAnimationFrame(render);
+                }
+            }
+
+            // 4 faces
+            function createTetrahedron(radius, detail) {
+                var geometry = new THREE.TetrahedronGeometry(radius, detail);
+                var object = new THREE.Mesh(geometry, objectMaterial);
+                object.castShadow = true;
+                object.position.set(0.0, radius * 1.1, 0.0);
+                object.visible = false;
+                object.name = "Tetrahedron";
+                objectArray.push(object);
+                return object;
+            }
+
+            // 6 faces
+            function createCube(s) {
+                let geometry = new THREE.BoxGeometry(s, s, s);
+                let object = new THREE.Mesh(geometry, objectMaterial);
+                object.castShadow = true;
+                object.position.set(0.0, s / 2.0, 0.0);
+                object.visible = false;
+                object.name = "Cube";
+                objectArray.push(object);
+                return object;
+            }
+
+            // 8 faces
+            function createOctahedron(radius, detail) {
+                var geometry = new THREE.OctahedronGeometry(radius, detail);
+                var object = new THREE.Mesh(geometry, objectMaterial);
+                object.castShadow = true;
+                object.position.set(0.0, radius, 0.0);
+                object.visible = false;
+                object.name = "Octahedro";
+                objectArray.push(object);
+                return object;
+            }
+
+            // 12 faces
+            function createDodecahedron(radius, detail) {
+                var geometry = new THREE.DodecahedronGeometry(radius, detail);
+                var object = new THREE.Mesh(geometry, objectMaterial);
+                object.castShadow = true;
+                object.position.set(0.0, radius, 0.0);
+                object.visible = false;
+                object.name = "Dodecahedron";
+                objectArray.push(object);
+                return object;
+            }
+
+            // 20 faces
+            function createIcosahedron(radius, detail) {
+                let geometry = new THREE.IcosahedronGeometry(radius, detail);
+                let object = new THREE.Mesh(geometry, objectMaterial);
+                object.castShadow = true;
+                object.position.set(0.0, radius, 0.0);
+                object.visible = false;
+                object.name = "Icosahedron";
+                objectArray.push(object);
+                return object;
+            }
+            
+        </script>
+        
+    </body>
+</html>
