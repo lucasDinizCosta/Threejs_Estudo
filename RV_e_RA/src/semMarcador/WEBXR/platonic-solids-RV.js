@@ -275,14 +275,9 @@ function init() {
     /*controller.position.set(camera.position.x, camera.position.y, camera.position.z);
     controller.rotation.set(camera.rotation.x, camera.rotation.y, camera.rotation.z);
     controllerGrip.position.set(camera.position.x, camera.position.y, camera.position.z);
-    controllerGrip.rotation.set(camera.rotation.x, camera.rotation.y, camera.rotation.z);*/
-
-    controller.position.set(camera.position.x, camera.position.y, camera.position.z);
-    controller.rotation.set(camera.rotation.x, camera.rotation.y, camera.rotation.z);
-    controllerGrip.position.set(camera.position.x, camera.position.y, camera.position.z);
     controllerGrip.rotation.set(camera.rotation.x, camera.rotation.y, camera.rotation.z);
     model1.position.set(camera.position.x, camera.position.y, camera.position.z);
-    model1.rotation.set(camera.rotation.x, camera.rotation.y, camera.rotation.z);
+    model1.rotation.set(camera.rotation.x, camera.rotation.y, camera.rotation.z);*/
 
     console.log(model1);
 
