@@ -120,7 +120,7 @@
                 var rotation = 0.02;
 
                 // Loop de animação
-                render();
+                //render();
                 function render(){
                     mesh = objectArray[meshNumber];
 
@@ -134,19 +134,7 @@
                 }
 
                 // Loop usado para VR
-                //renderer.setAnimationLoop(render);
-
-                /*function render(){
-                    mesh = objectArray[meshNumber];
-
-                    // Rotating the mesh selected
-                    mesh.rotation.x += rotation;
-                    mesh.rotation.y += rotation;
-                    mesh.rotation.z += rotation;
-
-                    renderer.render(scene, camera);
-                    //requestAnimationFrame(render);
-                }*/
+                renderer.setAnimationLoop(render());
 
                 // 4 faces
                 function createTetrahedron(radius, detail)
