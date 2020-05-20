@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Platonic Solids</title>
+    <meta charset="UTF-8">
+    <!-- Tag that adapt the dimensions(width, height) of interface for mobile devices:
+         https://developer.mozilla.org/pt-BR/docs/Mozilla/Mobile/Viewport_meta_tag
+    -->
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        a {
+            color: var(--color-blue);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        #newWindow {
+            display: block;
+            position: absolute;
+            bottom: 0em;
+            left: 0.4em;
+            color: #fff;
+            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        }
+    </style>
+
+    <!-- Libraries of configuration -->
+    <script type="text/javascript" charset="UTF-8" src="../../../libs/three/three.js"></script>
+    <script type="text/javascript" src="../../../libs/util/Stats.js"></script>
+    <script type="text/javascript" src="../../../libs/util/dat.gui.js"></script>
+
+    <!-- There are many useful functionss -->
+    <script type="text/javascript" src="../../../libs/util/util.js"></script>
+
+</head>
+
+<body>
+    <div id="webgl-output"></div>
+    <script type="module">
+        import * as MAIN from "./platonic-solids-RV.js";    //Importação do módulo do exemplo
+        MAIN.init();
+    </script>
+</body>
+
+</html>
