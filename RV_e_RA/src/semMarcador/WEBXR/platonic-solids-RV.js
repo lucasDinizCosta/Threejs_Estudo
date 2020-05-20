@@ -252,7 +252,7 @@ function init() {
     var controller = renderer.xr.getController( 0 );
     controller.addEventListener( 'selectstart', onSelectStart );
     controller.addEventListener( 'selectend', onSelectEnd );
-    controller.addEventListener( 'connected', function ( event ) {
+    /*controller.addEventListener( 'connected', function ( event ) {
 
         this.add( buildController( event.data ) );
 
@@ -261,16 +261,20 @@ function init() {
 
         this.remove( this.children[ 0 ] );
 
-    } );
+    } );*/
     scene.add( controller );
 
     var controllerModelFactory = new XRControllerModelFactory();
 
     var controllerGrip = renderer.xr.getControllerGrip( 0 );
-    controllerGrip.add( controllerModelFactory.createControllerModel( controllerGrip ) );
+    var model1 = controllerModelFactory.createControllerModel(controllerGrip);
+    controllerGrip.add(model1);
     scene.add( controllerGrip );
-
+    
     controller.position.set(camera.position.x, camera.position.y, camera.position.z);
+    controller.rotation.set(camera.rotation.x, camera.rotation.y, camera.rotation.z);
+    controllerGrip.position.set(camera.position.x, camera.position.y, camera.position.z);
+    controllerGrip.rotation.set(camera.rotation.x, camera.rotation.y, camera.rotation.z);
     console.log(controllerGrip);
 
     orbitControls.update();                 // Atualiza o controle da câmera
