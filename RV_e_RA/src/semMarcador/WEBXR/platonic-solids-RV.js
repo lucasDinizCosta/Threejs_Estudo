@@ -160,7 +160,6 @@ function init() {
     controls.choosePoligon(); // Update de selection of the polygon
 
     // Reajuste da renderização com base na mudança da janela
-            
     function onResize(){
         camera.aspect = window.innerWidth / window.innerHeight;  //Atualiza o aspect da camera com relação as novas dimensões
         camera.updateProjectionMatrix();                         //Atualiza a matriz de projeção
@@ -233,10 +232,55 @@ function init() {
     // Adiciona o renderer no elemento de VR
     document.getElementById("webgl-output").appendChild(VRButton.createButton( renderer ));
 
-    orbitControls.update();                 // Atualiza o controle da câmera
+    /************************************************
+     * 
+     * 
+     * CONTROLADOR DO VR
+     ************************************************/
+    function onSelectStart() {
 
-    // Loop usado para VR
-    renderer.setAnimationLoop( function () {
+        this.userData.isSelecting = true;
+
+    }
+
+    function onSelectEnd() {
+
+        this.userData.isSelecting = false;
+
+    }
+
+    var controller = renderer.xr.getController( 0 );
+    controller.addEventListener( 'selectstart', onSelectStart );
+    controller.addEventListener( 'selectend', onSelectEnd );
+    controller.addEventListener( 'connected', function ( event ) {
+
+        this.add( buildController( event.data ) );
+
+    } );
+    controller.addEventListener( 'disconnected', function () {
+
+        this.remove( this.children[ 0 ] );
+
+    } );
+    scene.add( controller );
+
+    var controllerModelFactory = new XRControllerModelFactory();
+
+    var controllerGrip = renderer.xr.getControllerGrip( 0 );
+    controllerGrip.add( controllerModelFactory.createControllerModel( controllerGrip ) );
+    scene.add( controllerGrip );
+
+    controller.position.set(camera.position.x, camera.position.y, camera.position.z);
+    console.log(controllerGrip);
+
+    orbitControls.update();                 // Atualiza o controle da câmera
+    animate();
+    function animate(){
+        // Loop usado para VR
+        renderer.setAnimationLoop(render);
+    }
+
+    function render(){
         stats.update();
         orbitControls.update();
 
@@ -245,7 +289,7 @@ function init() {
         controls.mesh.rotation.y += controls.rotation;
         controls.mesh.rotation.z += controls.rotation;
         renderer.render( scene, camera );
-    });
+    }
 }
 
 // Exportando métodos e variáveis que serão vísiveis no módulo
