@@ -16,6 +16,7 @@
         <!-- https://stackoverflow.com/questions/51183006/using-a-frame-with-three-js-will-affect-three-js -->
         <script type="text/javascript" src="../../../libs/util.js"></script>
         <script type="text/javascript" src="../../../libs/three/controls/OrbitControls.js"></script>
+        <script type="text/javascript" src="../../../libs/util/Stats.js"></script>
 
         <title>Virtual Reality - Solids</title>
     </head>
@@ -34,7 +35,9 @@
                     
                 },
                 tick: function(){
-                    render();
+                    orbitControls.update(clock);
+                    stats.update();
+                    //render();
                 },
                 update: function(){
                 }
@@ -52,7 +55,7 @@
             var camera;
             var clock;
             var orbitControls;
-            
+            var stats;
 
             var meshNumber;
             var mesh;
@@ -61,8 +64,8 @@
 
             // Loop de animação
             function render(){
+                dt = (t - anterior) / 1000;
                 mesh = objectArray[meshNumber];
-                orbitControls.update(clock);
 
                 // Rotating the mesh selected
                 mesh.rotation.x += rotation;
@@ -77,6 +80,7 @@
                 // self.el.sceneEl.object3D.children = [];
 
                 // Elementos básicos de cena
+                stats = initStats();
                 scene = self.el.sceneEl.object3D;               
                 renderer = self.el.renderer;
                 camera = document.querySelector("[camera]").getObject3D('camera');
