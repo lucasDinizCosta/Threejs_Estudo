@@ -40,6 +40,7 @@
                     //render();
                 },
                 update: function(){
+                    createScene(self);
                 }
             });
         </script>
@@ -167,8 +168,6 @@
                 meshNumber = 0;
                 mesh = objectArray[meshNumber];
                 mesh.visible = true;
-                var rotation = 0.02;
-
 
                 // 4 faces
                 function createTetrahedron(radius, detail)
