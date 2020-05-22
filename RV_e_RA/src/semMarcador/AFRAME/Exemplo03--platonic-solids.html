@@ -37,13 +37,13 @@
                 tick: function(){
                     orbitControls.update(clock);
                     stats.update();
-                    //render();
+                    render();
                 },
                 update: function(){
                 }
             });
         </script>
-        <a-scene main> 
+        <a-scene main stats> 
             <a-entity camera touch-controls></a-entity>
         </a-scene>
         
@@ -64,7 +64,6 @@
 
             // Loop de animação
             function render(){
-                dt = (t - anterior) / 1000;
                 mesh = objectArray[meshNumber];
 
                 // Rotating the mesh selected
@@ -115,10 +114,22 @@
 
 
                 // Default Light
-                var dirLight = new THREE.DirectionalLight(0xffffff);
+                var spotLight = new THREE.SpotLight(0xffffff);
+                spotLight.position = new THREE.Vector3(7.7, 14.14, 0);
+                spotLight.shadow.mapSize.width = 2048;
+                spotLight.shadow.mapSize.height = 2048;
+                spotLight.shadow.camera.fov = 15;
+                spotLight.castShadow = true;
+                spotLight.decay = 2;
+                spotLight.penumbra = 0.05;
+                spotLight.name = "spotLight"
+
+                scene.add(spotLight);
+
+                /*var dirLight = new THREE.DirectionalLight(0xffffff);
                 dirLight.position = new THREE.Vector3(2.2, 4.4, 0);
                 dirLight.castShadow = true;
-                scene.add(dirLight);
+                scene.add(dirLight);*/
                 var ambientLight = new THREE.AmbientLight(0x343434);
                 ambientLight.name = "ambientLight";
                 scene.add(ambientLight);
@@ -163,7 +174,7 @@
                 {
                     var geometry = new THREE.TetrahedronGeometry(radius, detail);
                     var object = new THREE.Mesh(geometry, objectMaterial);
-                    object.position.set(0.0, radius/3 * 1.5, 0.0);      //Color Axe (Red, Green, Blue)
+                    object.position.set(0.0, radius/3 * 2, 0.0);      //Color Axe (Red, Green, Blue)
                     object.castShadow = true;
 
                     //Set rotation
