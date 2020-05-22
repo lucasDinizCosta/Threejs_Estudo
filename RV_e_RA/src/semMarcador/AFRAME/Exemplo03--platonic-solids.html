@@ -45,6 +45,7 @@
         </script>
         <a-scene main stats> 
             <a-entity camera touch-controls></a-entity>
+            <a-plane position="0 0 0" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"  side="double"></a-plane>
         </a-scene>
         
         <script type="text/javascript">
@@ -135,9 +136,9 @@
                 scene.add(ambientLight);
                 
                 // Plano de base
-                var groundPlane = createGroundPlane(2, 2, 0); // width and height
+                /*var groundPlane = createGroundPlane(2, 2, 0); // width and height
                 groundPlane.rotateX(degreesToRadians(-90));
-                scene.add(groundPlane);
+                scene.add(groundPlane);*/
 
                 // Show axes (parameter is size of each axis)
                 var axes = new THREE.AxesHelper(50);
