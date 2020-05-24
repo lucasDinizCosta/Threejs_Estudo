@@ -25,7 +25,7 @@
             // A função de inicialização da cena é recomendada ficar antes do <a-scene>
             // Após ler todo o documento html é inicilizada a cena, por isso ocorre erro de não identificação da scene algumas vezes fora deste script
             // https://github.com/aframevr/aframe/issues/2000
-            AFRAME.registerComponent('main', {
+            /*AFRAME.registerComponent('main', {
                 init: function(){
                     console.log("Carregou a cena");
                     self = this;               
@@ -40,13 +40,18 @@
                     //render();
                 },
                 update: function(){
-                    createScene(self);
+                    //createScene(self);
                 }
-            });
+            });*/
         </script>
         <a-scene main stats> 
-            <a-entity camera touch-controls></a-entity>
+            <a-camera position="0 1 0">
+                <a-cursor></a-cursor>
+            </a-camera>
             <a-plane position="0 0 0" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"  side="double"></a-plane>
+            <a-plane position="0 0 2" rotation="0 0 0" width="4" height="4" color="#7BC8A4"  side="double"></a-plane>
+            <a-plane position="0 0 -2" rotation="0 0 0" width="4" height="4" color="#555555"  side="double"></a-plane>
+            <a-sky color="black"></a-sky>
         </a-scene>
         
         <script type="text/javascript">
@@ -83,7 +88,7 @@
                 // Elementos básicos de cena
                 stats = initStats();
                 scene = self.el.sceneEl.object3D;               
-                renderer = self.el.renderer;
+                //renderer = self.el.renderer;
                 camera = document.querySelector("[camera]").getObject3D('camera');
 
                 renderer = self.el.renderer;
