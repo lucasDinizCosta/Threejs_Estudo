@@ -27,13 +27,13 @@
             // A função de inicialização da cena é recomendada ficar antes do <a-scene>
             // Após ler todo o documento html é inicilizada a cena, por isso ocorre erro de não identificação da scene algumas vezes fora deste script
             // https://github.com/aframevr/aframe/issues/2000
-            /*AFRAME.registerComponent('main', {
+            AFRAME.registerComponent('main', {
                 init: function(){
                     console.log("Carregou a cena");
                     self = this;               
 
                     // Após a leitura do arquivo html e inicialização da cena, agora cria-se os elementos
-                    //createScene(self);
+                    createScene(self);
                     
                 },
                 tick: function(){
@@ -44,16 +44,18 @@
                 update: function(){
                     //createScene(self);
                 }
-            });*/
+            });
         </script>
         <a-scene main stats> 
-            <a-camera position="0 1 0">
-                <a-cursor></a-cursor>
-            </a-camera>
+            <!--
+                <a-camera position="0 1 0">
+                    <a-cursor></a-cursor>
+                </a-camera>
             <a-plane position="0 0 0" rotation="-90 0 0" width="8" height="8" color="#7BC8A4"  side="double"></a-plane>
             <a-plane position="0 0 4" rotation="0 0 0" width="8" height="8" color="#7BC8A4"  side="double"></a-plane>
             <a-plane position="0 0 -4" rotation="0 0 0" width="8" height="8" color="blue"  side="double"></a-plane>
             <a-sky color="black"></a-sky>
+            -->
         </a-scene>
         
         <script type="text/javascript">
@@ -145,9 +147,9 @@
                 scene.add(ambientLight);
                 
                 // Plano de base
-                /*var groundPlane = createGroundPlane(2, 2, 0); // width and height
+                var groundPlane = createGroundPlane(2, 2, 0); // width and height
                 groundPlane.rotateX(degreesToRadians(-90));
-                scene.add(groundPlane);*/
+                scene.add(groundPlane);
 
                 // Show axes (parameter is size of each axis)
                 var axes = new THREE.AxesHelper(50);
