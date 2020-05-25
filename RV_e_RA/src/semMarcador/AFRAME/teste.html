@@ -33,7 +33,7 @@
                 console.log(self);
 
                 // inicia a cena
-                createScene(self);
+                //createScene(self);
             },
             // Antes da cena ser renderizada
             tick: function(time, timeDelta){
@@ -287,11 +287,7 @@
                 return object;
             }
 
-            // verifica se o elemento foi carregado
-            document.querySelector('a-scene').addEventListener('loaded', function () {
-                //render();
-                requestAnimationFrame(render);
-            });
+            
         }
 
         addEventListener("keydown", function (e) {
@@ -311,7 +307,14 @@
         });
 
 
-
+        // verifica se o elemento foi carregado
+        /*console.log("cc");
+        document.querySelector('a-scene').addEventListener('loaded', function () {
+                //render();
+            createScene(self);
+            render();
+            //requestAnimationFrame(render);
+        });*/
 
         </script>
         <a-scene main="" log="Hello, Scene!" stats>
@@ -322,6 +325,17 @@
             <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
             <a-sky color="#ECECEC"></a-sky>
         </a-scene>
+
+        <script>
+        // verifica se o elemento foi carregado
+        console.log("cc");
+        document.querySelector('a-scene').addEventListener('loaded', function () {
+                //render();
+            createScene(self);
+            render();
+            //requestAnimationFrame(render);
+        });
+        </script>
         
     </body>
 </html>
