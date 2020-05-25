@@ -52,11 +52,11 @@
                 tick: function(time, timeDelta){
                     //console.log(time, timeDelta);
                     stats.update();
-                    if(time - lastFrameTime < FRAME_MIN_TIME){ //skip the frame if the call is too early
+                    if(timeDelta > FRAME_MIN_TIME){ //skip the frame if the call is too early
                         return; // return as there is nothing to do
                     }
 
-                    lastFrameTime = time;
+                    //lastFrameTime = time;
 
                     // render the frame
                     orbitControls.update(clock);
