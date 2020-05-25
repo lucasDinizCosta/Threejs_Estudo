@@ -3,12 +3,12 @@
     <head>
         <meta charset="utf-8">
         <!--
-            <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+            Atualizado
             <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@cd01cec35a01e03eb2d6a9272500a53de31d3828/dist/aframe-master.min.js"></script>
-            <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
         -->
         <script type="text/javascript" src="../../../libs/aframe-master.min.js"></script>
         
+        <!--
         <script>
             // Remove a versão interna do Three.js que tem dentro do aframe e coloca a nova
             window._THREE = THREE;
@@ -18,7 +18,7 @@
         <script>
             console.log("Three.js version: ",_THREE.REVISION, THREE.REVISION);
         </script>
-        <!--
+        
          https://stackoverflow.com/questions/51183006/using-a-frame-with-three-js-will-affect-three-js -->
         <script type="text/javascript" src="../../../libs/util.js"></script>
         <script type="text/javascript" src="../../../libs/three/controls/OrbitControls.js"></script>
@@ -93,7 +93,7 @@
         </a-scene>
         
         <script type="text/javascript">
-            alert("HighRefreshRate teste");
+            //alert("HighRefreshRate teste");
 
             var self;
             var scene;
@@ -176,7 +176,7 @@
                 spotLight.castShadow = true;
                 //spotLight.decay = 2;
                 //spotLight.penumbra = 0.05;
-                spotLight.name = "spotLight"
+                spotLight.name = "spotLight";
 
                 scene.add(spotLight);
 
@@ -341,12 +341,15 @@
             addEventListener("keydown", function (e) {
                 switch(e.keyCode){
                     case 32: // Espaço
-                        objectArray[meshNumber].visible = false;
-                        meshNumber++;
+                        //objectArray[meshNumber].visible = false;
+                        mesh.visible = false;
+                        meshNumber = meshNumber + 1;
                         if(meshNumber >= 5){
                             meshNumber = 0;
                         }
-                        objectArray[meshNumber].visible = true;
+                        //objectArray[meshNumber].visible = true;
+                        mesh = objectArray[meshNumber];
+                        mesh.visible = true;
                         break;
                 }
             });
