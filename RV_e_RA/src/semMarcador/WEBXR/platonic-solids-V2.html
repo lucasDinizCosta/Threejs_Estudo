@@ -335,7 +335,15 @@
         //controller.matrixWorld = camera.getMatrixWorld();
         //console.log(controller, controllerGrip);*/
         //console.log(controller.matrixWorld.elements);
-        controller.add(camera.clone());
+
+        const geometry = new THREE.BufferGeometry().setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 1 ) ] );
+
+        const line = new THREE.Line( geometry );
+        line.name = 'line';
+		line.scale.z = 10;
+
+        controller.add( line.clone() );
+        //controller.add(camera.clone());
 
         //controller.matriz
         console.log(controller, camera.position);
