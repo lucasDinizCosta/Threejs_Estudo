@@ -24,13 +24,6 @@
         var mesh;
         var objectArray;
         var rotation = 0.02;
-        
-        // Teste do controle de fps
-
-        var FRAMES_PER_SECOND = 50;  // Valid values are 60,30,20,15,10...
-        // set the mim time to render the next frame
-        var FRAME_MIN_TIME = (1000/60) * (60 / FRAMES_PER_SECOND) - (1000/60) * 0.5;
-        var lastFrameTime = 0;  // the last frame time
 
         AFRAME.registerComponent('main', {
             schema: {type: 'string'},
@@ -44,7 +37,7 @@
             },
             // Antes da cena ser renderizada
             tick: function(time, timeDelta){
-                render();
+                //render();
 
             },
             // Após a cena ser renderizada
@@ -75,6 +68,7 @@
             mesh.rotation.z += rotation;
 
             renderer.render(scene, camera);
+            requestAnimationFrame(render);
         }
 
         function degreesToRadians(degrees)
@@ -292,6 +286,12 @@
                 objectArray.push(object);
                 return object;
             }
+
+            // verifica se o elemento foi carregado
+            document.querySelector('a-scene').addEventListener('loaded', function () {
+                //render();
+                requestAnimationFrame(render);
+            });
         }
 
         addEventListener("keydown", function (e) {
