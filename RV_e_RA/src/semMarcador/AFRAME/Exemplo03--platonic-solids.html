@@ -47,7 +47,10 @@
                 }
             });
         </script>
-        <a-scene main stats light="defaultLightsEnabled: false"> 
+        <a-scene main stats >
+            <a-camera position="0 1 0">
+                <a-cursor></a-cursor>
+            </a-camera>
             <!--
                 <a-camera position="0 1 0">
                     <a-cursor></a-cursor>
@@ -56,7 +59,13 @@
             <a-plane position="0 0 4" rotation="0 0 0" width="8" height="8" color="#7BC8A4"  side="double"></a-plane>
             <a-plane position="0 0 -4" rotation="0 0 0" width="8" height="8" color="blue"  side="double"></a-plane>
             <a-sky color="black"></a-sky>
+
+            light="defaultLightsEnabled: false"
             -->
+            <a-plane position="0 0 4" rotation="0 0 0" width="8" height="8" color="#7BC8A4"  side="double"></a-plane>
+            <a-plane position="0 0 -4" rotation="0 0 0" width="8" height="8" color="blue"  side="double"></a-plane>
+            <a-plane position="-4 0 0" rotation="0 90 0" width="8" height="8" color="blue"  side="double"></a-plane>
+            <a-plane position="4 0 0" rotation="0 90 0" width="8" height="8" color="blue"  side="double"></a-plane>
         </a-scene>
         
         <script type="text/javascript">
