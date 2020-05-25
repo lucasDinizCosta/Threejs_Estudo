@@ -2,75 +2,41 @@
 <html lang="pt">
     <head>
         <meta charset="utf-8">
-        <!--
-            <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@cd01cec35a01e03eb2d6a9272500a53de31d3828/dist/aframe-master.min.js"></script>
-            <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-        -->
-        <script type="text/javascript" src="../../../libs/aframe-master.min.js"></script>
-        
-        <script>
-            // Remove a versão interna do Three.js que tem dentro do aframe e coloca a nova
-            window._THREE = THREE;
-            delete window.THREE;
-        </script>
-        <script type="text/javascript" src="../../../libs/three/three.js"></script>
-        <script>
-            console.log("Three.js version: ",_THREE.REVISION, THREE.REVISION);
-        </script>
-        <!--
-         https://stackoverflow.com/questions/51183006/using-a-frame-with-three-js-will-affect-three-js -->
-        <script type="text/javascript" src="../../../libs/util.js"></script>
-        <script type="text/javascript" src="../../../libs/three/controls/OrbitControls.js"></script>
-        <script type="text/javascript" src="../../../libs/util/Stats.js"></script>
-
+        <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
         <title>Virtual Reality - Solids</title>
-
-        
-    </head>
-    <body>
         <script type="text/javascript">
             // A função de inicialização da cena é recomendada ficar antes do <a-scene>
             // Após ler todo o documento html é inicilizada a cena, por isso ocorre erro de não identificação da scene algumas vezes fora deste script
             // https://github.com/aframevr/aframe/issues/2000
-            // https://aframe.io/docs/1.0.0/core/component.html#schema
             AFRAME.registerComponent('main', {
                 schema: function(){
+                    // desired FPS
+                    fps: {
+                            type: 'number',
+                            default: 90.0
+                    }
+                
                 },
                 init: function(){
                     console.log("Carregou a cena");
-                    self = this;
+                    self = this;               
 
                     // Após a leitura do arquivo html e inicialização da cena, agora cria-se os elementos
                     createScene(self);
-
-                    
-                    
                     
                 },
-                // Antes da cena ser renderizada
-                tick: function(time, timeDelta){
-                    //console.log(time, timeDelta);
-                    stats.update();
-                    if(time - lastFrameTime < FRAME_MIN_TIME){ //skip the frame if the call is too early
-                        return; // return as there is nothing to do
-                    }
-
-                    lastFrameTime = time;
-
-                    // render the frame
+                tick: function(){
                     orbitControls.update(clock);
+                    stats.update();
                     render();
-                },
-                // Após a cena ser renderizada
-                tock: function(time, timeDelta, camera){
-                  
                 },
                 update: function(){
                     //createScene(self);
                 }
             });
         </script>
+    </head>
+    <body>
         <a-scene main stats light="defaultLightsEnabled: false" >
             <a-camera position="0 1 0">
                 <a-cursor></a-cursor>
@@ -107,13 +73,6 @@
             var mesh;
             var objectArray;
             var rotation = 0.02;
-            
-            // Teste do controle de fps
-
-            var FRAMES_PER_SECOND = 30;  // Valid values are 60,30,20,15,10...
-            // set the mim time to render the next frame
-            var FRAME_MIN_TIME = (1000/60) * (60 / FRAMES_PER_SECOND) - (1000/60) * 0.5;
-            var lastFrameTime = 0;  // the last frame time
 
             // Loop de animação
             function render(){
