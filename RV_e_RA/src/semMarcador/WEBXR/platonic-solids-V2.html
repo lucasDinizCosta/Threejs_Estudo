@@ -311,14 +311,17 @@
             //this.add( buildController( event.data ) );
             alert("connected");
 
+
         } );
         controller.addEventListener( 'disconnected', function () {
 
-            //this.remove( this.children[ 0 ] );
+            this.remove( this.children[ 0 ] );
             alert("disconnected");
 
         } );
         scene.add( controller );
+        //var teste ="deu";
+        //alert(teste)
 
         var controllerModelFactory = new XRControllerModelFactory();
 
@@ -327,10 +330,15 @@
         controllerGrip.add(model1);
         scene.add( controllerGrip );
 
-        controller.visible = true;
-        controllerGrip.visible = true;
+        //controller.visible = true;
+        //controllerGrip.visible = true;
         //controller.matrixWorld = camera.getMatrixWorld();
         //console.log(controller, controllerGrip);*/
+        //console.log(controller.matrixWorld.elements);
+        controller.add(camera.clone());
+
+        //controller.matriz
+        console.log(controller, camera.position);
 
         // Nao resolveu
         /*controller.position.set(camera.position.x, camera.position.y, camera.position.z);
