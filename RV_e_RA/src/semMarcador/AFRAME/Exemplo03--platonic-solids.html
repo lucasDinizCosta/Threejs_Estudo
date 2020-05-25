@@ -47,7 +47,7 @@
                 }
             });
         </script>
-        <a-scene main stats >
+        <a-scene main stats light="defaultLightsEnabled: false" >
             <a-camera position="0 1 0">
                 <a-cursor></a-cursor>
             </a-camera>
@@ -136,7 +136,7 @@
 
 
                 // Default Light
-                /*var spotLight = new THREE.SpotLight(0xffffff);
+                var spotLight = new THREE.SpotLight(0xffffff);
                 spotLight.position = new THREE.Vector3(7.7, 14.14, 0);
                 spotLight.shadow.mapSize.width = 2048;
                 spotLight.shadow.mapSize.height = 2048;
@@ -146,7 +146,7 @@
                 spotLight.penumbra = 0.05;
                 spotLight.name = "spotLight"
 
-                scene.add(spotLight);*/
+                scene.add(spotLight);
 
                 /*var dirLight = new THREE.DirectionalLight(0xffffff);
                 dirLight.position = new THREE.Vector3(2.2, 4.4, 0);
