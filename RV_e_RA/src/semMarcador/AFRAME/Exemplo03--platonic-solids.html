@@ -102,11 +102,11 @@
                 renderer.alpha = true;
 
                 // Propriedades de sombreado
-                renderer.shadowMap.enabled = true;
+                /*renderer.shadowMap.enabled = true;
                 renderer.shadowMapSoft = true;
                 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                renderer.shadowMap.enabled = true;*/
                 renderer.setClearColor(new THREE.Color("black"));
-                renderer.shadowMap.enabled = true;
 
                 // Propriedades da camera
                 camera.fov = 45;
@@ -127,7 +127,7 @@
 
 
                 // Default Light
-                var spotLight = new THREE.SpotLight(0xffffff);
+                /*var spotLight = new THREE.SpotLight(0xffffff);
                 spotLight.position = new THREE.Vector3(7.7, 14.14, 0);
                 spotLight.shadow.mapSize.width = 2048;
                 spotLight.shadow.mapSize.height = 2048;
@@ -137,15 +137,15 @@
                 spotLight.penumbra = 0.05;
                 spotLight.name = "spotLight"
 
-                scene.add(spotLight);
+                scene.add(spotLight);*/
 
                 /*var dirLight = new THREE.DirectionalLight(0xffffff);
                 dirLight.position = new THREE.Vector3(2.2, 4.4, 0);
                 dirLight.castShadow = true;
                 scene.add(dirLight);*/
-                var ambientLight = new THREE.AmbientLight(0x343434);
+                /*var ambientLight = new THREE.AmbientLight(0x343434);
                 ambientLight.name = "ambientLight";
-                scene.add(ambientLight);
+                scene.add(ambientLight);*/
                 
                 // Plano de base
                 var groundPlane = createGroundPlane(2, 2, 0); // width and height
