@@ -2,314 +2,325 @@
 <html lang="pt">
     <head>
         <meta charset="utf-8">
-        <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+        <script type="text/javascript" src="../../../libs/aframe-master.js"></script>
         <title>Virtual Reality - Solids</title>
-        <script type="text/javascript">
-            // A função de inicialização da cena é recomendada ficar antes do <a-scene>
-            // Após ler todo o documento html é inicilizada a cena, por isso ocorre erro de não identificação da scene algumas vezes fora deste script
-            // https://github.com/aframevr/aframe/issues/2000
-            AFRAME.registerComponent('main', {
-                schema: function(){
-                    // desired FPS
-                    fps: {
-                            type: 'number',
-                            default: 90.0
-                    }
-                
-                },
-                init: function(){
-                    console.log("Carregou a cena");
-                    self = this;               
-
-                    // Após a leitura do arquivo html e inicialização da cena, agora cria-se os elementos
-                    createScene(self);
-                    
-                },
-                tick: function(){
-                    orbitControls.update(clock);
-                    stats.update();
-                    render();
-                },
-                update: function(){
-                    //createScene(self);
-                }
-            });
-        </script>
     </head>
     <body>
-        <a-scene main stats light="defaultLightsEnabled: false" >
-            <a-camera position="0 1 0">
-                <a-cursor></a-cursor>
-            </a-camera>
-            <!--
-                <a-camera position="0 1 0">
-                    <a-cursor></a-cursor>
-                </a-camera>
-            <a-plane position="0 0 0" rotation="-90 0 0" width="8" height="8" color="#7BC8A4"  side="double"></a-plane>
-            <a-plane position="0 0 4" rotation="0 0 0" width="8" height="8" color="#7BC8A4"  side="double"></a-plane>
-            <a-plane position="0 0 -4" rotation="0 0 0" width="8" height="8" color="blue"  side="double"></a-plane>
-            <a-sky color="black"></a-sky>
-
-            light="defaultLightsEnabled: false"
-            -->
-            <a-plane position="0 0 4" rotation="0 0 0" width="8" height="8" color="#7BC8A4"  side="double"></a-plane>
-            <a-plane position="0 0 -4" rotation="0 0 0" width="8" height="8" color="blue"  side="double"></a-plane>
-            <a-plane position="-4 0 0" rotation="0 90 0" width="8" height="8" color="blue"  side="double"></a-plane>
-            <a-plane position="4 0 0" rotation="0 90 0" width="8" height="8" color="blue"  side="double"></a-plane>
-        </a-scene>
-        
         <script type="text/javascript">
-            alert("Pixelratio no renderer");
+        // A função de inicialização da cena é recomendada ficar antes do <a-scene>
+        // Após ler todo o documento html é inicilizada a cena, por isso ocorre erro de não identificação da scene algumas vezes fora deste script
+        // https://github.com/aframevr/aframe/issues/2000
+        // https://aframe.io/docs/1.0.0/core/component.html#schema
 
-            var self;
-            var scene;
-            var renderer;
-            var camera;
-            var clock;
-            var orbitControls;
-            var stats;
+        var self;
+        var scene;
+        var renderer;
+        var camera;
+        var clock;
+        var orbitControls;
+        var stats;
 
-            var meshNumber;
-            var mesh;
-            var objectArray;
-            var rotation = 0.02;
+        var meshNumber;
+        var mesh;
+        var objectArray;
+        var rotation = 0.02;
+        
+        // Teste do controle de fps
 
-            // Loop de animação
-            function render(){
-                mesh = objectArray[meshNumber];
+        var FRAMES_PER_SECOND = 50;  // Valid values are 60,30,20,15,10...
+        // set the mim time to render the next frame
+        var FRAME_MIN_TIME = (1000/60) * (60 / FRAMES_PER_SECOND) - (1000/60) * 0.5;
+        var lastFrameTime = 0;  // the last frame time
 
-                // Rotating the mesh selected
-                mesh.rotation.x += rotation;
-                mesh.rotation.y += rotation;
-                mesh.rotation.z += rotation;
+        AFRAME.registerComponent('main', {
+            schema: {type: 'string'},
+            init: function(){
+                console.log("Carregou a cena");
+                self = this;
+                console.log(self);
 
-                renderer.render(scene, camera);
+                // inicia a cena
+                createScene(self);
+            },
+            // Antes da cena ser renderizada
+            tick: function(time, timeDelta){
+
+            },
+            // Após a cena ser renderizada
+            tock: function(time, timeDelta, camera){
+              
+            },
+            update: function(){
+                //createScene(self);
+            }
+        });
+
+        AFRAME.registerComponent('log', {       // console.log para o elemento passado
+            schema: {type: 'string'},
+
+            init: function () {
+                var stringToLog = this.data;
+                console.log(stringToLog);
+            }
+        });
+
+        // Loop de animação
+        function render(){
+            mesh = objectArray[meshNumber];
+
+            // Rotating the mesh selected
+            mesh.rotation.x += rotation;
+            mesh.rotation.y += rotation;
+            mesh.rotation.z += rotation;
+
+            renderer.render(scene, camera);
+        }
+
+        function degreesToRadians(degrees)
+        {
+            var pi = Math.PI;
+            return degrees * (pi/180);
+        }
+
+
+        function createScene(self){
+            // Remove todos os elementos dentro da cena -- Elementos padrão -- menos o render
+            // self.el.sceneEl.object3D.children = [];
+
+            // Elementos básicos de cena
+            scene = self.el.sceneEl.object3D;               
+            //renderer = self.el.renderer;
+            camera = document.querySelector("[camera]").getObject3D('camera');
+
+            renderer = self.el.renderer;
+            renderer.antialias = true;
+            renderer.alpha = true;
+
+            // Propriedades de sombreado
+            /*renderer.shadowMap.enabled = true;
+            renderer.shadowMapSoft = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.shadowMap.enabled = true;*/
+            renderer.setClearColor(new THREE.Color("black"));
+            renderer.setPixelRatio(Math.floor(window.devicePixelRatio));
+
+            // Propriedades da camera
+            camera.fov = 45;
+            camera.aspect = (window.innerWidth / window.innerHeight);
+            camera.near = 0.1;
+            camera.far = 1000;
+
+            camera.position.set(0.5, 0.8, 2);
+            camera.lookAt(0, 0, 0);
+            //camera.position.set(5, 25, 30);
+            camera.up.set( 0, 1, 0 );
+            //scene.add(camera);
+
+            // Enable mouse rotation, pan, zoom etc.
+            //orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+            //orbitControls.target.set(0, 0, -1);
+            clock = new THREE.Clock();
+
+
+            // Default Light
+            var spotLight = new THREE.SpotLight(0xffffff);
+            spotLight.position = new THREE.Vector3(7.7, 14.14, 0);
+            //spotLight.shadow.mapSize.width = 2048;
+            //spotLight.shadow.mapSize.height = 2048;
+            //spotLight.shadow.camera.fov = 15;
+            spotLight.castShadow = true;
+            //spotLight.decay = 2;
+            //spotLight.penumbra = 0.05;
+            spotLight.name = "spotLight";
+
+            scene.add(spotLight);
+
+            /*var dirLight = new THREE.DirectionalLight(0xffffff);
+            dirLight.position = new THREE.Vector3(2.2, 4.4, 0);
+            dirLight.castShadow = true;
+            scene.add(dirLight);*/
+            var ambientLight = new THREE.AmbientLight(0x343434);
+            ambientLight.name = "ambientLight";
+            scene.add(ambientLight);
+            
+            // Plano de base
+            /*var groundPlane = createGroundPlane(2, 2, 0); // width and height
+            groundPlane.rotateX(degreesToRadians(-90));
+            scene.add(groundPlane);*/
+
+            // Show axes (parameter is size of each axis)
+            var axes = new THREE.AxesHelper(50);
+            axes.name = "AXES";
+            axes.visible = true;
+            scene.add(axes);
+
+            // Object Material for all objects -- MeshNormalMaterial
+            var objectMaterial = new THREE.MeshPhongMaterial({color:"rgb(255, 0, 0)"});
+            objectMaterial.side = THREE.DoubleSide;     
+
+            // Add objects to scene
+            objectArray = new Array();
+
+            criationObjects();
+
+            function criationObjects(){
+                scene.add(createTetrahedron(0.25, 0));
+                scene.add(createCube(0.50));
+                scene.add(createOctahedron(0.28, 0));
+                scene.add(createDodecahedron(0.28, 0));
+                scene.add(createIcosahedron(0.28, 0));
             }
 
-            function createScene(self){
-                // Remove todos os elementos dentro da cena -- Elementos padrão -- menos o render
-                // self.el.sceneEl.object3D.children = [];
+            // Seleciona o primeiro objeto
+            meshNumber = 0;
+            mesh = objectArray[meshNumber];
+            mesh.visible = true;
 
-                // Elementos básicos de cena
-                stats = initStats();
-                scene = self.el.sceneEl.object3D;               
-                //renderer = self.el.renderer;
-                camera = document.querySelector("[camera]").getObject3D('camera');
+            // 4 faces
+            function createTetrahedron(radius, detail)
+            {
+                var geometry = new THREE.TetrahedronGeometry(radius, detail);
+                var object = new THREE.Mesh(geometry, objectMaterial);
+                object.position.set(0.0, radius/3 * 2, 0.0);      //Color Axe (Red, Green, Blue)
+                object.castShadow = true;
 
-                renderer = self.el.renderer;
-                renderer.antialias = true;
-                renderer.alpha = true;
+                //Set rotation
+                object.rotation.x = degreesToRadians(-41.12);
+                object.rotation.y = degreesToRadians(-42.26);
+                object.rotation.z = degreesToRadians(0.1);
 
-                // Propriedades de sombreado
-                /*renderer.shadowMap.enabled = true;
-                renderer.shadowMapSoft = true;
-                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-                renderer.shadowMap.enabled = true;*/
-                renderer.setClearColor(new THREE.Color("black"));
-                renderer.setPixelRatio(Math.floor(window.devicePixelRatio));
+                object.visible = false;
+                object.name = "Tetrahedron";
 
-                // Propriedades da camera
-                camera.fov = 45;
-                camera.aspect = (window.innerWidth / window.innerHeight);
-                camera.near = 0.1;
-                camera.far = 1000;
+                // Border -- Black line
+                var geo = new THREE.EdgesGeometry( object.geometry );
+                var mat = new THREE.LineBasicMaterial( { color: 0x000000, transparent: true, opacity: 0.4 } );
+                var borderLine = new THREE.LineSegments( geo, mat );
+                borderLine.renderOrder = 1; // make sure wireframes are rendered 2nd
+                borderLine.name = "borderLine";
+                object.add( borderLine );
 
-                camera.position.set(0.5, 0.8, 2);
-                camera.lookAt(0, 0, 0);
-                //camera.position.set(5, 25, 30);
-                camera.up.set( 0, 1, 0 );
-                //scene.add(camera);
-
-                // Enable mouse rotation, pan, zoom etc.
-                orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
-                //orbitControls.target.set(0, 0, -1);
-                clock = new THREE.Clock();
-
-
-                // Default Light
-                var spotLight = new THREE.SpotLight(0xffffff);
-                spotLight.position = new THREE.Vector3(7.7, 14.14, 0);
-                //spotLight.shadow.mapSize.width = 2048;
-                //spotLight.shadow.mapSize.height = 2048;
-                //spotLight.shadow.camera.fov = 15;
-                spotLight.castShadow = true;
-                //spotLight.decay = 2;
-                //spotLight.penumbra = 0.05;
-                spotLight.name = "spotLight"
-
-                scene.add(spotLight);
-
-                /*var dirLight = new THREE.DirectionalLight(0xffffff);
-                dirLight.position = new THREE.Vector3(2.2, 4.4, 0);
-                dirLight.castShadow = true;
-                scene.add(dirLight);*/
-                /*var ambientLight = new THREE.AmbientLight(0x343434);
-                ambientLight.name = "ambientLight";
-                scene.add(ambientLight);*/
-                
-                // Plano de base
-                var groundPlane = createGroundPlane(2, 2, 0); // width and height
-                groundPlane.rotateX(degreesToRadians(-90));
-                scene.add(groundPlane);
-
-                // Show axes (parameter is size of each axis)
-                var axes = new THREE.AxesHelper(50);
-                axes.name = "AXES";
-                axes.visible = true;
-                scene.add(axes);
-    
-                // Object Material for all objects -- MeshNormalMaterial
-                var objectMaterial = new THREE.MeshPhongMaterial({color:"rgb(255, 0, 0)"});
-                objectMaterial.side = THREE.DoubleSide;     
-
-                // Add objects to scene
-                objectArray = new Array();
-
-                criationObjects();
-
-                function criationObjects(){
-                    scene.add(createTetrahedron(0.25, 0));
-                    scene.add(createCube(0.50));
-                    scene.add(createOctahedron(0.28, 0));
-                    scene.add(createDodecahedron(0.28, 0));
-                    scene.add(createIcosahedron(0.28, 0));
-                }
-
-                // Seleciona o primeiro objeto
-                meshNumber = 0;
-                mesh = objectArray[meshNumber];
-                mesh.visible = true;
-
-                // 4 faces
-                function createTetrahedron(radius, detail)
-                {
-                    var geometry = new THREE.TetrahedronGeometry(radius, detail);
-                    var object = new THREE.Mesh(geometry, objectMaterial);
-                    object.position.set(0.0, radius/3 * 2, 0.0);      //Color Axe (Red, Green, Blue)
-                    object.castShadow = true;
-
-                    //Set rotation
-                    object.rotation.x = degreesToRadians(-41.12);
-                    object.rotation.y = degreesToRadians(-42.26);
-                    object.rotation.z = degreesToRadians(0.1);
-
-                    object.visible = false;
-                    object.name = "Tetrahedron";
-
-                    // Border -- Black line
-                    var geo = new THREE.EdgesGeometry( object.geometry );
-                    var mat = new THREE.LineBasicMaterial( { color: 0x000000, transparent: true, opacity: 0.4 } );
-                    var borderLine = new THREE.LineSegments( geo, mat );
-                    borderLine.renderOrder = 1; // make sure wireframes are rendered 2nd
-                    borderLine.name = "borderLine";
-                    object.add( borderLine );
-
-                    objectArray.push(object);
-                    return object;
-                }
-
-                // 6 faces
-                function createCube(s)
-                {
-                    let geometry = new THREE.BoxGeometry(s, s, s);
-                    let object = new THREE.Mesh(geometry, objectMaterial);
-                    object.position.set(0.0, s/2, 0.0);
-                    object.castShadow = true;
-                    object.visible = false;
-                    object.name = "Cube";
-
-                    // Border
-                    var geo = new THREE.EdgesGeometry( object.geometry );
-                    var mat = new THREE.LineBasicMaterial( { color: 0x000000, transparent: true, opacity: 0.4});
-                    var borderLine = new THREE.LineSegments( geo, mat );
-                    borderLine.renderOrder = 1; // make sure wireframes are rendered 2nd
-                    borderLine.name = "borderLine";
-                    object.add( borderLine );
-
-                    objectArray.push(object);
-                    return object;
-                }
-
-                // 8 faces
-                function createOctahedron(radius, detail)
-                {
-                    var geometry = new THREE.OctahedronGeometry(radius, detail);
-                    var object = new THREE.Mesh(geometry, objectMaterial);
-                    object.position.set(0.0, radius, 0.0);
-                    object.castShadow = true;
-                    object.visible = false;
-                    object.name = "Octahedro";
-
-                    // Border
-                    var geo = new THREE.EdgesGeometry( object.geometry );
-                    var mat = new THREE.LineBasicMaterial( { color: 0x000000, transparent: true, opacity: 0.4 });
-                    var borderLine = new THREE.LineSegments( geo, mat );
-                    borderLine.renderOrder = 1; // make sure wireframes are rendered 2nd
-                    borderLine.name = "borderLine";
-                    object.add( borderLine );
-
-                    objectArray.push(object);
-                    return object;
-                }
-
-                // 12 faces
-                function createDodecahedron(radius, detail)
-                {
-                    var geometry = new THREE.DodecahedronGeometry(radius, detail);
-                    var object = new THREE.Mesh(geometry, objectMaterial);
-                    object.position.set(0.0, radius, 0.0);
-                    object.castShadow = true;
-                    object.visible = false;
-                    object.name = "Dodecahedron";
-
-                    // Border
-                    var geo = new THREE.EdgesGeometry( object.geometry );
-                    var mat = new THREE.LineBasicMaterial( { color: 0x000000, transparent: true, opacity: 0.4 } );
-                    var borderLine = new THREE.LineSegments( geo, mat );
-                    borderLine.renderOrder = 1; // make sure wireframes are rendered 2nd
-                    borderLine.name = "borderLine";
-                    object.add( borderLine );
-
-                    objectArray.push(object);
-                    return object;
-                }
-
-                // 20 faces
-                function createIcosahedron(radius, detail)
-                {
-                    let geometry = new THREE.IcosahedronGeometry(radius, detail);
-                    let object = new THREE.Mesh(geometry, objectMaterial);
-                    object.position.set(0.0, radius - 0.05, 0.0);
-                    object.castShadow = true;
-                    object.visible = false;
-                    object.name = "Icosahedron";
-
-                    // Border
-                    var geo = new THREE.EdgesGeometry( object.geometry );
-                    var mat = new THREE.LineBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.4 });
-                    var borderLine = new THREE.LineSegments( geo, mat );
-                    borderLine.renderOrder = 1; // make sure wireframes are rendered 2nd
-                    borderLine.name = "borderLine";
-                    object.add( borderLine );
-
-                    objectArray.push(object);
-                    return object;
-                }
+                objectArray.push(object);
+                return object;
             }
 
-            addEventListener("keydown", function (e) {
-                switch(e.keyCode){
-                    case 32: // Espaço
-                        objectArray[meshNumber].visible = false;
-                        meshNumber++;
-                        if(meshNumber >= 5){
-                            meshNumber = 0;
-                        }
-                        objectArray[meshNumber].visible = true;
-                        break;
-                }
-            });
+            // 6 faces
+            function createCube(s)
+            {
+                let geometry = new THREE.BoxGeometry(s, s, s);
+                let object = new THREE.Mesh(geometry, objectMaterial);
+                object.position.set(0.0, s/2, 0.0);
+                object.castShadow = true;
+                object.visible = false;
+                object.name = "Cube";
+
+                // Border
+                var geo = new THREE.EdgesGeometry( object.geometry );
+                var mat = new THREE.LineBasicMaterial( { color: 0x000000, transparent: true, opacity: 0.4});
+                var borderLine = new THREE.LineSegments( geo, mat );
+                borderLine.renderOrder = 1; // make sure wireframes are rendered 2nd
+                borderLine.name = "borderLine";
+                object.add( borderLine );
+
+                objectArray.push(object);
+                return object;
+            }
+
+            // 8 faces
+            function createOctahedron(radius, detail)
+            {
+                var geometry = new THREE.OctahedronGeometry(radius, detail);
+                var object = new THREE.Mesh(geometry, objectMaterial);
+                object.position.set(0.0, radius, 0.0);
+                object.castShadow = true;
+                object.visible = false;
+                object.name = "Octahedro";
+
+                // Border
+                var geo = new THREE.EdgesGeometry( object.geometry );
+                var mat = new THREE.LineBasicMaterial( { color: 0x000000, transparent: true, opacity: 0.4 });
+                var borderLine = new THREE.LineSegments( geo, mat );
+                borderLine.renderOrder = 1; // make sure wireframes are rendered 2nd
+                borderLine.name = "borderLine";
+                object.add( borderLine );
+
+                objectArray.push(object);
+                return object;
+            }
+
+            // 12 faces
+            function createDodecahedron(radius, detail)
+            {
+                var geometry = new THREE.DodecahedronGeometry(radius, detail);
+                var object = new THREE.Mesh(geometry, objectMaterial);
+                object.position.set(0.0, radius, 0.0);
+                object.castShadow = true;
+                object.visible = false;
+                object.name = "Dodecahedron";
+
+                // Border
+                var geo = new THREE.EdgesGeometry( object.geometry );
+                var mat = new THREE.LineBasicMaterial( { color: 0x000000, transparent: true, opacity: 0.4 } );
+                var borderLine = new THREE.LineSegments( geo, mat );
+                borderLine.renderOrder = 1; // make sure wireframes are rendered 2nd
+                borderLine.name = "borderLine";
+                object.add( borderLine );
+
+                objectArray.push(object);
+                return object;
+            }
+
+            // 20 faces
+            function createIcosahedron(radius, detail)
+            {
+                let geometry = new THREE.IcosahedronGeometry(radius, detail);
+                let object = new THREE.Mesh(geometry, objectMaterial);
+                object.position.set(0.0, radius - 0.05, 0.0);
+                object.castShadow = true;
+                object.visible = false;
+                object.name = "Icosahedron";
+
+                // Border
+                var geo = new THREE.EdgesGeometry( object.geometry );
+                var mat = new THREE.LineBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.4 });
+                var borderLine = new THREE.LineSegments( geo, mat );
+                borderLine.renderOrder = 1; // make sure wireframes are rendered 2nd
+                borderLine.name = "borderLine";
+                object.add( borderLine );
+
+                objectArray.push(object);
+                return object;
+            }
+        }
+
+        addEventListener("keydown", function (e) {
+            switch(e.keyCode){
+                case 32: // Espaço
+                    //objectArray[meshNumber].visible = false;
+                    mesh.visible = false;
+                    meshNumber = meshNumber + 1;
+                    if(meshNumber >= 5){
+                        meshNumber = 0;
+                    }
+                    //objectArray[meshNumber].visible = true;
+                    mesh = objectArray[meshNumber];
+                    mesh.visible = true;
+                    break;
+            }
+        });
+
+
+
 
         </script>
+        <a-scene main="" log="Hello, Scene!" stats>
+            <a-tetrahedron log="Hello, Tetrahedron!" position="-1.5 1.5 -2.8" rotation="0 0 0" color="green"></a-tetrahedron>
+            <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+            <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+            <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+            <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+            <a-sky color="#ECECEC"></a-sky>
+        </a-scene>
+        
     </body>
 </html>
