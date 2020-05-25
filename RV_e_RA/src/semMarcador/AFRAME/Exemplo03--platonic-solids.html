@@ -2,8 +2,9 @@
 <html lang="pt">
     <head>
         <meta charset="utf-8">
-        <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@cd01cec35a01e03eb2d6a9272500a53de31d3828/dist/aframe-master.min.js"></script>
+        <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
         <!--
+            <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@cd01cec35a01e03eb2d6a9272500a53de31d3828/dist/aframe-master.min.js"></script>
             <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
         <script type="text/javascript" src="../../../libs/aframe-master.min.js"></script>
         
@@ -138,12 +139,12 @@
                 // Default Light
                 var spotLight = new THREE.SpotLight(0xffffff);
                 spotLight.position = new THREE.Vector3(7.7, 14.14, 0);
-                spotLight.shadow.mapSize.width = 2048;
-                spotLight.shadow.mapSize.height = 2048;
-                spotLight.shadow.camera.fov = 15;
+                //spotLight.shadow.mapSize.width = 2048;
+                //spotLight.shadow.mapSize.height = 2048;
+                //spotLight.shadow.camera.fov = 15;
                 spotLight.castShadow = true;
-                spotLight.decay = 2;
-                spotLight.penumbra = 0.05;
+                //spotLight.decay = 2;
+                //spotLight.penumbra = 0.05;
                 spotLight.name = "spotLight"
 
                 scene.add(spotLight);
