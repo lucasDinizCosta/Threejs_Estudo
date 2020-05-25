@@ -70,7 +70,7 @@
         </a-scene>
         
         <script type="text/javascript">
-            alert("Teste versão pelo site 1.0.4");
+            alert("Pixelratio no renderer");
 
             var self;
             var scene;
@@ -117,6 +117,7 @@
                 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
                 renderer.shadowMap.enabled = true;*/
                 renderer.setClearColor(new THREE.Color("black"));
+                renderer.setPixelRatio(Math.floor(window.devicePixelRatio));
 
                 // Propriedades da camera
                 camera.fov = 45;
