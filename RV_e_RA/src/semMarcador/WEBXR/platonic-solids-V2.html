@@ -38,6 +38,7 @@
 
     <!-- Libraries of configuration -->
     <script type="text/javascript" charset="UTF-8" src="../../../libs/three/three.js"></script>
+    
     <script type="text/javascript" src="../../../libs/util/Stats.js"></script>
     <script type="text/javascript" src="../../../libs/util/dat.gui.js"></script>
 
@@ -69,11 +70,10 @@
         camera.lookAt(0, 0, 0);
         camera.position.set(5, 15, 30);
         camera.up.set(0, 1, 0);
+        scene.add(camera);
         
+        //console.log(renderer.xr);
         //var xrCamera = renderer.xr.getCamera(camera);
-        console.log(camera);
-
-
 
         var light = initDefaultLighting(scene, new THREE.Vector3(25, 30, 20)); // Use default light
 
@@ -315,7 +315,7 @@
         } );
         controller.addEventListener( 'disconnected', function () {
 
-            this.remove( this.children[ 0 ] );
+            //this.remove( this.children[ 0 ] );
             alert("disconnected");
 
         } );
@@ -329,6 +329,7 @@
         var model1 = controllerModelFactory.createControllerModel(controllerGrip);
         controllerGrip.add(model1);
         scene.add( controllerGrip );
+        alert("Adicao da camera na cena");
 
         //controller.visible = true;
         //controllerGrip.visible = true;
