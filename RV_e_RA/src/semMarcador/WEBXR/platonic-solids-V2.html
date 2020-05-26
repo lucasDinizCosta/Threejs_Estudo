@@ -319,17 +319,18 @@
             alert("disconnected");
 
         } );
-        scene.add( controller );
-        //var teste ="deu";
-        //alert(teste)
+        
+        //scene.add( controller );
+        camera.add(controller);
 
         var controllerModelFactory = new XRControllerModelFactory();
 
         var controllerGrip = renderer.xr.getControllerGrip( 0 );
         var model1 = controllerModelFactory.createControllerModel(controllerGrip);
         controllerGrip.add(model1);
-        scene.add( controllerGrip );
-        alert("Adicao da camera na cena");
+        //scene.add( controllerGrip );
+        camera.add(controllerGrip);
+        alert("Adicao do controller na camera");
 
         //controller.visible = true;
         //controllerGrip.visible = true;
@@ -345,6 +346,7 @@
 
         controller.add( line.clone() );
         //controller.add(camera.clone());
+        //console.log(controle.);
 
         //controller.matriz
         console.log(controller, camera.position);
