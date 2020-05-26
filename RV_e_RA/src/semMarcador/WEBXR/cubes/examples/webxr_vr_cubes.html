@@ -45,7 +45,7 @@
 
 				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 10 );
 				camera.position.set( 0, 1.6, 3 );
-				//camera.lookAt( 0, 0, 0 );
+				camera.lookAt( 0, 0, 0 );
 				scene.add( camera );
 
 				
@@ -56,10 +56,10 @@
 				);
 				scene.add( room );
 
-				/*var axes = new THREE.AxesHelper(100);
+				var axes = new THREE.AxesHelper(100);
 				axes.name = "AXES";
 				axes.visible = true;
-				scene.add(axes);*/
+				scene.add(axes);
 				//console.log(THREE.REVISION);
 
 				scene.add( new THREE.HemisphereLight( 0x606060, 0x404040 ) );
