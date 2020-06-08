@@ -4,7 +4,7 @@
 <head>
     <title>Solar System - VR</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <style>
         body {
             margin: 0;
@@ -33,8 +33,12 @@
         }
     </style>
 
-    <!-- Library of Augmented Reality that uses Three.js -->
+    <!-- Library of Virtual Reality -->
     <script type="text/javascript" charset="UTF-8" src="../../../libs/aframe-master.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="../../../libs/AframeExtras/aframe-extras.js"></script>
+    <!-- Details about aframe-extras "controls" here:
+        https://github.com/donmccurdy/aframe-extras/tree/master/src/controls
+    -->
 
     <!-- Loading screen -->
     <script type="text/javascript" charset="UTF-8" src="../../../libs/util/loadScreen/LoadScreen.js"></script>
@@ -69,9 +73,9 @@
     </script>
 
     <a-scene main_scene id="scene" stats time light="defaultLightsEnabled: false" shadow="type: pcfsoft">
-        <a-camera id="camera" camera="active: true;" position="0 8 70" 
-        look-controls wasd-controls="acceleration:600">
-        </a-camera>
+        <a-entity id="rig" movement-controls position="0 6 70">
+            <a-entity id="camera" camera position="0 1.6 0" look-controls="pointerLockEnabled: true"></a-entity>            
+        </a-entity>
 
         <!-- Asset management system. -->
         <a-assets timeout="10000">
