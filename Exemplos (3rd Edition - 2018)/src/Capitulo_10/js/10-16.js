@@ -19,7 +19,7 @@ function init() {
 
   var earthMaterial = new THREE.MeshPhongMaterial({
       map: textureLoader.load("../../assets/textures/earth/Earth.png"),                 // imagem da terra
-      normalMap: textureLoader.load("../../assets/textures/earth/EarthNormal.png"),     // mapeamento das normais
+      normalMap: textureLoader.load("../../assets/textures/earth/2k_earth_normal_map.tif"),     // mapeamento das normais
       specularMap: textureLoader.load("../../assets/textures/earth/EarthSpec.png"),     // mapeamento da luz especular(Reflexão)
       normalScale: new THREE.Vector2(6, 6)
   });
@@ -27,6 +27,8 @@ function init() {
   var sphere = new THREE.SphereGeometry(9, 50, 50);
   var sphere1 = addGeometryWithMaterial(scene, sphere, 'sphere', gui, controls, earthMaterial.clone());
   sphere1.rotation.y = (1/6) * Math.PI;
+
+  console.log(sphere1);
 
   render();
   function render() {

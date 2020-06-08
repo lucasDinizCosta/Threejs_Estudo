@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Solar System - VR</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        a {
+            color: var(--color-blue);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        #newWindow {
+            display: block;
+            position: absolute;
+            bottom: 0em;
+            left: 0.4em;
+            color: #fff;
+            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        }
+    </style>
+
+    <!-- Library of Augmented Reality that uses Three.js -->
+    <script type="text/javascript" charset="UTF-8" src="../../../libs/aframe-master.js"></script>
+
+    <!-- Loading screen -->
+    <script type="text/javascript" charset="UTF-8" src="../../../libs/util/loadScreen/LoadScreen.js"></script>
+
+    <!-- There are many useful functionss -->
+    <script type="text/javascript" src="../../../libs/util/util.js"></script>
+
+</head>
+<body>
+    <script type="text/javascript">
+        AFRAME.registerComponent('main_scene', {
+            schema: function(){},
+            init: function(){
+                console.log("Carregou a cena");
+                self = this;
+            },
+            // Antes da cena ser renderizada
+            tick: function(time, timeDelta){
+            },
+            // Após a cena ser renderizada
+            tock: function(time, timeDelta, camera){
+                for(let i = 0; i < rotationObjects.length; i++){
+                    rotationObjects[i].rotateY(rotationObjects[i].speedRotation);
+                }
+                for(let i = 0; i < TranslationObjects.length; i++){
+                    TranslationObjects[i].rotateY(TranslationObjects[i].speedTranslation);
+                }
+            },
+            update: function(){
+            }
+        });
+    </script>
+
+    <a-scene main_scene id="scene" stats time light="defaultLightsEnabled: false" shadow="type: pcfsoft">
+        <a-camera id="camera" camera="active: true;" position="0 8 70" 
+        look-controls wasd-controls="acceleration:600">
+        </a-camera>
+
+        <!-- Asset management system. -->
+        <a-assets timeout="10000">
+            <img id="skyBoxMap" src="./assets/textures/space/2k_stars_milky_way.jpg"></img>
+            <img id="sunMap" src="./assets/textures/space/2k_sun.jpg"></img>
+            <img id="mercuryMap" src="./assets/textures/space/2k_mercury.jpg"></img>
+            <img id="venusMap" src="./assets/textures/space/2k_venus_surface.jpg"></img>
+            <img id="moonMap" src="./assets/textures/space/2k_moon.jpg"></img>
+            <img id="earthMap" src="./assets/textures/space/2k_earth.jpg"></img>
+            <img id="earthSpecularMap" src="./assets/textures/space/2k_earth_specular_map.png"></img>
+            <img id="marsMap" src="./assets/textures/space/2k_mars.jpg"></img>
+            <img id="jupiterMap" src="./assets/textures/space/2k_jupiter.jpg"></img>
+            <img id="saturnMap" src="./assets/textures/space/2k_saturn.jpg"></img>
+            <img id="saturnRingMap" src="./assets/textures/space/SaturnRing.jpg"></img>
+            <img id="uranusMap" src="./assets/textures/space/2k_uranus.jpg"></img>
+            <img id="neptuneMap" src="./assets/textures/space/2k_neptune.jpg"></img>
+        </a-assets>
+
+        <!-- Lights -->
+        <a-entity light="type: ambient; color: #AAA"></a-entity>
+        <a-sphere radius="0.25" position="0 0 0">
+            <a-entity light="type: point; castShadow: true; intensity: 0.40; distance: 50; decay: 1;" 
+            position="0 0 0"></a-entity>
+        </a-sphere>
+
+        <!-- Axis -->
+        <a-entity id="axis" line="start: 0, 0, 0; end: 200, 0, 0; color: red;"
+                  line__2="start: 0, 0, 0; end: 0, 200, 0; color: green;"
+                  line__3="start: 0, 0, 0; end: 0, 0, 200; color: blue;"
+        ></a-entity>
+
+        <!-- Galaxy Objects -->
+
+        <a-sphere id="sun" material="shader: flat; src: #sunMap;" position="0 0 0" radius="11.0"></a-sphere>
+
+        <a-entity id="mercuryBox" position="0 0 0">
+            <a-sphere id="mercury" material="shader: standard; src: #mercuryMap;" 
+            shadow="cast: true; receive: false" position="0 0 21" radius="1.0"></a-sphere>
+        </a-entity>
+        
+        <a-entity id="venusBox" position="0 0 0">
+            <a-sphere id="venus" material="shader: standard; src: #venusMap;" 
+            shadow="cast: true; receive: false" position="0 0 26" radius="1.0"></a-sphere>
+        </a-entity>
+
+        <a-entity id="moonEarthBox" position="0 0 0">
+            <a-sphere id="earth" material="shader: standard; src: #earthMap;" 
+                shadow="cast: true; receive: true" position="0 0 31" radius="1.0"></a-sphere> 
+            <a-entity id="moonBox" position="0 0 31">
+                <a-sphere id="moon" material="shader: standard; src: #moonMap;" 
+                shadow="cast: true; receive: true" position="0 0 3" radius="0.5"></a-sphere>  
+            </a-entity>  
+        </a-entity>
+
+        <a-entity id="marsBox" position="0 0 0">
+            <a-sphere id="mars" material="shader: standard; src: #marsMap;" 
+            shadow="cast: true; receive: false" position="0 0 36" radius="1.0"></a-sphere>
+        </a-entity>
+
+        <a-entity id="jupiterBox" position="0 0 0">
+            <a-sphere id="jupiter" material="shader: standard; src: #jupiterMap;" 
+            shadow="cast: true; receive: false" position="0 0 46" radius="4.0"></a-sphere>
+        </a-entity>
+
+        <a-entity id="saturnBox" position="0 0 0">
+            <a-sphere id="saturn" material="shader: standard; src: #saturnMap;" 
+            shadow="cast: true; receive: false" position="0 0 54" radius="1.0"></a-sphere>    
+        </a-entity>
+
+        <a-entity id="uranusBox" position="0 0 0">
+            <a-sphere id="uranus" material="shader: standard; src: #uranusMap;" 
+            shadow="cast: true; receive: false" position="0 0 61" radius="1.0"></a-sphere>
+        </a-entity>
+
+        <a-entity id="neptuneBox" position="0 0 0">
+            <a-sphere id="neptune" material="shader: standard; src: #neptuneMap;" 
+            shadow="cast: true; receive: false" position="0 0 66" radius="1.0"></a-sphere>
+        </a-entity>            
+
+        <a-sky id="skyBox" material="src: #skyBoxMap"></a-sky>
+
+        <script type="text/javascript">
+            var scene = document.querySelector('#scene').object3D;
+            var camera = document.querySelector('#camera').object3D;
+            var axis = document.querySelector('#axis').object3D;
+            axis.visible = false;
+
+            var rotationObjects = new Array();
+            var TranslationObjects = new Array();
+            rotationObjects.push(document.querySelector('#sun').object3D);
+            rotationObjects.push(document.querySelector('#mercury').object3D);
+            rotationObjects.push(document.querySelector('#venus').object3D);
+            //rotationObjects.push(document.querySelector('#moon').object3D);
+            rotationObjects.push(document.querySelector('#earth').object3D);
+            rotationObjects.push(document.querySelector('#mars').object3D);
+            rotationObjects.push(document.querySelector('#jupiter').object3D);
+            rotationObjects.push(document.querySelector('#saturn').object3D);
+            rotationObjects.push(document.querySelector('#uranus').object3D);
+            rotationObjects.push(document.querySelector('#neptune').object3D);
+
+            var speedRotation = 0.01;
+
+            for(let i = 0; i < rotationObjects.length; i++){
+                rotationObjects[i].speedRotation = speedRotation;
+            }
+
+            // Boxes --- Translation Moviment
+            TranslationObjects.push(document.querySelector('#mercuryBox').object3D);
+            TranslationObjects.push(document.querySelector('#venusBox').object3D);
+            TranslationObjects.push(document.querySelector('#moonEarthBox').object3D);
+            TranslationObjects.push(document.querySelector('#moonBox').object3D);
+            TranslationObjects.push(document.querySelector('#marsBox').object3D);
+            TranslationObjects.push(document.querySelector('#jupiterBox').object3D);
+            TranslationObjects.push(document.querySelector('#saturnBox').object3D);
+            TranslationObjects.push(document.querySelector('#uranusBox').object3D);
+            TranslationObjects.push(document.querySelector('#neptuneBox').object3D);
+
+            var speedTranslation = 0.025;
+            for(let i = 0; i < TranslationObjects.length; i++){
+                TranslationObjects[i].speedTranslation = speedTranslation;
+                speedTranslation = speedTranslation - 0.0025;
+            }
+
+            // Fix the start rotation of planets
+            var angleRotation = -45;
+
+            for(let i = 0; i < TranslationObjects.length; i++){
+                if(i%2 === 0){  // pair index ===> invert sense
+                    TranslationObjects[i].rotateY(THREE.Math.degToRad(-angleRotation));
+                }
+                else{
+                    TranslationObjects[i].rotateY(THREE.Math.degToRad(angleRotation));
+                }
+                angleRotation = angleRotation + 19;
+            }
+
+            //camera.children[0].lookAt(0,0,0);
+            //document.querySelector('#camera').setAttribute('wasd-controls-enabled', '');
+            //document.querySelector('#camera').setAttribute('look-controls', '');    //Adiciona o atributo de movimentação da câmera
+        </script>
+    </a-scene>
+
+    <!-- Open the application on another tab -->
+    <div id="newWindow">
+        <p><a id="" href="./solar-system-application.html?quality=0" target="_blank">Medium Quality</a></p>
+        <p><a id="" href="./solar-system-application.html?quality=1" target="_blank">High Quality</a></p>
+        <p><a id="" href="./solar-system-application-AR.html" target="_blank">Augmented Reality</a></p>
+    </div>
+</body>
+
+</html>

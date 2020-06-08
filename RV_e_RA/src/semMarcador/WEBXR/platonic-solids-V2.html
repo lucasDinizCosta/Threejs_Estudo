@@ -293,19 +293,24 @@
          ************************************************/
         function onSelectStart() {
 
+            console.log('Controller: select start');
             this.userData.isSelecting = true;
 
         }
 
+        function onSelect() {
+            console.log("Controller: select");
+        }
+
         function onSelectEnd() {
-
+            console.log('Controller: select end');
             this.userData.isSelecting = false;
-
         }
 
         var controller = renderer.xr.getController( 0 );
         controller.addEventListener( 'selectstart', onSelectStart );
         controller.addEventListener( 'selectend', onSelectEnd );
+        controller.addEventListener( 'select', onSelect );
         controller.addEventListener( 'connected', function ( event ) {
 
             //this.add( buildController( event.data ) );

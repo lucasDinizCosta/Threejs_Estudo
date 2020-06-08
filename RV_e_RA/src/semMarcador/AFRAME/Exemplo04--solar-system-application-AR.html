@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Solar System - AR</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        a {
+            color: var(--color-blue);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        #newWindow {
+            display: block;
+            position: absolute;
+            bottom: 0em;
+            left: 0.4em;
+            color: #fff;
+            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        }
+    </style>
+
+    <!-- Libraries of configuration -->
+    <script type="text/javascript" charset="UTF-8" src="../libs/three/three.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="../libs/three/controls/OrbitControls.js"></script>
+    <script type="text/javascript" src="../libs/util/Stats.js"></script>
+    <script type="text/javascript" src="../libs/util/dat.gui.js"></script>
+
+    <!-- Library of Augmented Reality that uses Three.js -->
+    <script type="text/javascript" charset="UTF-8" src="../libs/MarkerTracking--LocationBasedAR/THREE/ar.js"></script>
+    <script>THREEx.ArToolkitContext.baseURL = "../"</script>  <!-- Define o local do contexto -->
+
+    <!-- Loading screen -->
+    <script type="text/javascript" charset="UTF-8" src="../libs/util/loadScreen/LoadScreen.js"></script>
+
+    <!-- There are many useful functionss -->
+    <script type="text/javascript" src="../libs/util/util.js"></script>
+
+    <!-- Library of example -->
+    <script type="text/javascript" src="./solar-system-AR.js"></script>
+
+</head>
+
+<body>
+
+    <!-- Open the application on another tab -->
+    <div id="newWindow">
+        <p><a id="" href="./solar-system-application.html?quality=0" target="_blank">Medium Quality</a></p>
+        <p><a id="" href="./solar-system-application.html?quality=1" target="_blank">High Quality</a></p>
+        <p><a id="" href="./solar-system-application-AR.html" target="_blank">Augmented Reality</a></p>
+    </div>
+    <div id="webgl-output"></div>
+    <script type="text/javascript">
+
+        // Seed to Medium or High Quality
+        /*var quality = location.search;
+
+        if(quality.length != 0){                   //QUALITY PASSED BY URL
+            let aux = "?quality=";
+            quality = quality.substring(aux.length, quality.length);
+            quality = parseInt(quality);
+            switch(quality){
+                case 0:             // Medium Quality
+                    mainMediumQuality();
+                    break;
+                case 1:             // High Quality
+                    mainHighQuality();
+                    break;
+            }
+        }
+        else{                                           //NOT QUALITY SETTED
+            mainMediumQuality();
+        }*/
+        mainMediumQuality();
+    </script>
+</body>
+
+</html>
