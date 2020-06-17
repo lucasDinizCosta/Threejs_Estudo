@@ -38,7 +38,9 @@ function init() {
   geom.faceVertexUvs[0][0][1].x = 0.4; 
   geom.faceVertexUvs[0][0][1].y = 0.1; 
   geom.faceVertexUvs[0][0][2].x = 0.4; 
-  geom.faceVertexUvs[0][0][2].y = 0.5; 
+  geom.faceVertexUvs[0][0][2].y = 0.5;
+
+  console.log(geom.faceVertexUvs);
 
   var mesh = new THREE.Mesh(geom, material);
   mesh.rotation.y = 1.7 * Math.PI;
