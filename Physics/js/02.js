@@ -71,6 +71,8 @@ function init() {
     mesh: boxMesh,
     visibleBox: true,
     visibleAxis: true,
+    animation: true,
+
     resetSimulation: function(){
       this.mesh.position.x = 0;
       this.mesh.position.y = 13;
@@ -95,6 +97,14 @@ function init() {
 
   var objectMenu = gui.addFolder("object Menu");
   objectMenu.add(controls, "resetSimulation");
+  objectMenu.add(controls, "animation").onChange(function(e){
+    if(controls.animation){
+      controls.mesh.mass = 1;
+    }
+    else{
+      controls.mesh.mass = 0;
+    }
+  });
   objectMenu.add(controls, "visibleBox").onChange(function(e){
     if(controls.visibleBox){
       controls.mesh.visible = true;
