@@ -56,7 +56,7 @@ function init() {
   
   // set the initial rotiation of a stone so it'll fall down
   //stones[0].rotation.x = 0.4;
-  boxMesh.__dirtyPosition = true;
+  //boxMesh.__dirtyPosition = true;
   
   scene.add(boxMesh);
   createAxisOnObject(boxMesh, sideBound); // Put center axis on object
@@ -73,14 +73,26 @@ function init() {
     visibleAxis: true,
     resetSimulation: function(){
       this.mesh.position.x = 0;
-      this.mesh.position.y = 15;
-      this.mesh.position.z += 5;
-      //this.mesh.setLinearVelocity(0);
+      this.mesh.position.y = 13;
+      this.mesh.position.z = 0;
 
-      //this.mesh.rotation.y = THREE.MathUtils.degToRad(90);
-      //this.mesh.rotation.z = THREE.MathUtils.degToRad(30);
+      this.mesh.rotation.set(0, 0, 0);
+      this.mesh.rotation.y = THREE.MathUtils.degToRad(90);
+      this.mesh.rotation.z = THREE.MathUtils.degToRad(30);
+
+      // https://github.com/chandlerprall/Physijs/wiki/Updating-an-object's-position-&-rotation
+      // Permite a mudança de posição
+      this.mesh.__dirtyPosition = true;
+      this.mesh.__dirtyRotation = true;
+
+      // You may also want to cancel the object's velocity
+      this.mesh.setLinearVelocity(new THREE.Vector3(0, 0, 0));
+      this.mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));
+
+      
     }
   };
+
   var objectMenu = gui.addFolder("object Menu");
   objectMenu.add(controls, "resetSimulation");
   objectMenu.add(controls, "visibleBox").onChange(function(e){
