@@ -46,21 +46,61 @@ function init() {
       {map: textureLoader.load('assets/textures/general/stone.jpg')}
     ),
     .6, .1); //Friction and restitution
-  var boxMesh = new Physijs.BoxMesh(new THREE.BoxGeometry(5, 5, 5), block_material, 1);   //geometry, material and mass
+  var sideBound = 5;
+  var boxMesh = new Physijs.BoxMesh(new THREE.BoxGeometry(sideBound, sideBound, sideBound), block_material, 1);   //geometry, material and mass
   boxMesh.castShadow = true;
   boxMesh.receiveShadow = true;
   boxMesh.position.y = 15;
   boxMesh.rotation.y = THREE.MathUtils.degToRad(90);
   boxMesh.rotation.z = THREE.MathUtils.degToRad(30);
+  
+  // set the initial rotiation of a stone so it'll fall down
+  //stones[0].rotation.x = 0.4;
+  boxMesh.__dirtyPosition = true;
+  
   scene.add(boxMesh);
+  createAxisOnObject(boxMesh, sideBound); // Put center axis on object
+
 
   // setup controls
   var gui = new dat.GUI();
   var controls = {
     gravityX: 0,
     gravityY: -50,
-    gravityZ: 0
+    gravityZ: 0,
+    mesh: boxMesh,
+    visibleBox: true,
+    visibleAxis: true,
+    resetSimulation: function(){
+      this.mesh.position.x = 0;
+      this.mesh.position.y = 15;
+      this.mesh.position.z += 5;
+      //this.mesh.setLinearVelocity(0);
+
+      //this.mesh.rotation.y = THREE.MathUtils.degToRad(90);
+      //this.mesh.rotation.z = THREE.MathUtils.degToRad(30);
+    }
   };
+  var objectMenu = gui.addFolder("object Menu");
+  objectMenu.add(controls, "resetSimulation");
+  objectMenu.add(controls, "visibleBox").onChange(function(e){
+    if(controls.visibleBox){
+      controls.mesh.visible = true;
+    }
+    else{
+      controls.mesh.visible = false;
+    }
+  });
+  objectMenu.add(controls, "visibleAxis").onChange(function(e){
+    if(controls.visibleAxis){
+      controls.mesh.getObjectByName("Axis").visible = true;
+    }
+    else{
+      controls.mesh.getObjectByName("Axis").visible = false;
+    }
+  });
+  console.log(boxMesh);
+  
 
   gui.add(controls, "gravityX", -100, 100, 1).onChange(function(e) {scene.setGravity(new THREE.Vector3(controls.gravityX, controls.gravityY, controls.gravityZ))});
   gui.add(controls, "gravityY", -100, 100, 1).onChange(function(e) {scene.setGravity(new THREE.Vector3(controls.gravityX, controls.gravityY, controls.gravityZ))});
@@ -81,6 +121,52 @@ function init() {
     renderer.render(scene, camera);
     scene.simulate(undefined, 1);
   }
+}
+
+function createAxisOnObject(object, size){
+  // Axes of origin of block
+  var groupAxis = new THREE.Group;
+  groupAxis.name = "Axis";
+  object.add(groupAxis);
+
+  // X
+  var dir = new THREE.Vector3(1, 0, 0 );
+
+  //normalize the direction vector (convert to vector of length 1)
+  dir.normalize();
+
+  var origin = new THREE.Vector3(0, 0, 0);
+  var length = size + 2;
+  var hex = 0xff0000;
+
+  var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+  groupAxis.add(arrowHelper);
+
+  // Y
+  dir = new THREE.Vector3(0, 1, 0 );
+
+  //normalize the direction vector (convert to vector of length 1)
+  dir.normalize();
+
+  origin = new THREE.Vector3(0, 0, 0);
+  length = size + 2;
+  hex = 0x00ff00;
+
+  arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+  groupAxis.add(arrowHelper);
+
+  // Z
+  dir = new THREE.Vector3(0, 0, 1);
+
+  //normalize the direction vector (convert to vector of length 1)
+  dir.normalize();
+
+  origin = new THREE.Vector3(0, 0, 0);
+  length = size + 2;
+  hex = 0x0000ff;
+
+  arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+  groupAxis.add(arrowHelper);
 }
 
 function createGroundAndWalls(scene) {
