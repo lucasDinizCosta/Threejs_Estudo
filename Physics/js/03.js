@@ -18,6 +18,8 @@ function init() {
   var clock = new THREE.Clock();
   var scene = new Physijs.Scene;
 
+  // Positioning Lights
+
   var spotLight = new THREE.SpotLight(0xffffff);
   spotLight.position.set(0, 40, 70);
   spotLight.shadow.mapSize.width = 2048;
@@ -27,7 +29,6 @@ function init() {
   spotLight.decay = 2;
   spotLight.penumbra = 0.05;
   spotLight.name = "spotLight";
-
   scene.add(spotLight);
 
   var ambientLight = new THREE.AmbientLight(0x343434);
@@ -35,6 +36,7 @@ function init() {
   scene.add(ambientLight);
   scene.add(new THREE.AmbientLight(0x0393939));
 
+  
   // Axis
   var axis = new THREE.AxisHelper(300);
   scene.add(axis);
@@ -45,7 +47,13 @@ function init() {
     new THREE.MeshStandardMaterial(
       {map: textureLoader.load('assets/textures/general/bathroom.jpg')}
     ),
-    .9, .3); //Friction and restitution
+    .9, .3
+  ); //Friction and restitution
+
+  // Adjust the texture
+  ramp_material.map.repeat.set(3, 3);
+  ramp_material.map.wrapS = THREE.RepeatWrapping;
+  ramp_material.map.wrapT = THREE.RepeatWrapping;
 
   var ramp = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 0.1, 20), ramp_material, 0);
   ramp.castShadow = true;
@@ -253,6 +261,10 @@ function createGroundAndWalls(scene) {
     ),
     .9, .3
   );
+  
+  // Adjust the texture
+  ground_material.map.wrapS = THREE.RepeatWrapping;
+  ground_material.map.wrapT = THREE.RepeatWrapping;
 
   ground = new Physijs.BoxMesh(new THREE.BoxGeometry(1024, 0.5, 1024), ground_material, 0);
   ground.position.y = - 0.5;
