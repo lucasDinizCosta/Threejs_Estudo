@@ -17,7 +17,22 @@ function init() {
 
   var clock = new THREE.Clock();
   var scene = new Physijs.Scene;
-  initDefaultLighting(scene);
+
+  var spotLight = new THREE.SpotLight(0xffffff);
+  spotLight.position.set(0, 40, 70);
+  spotLight.shadow.mapSize.width = 2048;
+  spotLight.shadow.mapSize.height = 2048;
+  spotLight.shadow.camera.fov = 20;
+  spotLight.castShadow = true;
+  spotLight.decay = 2;
+  spotLight.penumbra = 0.05;
+  spotLight.name = "spotLight";
+
+  scene.add(spotLight);
+
+  var ambientLight = new THREE.AmbientLight(0x343434);
+  ambientLight.name = "ambientLight";
+  scene.add(ambientLight);
   scene.add(new THREE.AmbientLight(0x0393939));
 
   // Axis
@@ -40,23 +55,23 @@ function init() {
   ramp.rotation.z = THREE.MathUtils.degToRad(30);
   scene.add(ramp);
 
-
   var block_material = Physijs.createMaterial(
     new THREE.MeshStandardMaterial(
-      {map: textureLoader.load('assets/textures/general/stone.jpg')}
+      {map: textureLoader.load('assets/textures/general/metal-rust.jpg')}
     ),
-    .4, .1); //Friction and restitution
-  var sideBound = 5;
-  var boxMesh = new Physijs.BoxMesh(new THREE.BoxGeometry(sideBound, sideBound, sideBound), block_material, 1);   //geometry, material and mass
-  boxMesh.castShadow = true;
-  boxMesh.receiveShadow = true;
-  boxMesh.position.y = 15;
-  boxMesh.rotation.y = THREE.MathUtils.degToRad(90);
-  boxMesh.rotation.z = THREE.MathUtils.degToRad(30); 
-  scene.add(boxMesh);
+    .9, 0.5);    //Friction and restitution
+  var sideBound = 4;
+  var sphereMesh = new Physijs.SphereMesh(new THREE.SphereGeometry(sideBound, 64, 64), block_material, 1);   //geometry, material and mass
+  sphereMesh.castShadow = true;
+  sphereMesh.receiveShadow = true;
+  sphereMesh.position.y = 15;
+  sphereMesh.rotation.y = THREE.MathUtils.degToRad(90);
+  sphereMesh.rotation.z = THREE.MathUtils.degToRad(30); 
+  scene.add(sphereMesh);
 
-  createAxisOnObject(boxMesh, sideBound); // Put center axis on object
+  sphereMesh.setLinearVelocity(new THREE.Vector3(0, 50, 0));
 
+  createAxisOnObject(sphereMesh, sideBound); // Put center axis on object
 
   // setup controls
   var gui = new dat.GUI();
@@ -64,14 +79,14 @@ function init() {
     gravityX: 0,
     gravityY: -50,
     gravityZ: 0,
-    mesh: boxMesh,
-    visibleBox: true,
+    mesh: sphereMesh,
+    visibleSphere: true,
     visibleAxis: true,
     animation: true,
 
     resetSimulation: function(){
       this.mesh.position.x = 0;
-      this.mesh.position.y = 13;
+      this.mesh.position.y = 15;
       this.mesh.position.z = 0;
 
       this.mesh.rotation.set(0, 0, 0);
@@ -86,8 +101,6 @@ function init() {
       // You may also want to cancel the object's velocity
       this.mesh.setLinearVelocity(new THREE.Vector3(0, 0, 0));
       this.mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));
-
-      
     }
   };
 
@@ -101,8 +114,8 @@ function init() {
       controls.mesh.mass = 0;
     }
   });
-  objectMenu.add(controls, "visibleBox").onChange(function(e){
-    if(controls.visibleBox){
+  objectMenu.add(controls, "visibleSphere").onChange(function(e){
+    if(controls.visibleSphere){
       controls.mesh.visible = true;
     }
     else{
@@ -117,7 +130,7 @@ function init() {
       controls.mesh.getObjectByName("Axis").visible = false;
     }
   });
-  console.log(boxMesh);
+  console.log(sphereMesh);
   
 
   gui.add(controls, "gravityX", -100, 100, 1).onChange(function(e) {scene.setGravity(new THREE.Vector3(controls.gravityX, controls.gravityY, controls.gravityZ))});
@@ -154,7 +167,7 @@ function createAxisOnObject(object, size){
   dir.normalize();
 
   var origin = new THREE.Vector3(0, 0, 0);
-  var length = size + 2;
+  var length = size + 3;
   var hex = 0xff0000;
 
   var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
@@ -167,7 +180,7 @@ function createAxisOnObject(object, size){
   dir.normalize();
 
   origin = new THREE.Vector3(0, 0, 0);
-  length = size + 2;
+  length = size + 3;
   hex = 0x00ff00;
 
   arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
@@ -180,7 +193,7 @@ function createAxisOnObject(object, size){
   dir.normalize();
 
   origin = new THREE.Vector3(0, 0, 0);
-  length = size + 2;
+  length = size + 3;
   hex = 0x0000ff;
 
   arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
@@ -193,7 +206,8 @@ function createGroundAndWalls(scene) {
           new THREE.MeshStandardMaterial(
             {map: textureLoader.load('assets/textures/general/wood-2.jpg')}
           ),
-          .9, .3);
+          .9, .3
+  );
 
   var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(120, 1, 120), ground_material, 0);
   ground.castShadow = true;
@@ -230,6 +244,20 @@ function createGroundAndWalls(scene) {
   borderTop.receiveShadow = true;
 
   ground.add(borderTop);
+
+  scene.add(ground);
+
+  ground_material = Physijs.createMaterial(
+    new THREE.MeshStandardMaterial(
+      {map: textureLoader.load('assets/textures/ground/grasslight-big.jpg')}
+    ),
+    .9, .3
+  );
+
+  ground = new Physijs.BoxMesh(new THREE.BoxGeometry(1024, 0.5, 1024), ground_material, 0);
+  ground.position.y = - 0.5;
+  ground.castShadow = true;
+  ground.receiveShadow = true;
 
   scene.add(ground);
 }
