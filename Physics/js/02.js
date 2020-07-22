@@ -43,10 +43,6 @@ function init() {
   var textureLoader = new THREE.TextureLoader();
   var sideBound = 5;            // BoxSize
 
-  //createAxisOnObject(boxMesh, sideBound);     // Put center axis on object
-  //createForcesDiagram(boxMesh, sideBound, 0); // id to identify collision and plot the forces
-  //createForcesDiagram(boxMesh, sideBound, 0); // id to identify collision and plot the forces
-
   // setup controls
   var gui = new dat.GUI();
   var controls = {
@@ -54,10 +50,9 @@ function init() {
     gravityY: -50,
     gravityZ: 0,
     mesh: null,
-    rampSlide: null,
+    ramp: [],
     frictionRamp: 0.9,
     restitutionRamp: 0.3,
-    //material: block_material,
     visibleBox: true,
     visibleAxis: true,
     animation: true,
@@ -65,10 +60,10 @@ function init() {
     angleRamp: 30,                              // Degrees of inclination of the ramp
 
     createRamp: function(){
-      if(this.rampSlide != null)
-        scene.remove(this.rampSlide);         // Remove old version
-      
-      this.rampSlide = new THREE.Group;
+      for(let i = 0; i < this.ramp.length; i++){
+        scene.remove(this.ramp[i]);         // Remove old version
+      }
+      this.ramp = [];
 
       var ramp_material = Physijs.createMaterial(
         new THREE.MeshStandardMaterial(
@@ -91,7 +86,8 @@ function init() {
       ramp.position.y = altura/2 + fixDistRamp;    //  8
       ramp.rotation.y = THREE.MathUtils.degToRad(90);
       ramp.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
-      this.rampSlide.add(ramp);
+      this.ramp.push(ramp);
+      scene.add(ramp);
 
       var wall_material = Physijs.createMaterial(
         new THREE.MeshStandardMaterial(
@@ -116,11 +112,13 @@ function init() {
       var backWall = new  Physijs.BoxMesh(new THREE.BoxGeometry(20, altura, 0.1), wall_material, 0);
       backWall.position.z = - ((altura - altura/2) / Math.tan(this.angleRamp * (Math.PI/180)));
       backWall.position.y = altura/2 + fixDistRamp;
-      this.rampSlide.add(backWall);
+      this.ramp.push(backWall);
+      scene.add(backWall);
 
       var groundWall = new  Physijs.BoxMesh(new THREE.BoxGeometry(20, 0.1, (altura / Math.tan(controls.angleRamp * (Math.PI/180)))), wall_material, 0);
       groundWall.position.y = fixDistRamp;
-      this.rampSlide.add(groundWall);
+      this.ramp.push(groundWall);
+      scene.add(groundWall);
 
       // Adiciona os pontos da face lateral
 
@@ -141,103 +139,15 @@ function init() {
       geometry.computeFaceNormals();                          // Computa as normais de cada face
       geometry.normalsNeedUpdate = true;
       var leftWall = new Physijs.ConvexMesh(geometry, wall_sides_material, 0);
-    
-     // geometry.faces = [];
-
-      //create a new face using vertices 0, 1, 2
-      /*var normal = new THREE.Vector3( 1, 0, 0 ); //optional
-      var color = new THREE.Color( 0xffaa00 ); //optional
-      var materialIndex = 0; //optional
-      var face = new THREE.Face3( 0, 1, 2, normal, color, materialIndex );*/
-
-      //add the face to the geometry's faces array
-      //geometry.faces.push( face );
 
       geometry.computeVertexNormals();                        // Computa as normais
       geometry.computeFaceNormals();                          // Computa as normais de cada face
       geometry.normalsNeedUpdate = true;
 
-
-      /*console.log(geometry, geometry.faceVertexUvs);
-      let uvs = [];
-      let aux = {x: 0, y: 0};
-      aux.x = 0.5;
-      aux.y = 0.7;
-      uvs.push(aux);
-      aux = {x: 0, y: 0};
-      aux.x = 0.4;
-      aux.y = 0.1;
-      uvs.push(aux);
-      aux = {x: 0, y: 0};
-      aux.x = 0.4;
-      aux.y = 0.5;
-      uvs.push(aux);
-      geometry.faceVertexUvs = uvs;
-      geometry.uvsNeedUpdate = true;
-      console.log(geometry, geometry.faceVertexUvs);*/
-      //geometry.
-      /*geometry.faceVertexUvs[0].x = 0.5; 
-      geometry.faceVertexUvs[0].y = 0.7;
-
-      
-      geometry.faceVertexUvs[1].x = 0.4; 
-      geometry.faceVertexUvs[1].y = 0.1; 
-      geometry.faceVertexUvs[2].x = 0.4; 
-      geometry.faceVertexUvs[2].y = 0.5;*/
-
-      this.rampSlide.add(leftWall);
+      this.ramp.push(leftWall);
+      scene.add(leftWall);
 
       //console.log("altura: " + altura, "angle: "+this.angleRamp, "backWall.position.z: "+ backWall.position.z);
-
-      // Ajuste da textura na superficie
-      //var faces = geometry.faces;
-      //geometry.faces = [];
-
-      //create a new face using vertices 0, 1, 2
-      /*var normal = new THREE.Vector3( 1, 0, 0 ); //optional
-      var color = new THREE.Color( 0xffaa00 ); //optional
-      var materialIndex = 0; //optional
-      var face = new THREE.Face3( 0, 1, 2, normal, color, materialIndex );
-
-      //add the face to the geometry's faces array
-      geometry.faces.push( face );
-
-      geometry.computeVertexNormals();                        // Computa as normais
-      geometry.computeFaceNormals();                          // Computa as normais de cada face
-      geometry.normalsNeedUpdate = true;
-
-
-      console.log(geometry, geometry.faceVertexUvs);
-      geometry.faceVertexUvs[0].x = 0.5; 
-      geometry.faceVertexUvs[0].y = 0.7;*/
-
-      //geometry.uvsNeedUpdate = true;
-      /*geometry.faceVertexUvs[1].x = 0.4; 
-      geometry.faceVertexUvs[1].y = 0.1; 
-      geometry.faceVertexUvs[2].x = 0.4; 
-      geometry.faceVertexUvs[2].y = 0.5;*/
-
-      
-
-
-      //console.log(geometry);
-
-      /*geometry.faceVertexUvs[0] = [];
-
-      for (var i = 0; i < faces.length ; i++) {
-
-          var v1 = geometry.vertices[faces[i].a], 
-              v2 = geometry.vertices[faces[i].b], 
-              v3 = geometry.vertices[faces[i].c];
-
-          geometry.faceVertexUvs[0].push([
-              new THREE.Vector2((v1.x + offset.x)/range.x ,(v1.y + offset.y)/range.y),
-              new THREE.Vector2((v2.x + offset.x)/range.x ,(v2.y + offset.y)/range.y),
-              new THREE.Vector2((v3.x + offset.x)/range.x ,(v3.y + offset.y)/range.y)
-          ]);
-      }*/
-      //console.log(faces);
-      geometry.uvsNeedUpdate = true;
 
       // Right Side
       points = [];
@@ -256,12 +166,8 @@ function init() {
       geometry.computeFaceNormals();                          // Computa as normais de cada face
       geometry.normalsNeedUpdate = true;
       var rightWall = new Physijs.ConvexMesh(geometry, wall_sides_material, 0);
-      this.rampSlide.add(rightWall);
-
-      //rightWall.attributes.uvs.needsUpdate = true;
-      //console.log(rightWall);
-
-      scene.add(this.rampSlide);
+      this.ramp.push(rightWall);
+      scene.add(rightWall);
     },
 
     createBox: function(){
@@ -347,7 +253,7 @@ function init() {
   };
   
   controls.createRamp();
-  //controls.createBox();
+  controls.createBox();
 
   var objectMenu = gui.addFolder("object Menu");
   objectMenu.add(controls, "resetSimulation");
