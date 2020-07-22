@@ -46,25 +46,11 @@ function init() {
   ramp.rotation.y = THREE.MathUtils.degToRad(90);
   ramp.rotation.z = THREE.MathUtils.degToRad(30);
   scene.add(ramp);
-
-  var block_material = Physijs.createMaterial(
-    new THREE.MeshStandardMaterial(
-      {map: textureLoader.load('assets/textures/general/stone.jpg')}
-    ),
-    0.5, .1); //Friction and restitution
+  
   var sideBound = 5;
-  var boxMesh = new Physijs.BoxMesh(new THREE.BoxGeometry(sideBound, sideBound, sideBound), 
-  block_material, 1);     //geometry, material and mass
-  boxMesh.castShadow = true;
-  boxMesh.receiveShadow = true;
-  boxMesh.position.y = 16.48;
-  boxMesh.position.z = -9.5;
-  boxMesh.rotation.y = THREE.MathUtils.degToRad(90);
-  boxMesh.rotation.z = THREE.MathUtils.degToRad(30); 
-  scene.add(boxMesh);
 
-  createAxisOnObject(boxMesh, sideBound);     // Put center axis on object
-  createForcesDiagram(boxMesh, sideBound, 0); // id to identify collision and plot the forces
+  //createAxisOnObject(boxMesh, sideBound);     // Put center axis on object
+  //createForcesDiagram(boxMesh, sideBound, 0); // id to identify collision and plot the forces
   //createForcesDiagram(boxMesh, sideBound, 0); // id to identify collision and plot the forces
 
   // setup controls
@@ -73,12 +59,73 @@ function init() {
     gravityX: 0,
     gravityY: -50,
     gravityZ: 0,
-    mesh: boxMesh,
-    material: block_material,
+    mesh: null,
+    //material: block_material,
     visibleBox: true,
     visibleAxis: true,
     animation: true,
     friction: 0.5,
+
+    createBox: function(){
+      if(controls.mesh != null)
+        scene.remove(controls.mesh);         // Remove old version
+
+      var block_material = Physijs.createMaterial(
+        new THREE.MeshStandardMaterial(
+          {map: textureLoader.load('assets/textures/general/stone.jpg')}
+        ),
+        controls.friction, .1
+      ); //Friction and restitution
+      controls.mesh = new Physijs.BoxMesh(new THREE.BoxGeometry(sideBound, sideBound, sideBound), 
+      block_material, 1);     //geometry, material and mass
+      controls.mesh.castShadow = true;
+      controls.mesh.receiveShadow = true;
+      controls.mesh.position.y = 16.48;
+      controls.mesh.position.z = -9.5;
+      controls.mesh.rotation.y = THREE.MathUtils.degToRad(90);
+      controls.mesh.rotation.z = THREE.MathUtils.degToRad(30); 
+      scene.add(controls.mesh);
+
+      handleCollision = function( collided_with, linearVelocity, angularVelocity ) {
+				switch ( ++this.collisions ) {
+					
+					case 1:
+            this.material.color.setHex(0xcc8855);
+            console.log(collided_with);
+						break;
+					
+					case 2:
+            this.material.color.setHex(0xbb9955);
+            console.log(collided_with);
+            /*this.rotation.set(0, 0, 0);
+            this.__dirtyRotation = true;
+            this.setAngularVelocity(new THREE.Vector3(0, 0, 0));*/
+            
+						break;
+					
+					case 3:
+						this.material.color.setHex(0xaaaa55);
+						break;
+					
+					case 4:
+						this.material.color.setHex(0x99bb55);
+						break;
+					
+					case 5:
+						this.material.color.setHex(0x88cc55);
+						break;
+					
+					case 6:
+						this.material.color.setHex(0x77dd55);
+						break;
+				}
+      }
+      controls.mesh.collisions = 0;
+      controls.mesh.addEventListener( 'collision', handleCollision );
+
+      createAxisOnObject(controls.mesh, sideBound);     // Put center axis on object
+      createForcesDiagram(controls.mesh, sideBound, 0); // id to identify collision and plot the forces
+    },
 
     resetSimulation: function(){
       this.mesh.position.x = 0;
@@ -100,6 +147,8 @@ function init() {
 
     }
   };
+
+  controls.createBox();
 
   var objectMenu = gui.addFolder("object Menu");
   objectMenu.add(controls, "resetSimulation");
@@ -132,17 +181,9 @@ function init() {
       controls.mesh.getObjectByName("Axis").visible = false;
     }
   });
-  objectMenu.add(controls, "friction", 0, 1).onChange(
+  objectMenu.add(controls, "friction", 0, 1, 0.01).onChange(
     function(e) {
-      console.log(controls.mesh.material);
-      controls.mesh.__dirtyPosition = true;
-      controls.mesh.__dirtyRotation = true;
-      let auxMaterial = Physijs.createMaterial(
-        new THREE.MeshStandardMaterial(
-          {map: textureLoader.load('assets/textures/general/stone.jpg')}
-        ),
-        controls.friction, .1); //Friction and restitution
-      controls.mesh.material._physijs.friction = controls.friction;
+      controls.createBox();           // Recria o objeto pois a fisica é mudada
     }
   );
 
@@ -161,7 +202,6 @@ function init() {
     orbitControls.update(delta);                 // Atualiza o controle da câmera
    
     requestAnimationFrame(render);
-    //console.log(scene.simulate);
     scene.simulate(undefined, 2);
     renderer.render(scene, camera);
   }
