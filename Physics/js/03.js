@@ -36,7 +36,7 @@ function init() {
   scene.add(ambientLight);
   scene.add(new THREE.AmbientLight(0x0393939));
 
-  
+
   // Axis
   var axis = new THREE.AxisHelper(300);
   scene.add(axis);
@@ -69,7 +69,8 @@ function init() {
     ),
     .9, 0.5);    //Friction and restitution
   var sideBound = 4;
-  var sphereMesh = new Physijs.SphereMesh(new THREE.SphereGeometry(sideBound, 64, 64), block_material, 1);   //geometry, material and mass
+  var sphereMesh = new Physijs.SphereMesh(new THREE.SphereGeometry(sideBound, 64, 64), 
+  block_material, 1);   //geometry, material and mass
   sphereMesh.castShadow = true;
   sphereMesh.receiveShadow = true;
   sphereMesh.position.y = 15;
@@ -77,7 +78,8 @@ function init() {
   sphereMesh.rotation.z = THREE.MathUtils.degToRad(30); 
   scene.add(sphereMesh);
 
-  sphereMesh.setLinearVelocity(new THREE.Vector3(0, 50, 0));
+  sphereMesh.setLinearVelocity(new THREE.Vector3(0, 20, 0));
+  //sphereMesh.setAngularVelocity(new THREE.Vector3(0, 50, 0));
 
   createAxisOnObject(sphereMesh, sideBound); // Put center axis on object
 
@@ -85,7 +87,7 @@ function init() {
   var gui = new dat.GUI();
   var controls = {
     gravityX: 0,
-    gravityY: -50,
+    gravityY: -10,
     gravityZ: 0,
     mesh: sphereMesh,
     visibleSphere: true,
@@ -145,7 +147,7 @@ function init() {
   gui.add(controls, "gravityY", -100, 100, 1).onChange(function(e) {scene.setGravity(new THREE.Vector3(controls.gravityX, controls.gravityY, controls.gravityZ))});
   gui.add(controls, "gravityZ", -100, 100, 1).onChange(function(e) {scene.setGravity(new THREE.Vector3(controls.gravityX, controls.gravityY, controls.gravityZ))});
 
-  scene.setGravity(new THREE.Vector3(0, -50, 0));
+  scene.setGravity(new THREE.Vector3(0, -10, 0));
   createGroundAndWalls(scene);
 
 
@@ -158,7 +160,7 @@ function init() {
    
     requestAnimationFrame(render);
     renderer.render(scene, camera);
-    scene.simulate(undefined, 1);
+    scene.simulate(undefined, 1);               // maxSteps, ...
   }
 }
 
