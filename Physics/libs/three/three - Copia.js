@@ -593,7 +593,7 @@
 					break;
 
 				default:
-					//console.warn( 'THREE.MathUtils: .setQuaternionFromProperEuler() encountered an unknown order: ' + order );
+					console.warn( 'THREE.MathUtils: .setQuaternionFromProperEuler() encountered an unknown order: ' + order );
 
 			}
 
@@ -737,7 +737,7 @@
 
 			if ( w !== undefined ) {
 
-				//console.warn( 'THREE.Vector2: .add() now only accepts one argument. Use .addVectors( a, b ) instead.' );
+				console.warn( 'THREE.Vector2: .add() now only accepts one argument. Use .addVectors( a, b ) instead.' );
 				return this.addVectors( v, w );
 
 			}
@@ -780,7 +780,7 @@
 
 			if ( w !== undefined ) {
 
-				//console.warn( 'THREE.Vector2: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.' );
+				console.warn( 'THREE.Vector2: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.' );
 				return this.subVectors( v, w );
 
 			}
@@ -1068,7 +1068,7 @@
 
 			if ( offset !== undefined ) {
 
-				//console.warn( 'THREE.Vector2: offset has been removed from .fromBufferAttribute().' );
+				console.warn( 'THREE.Vector2: offset has been removed from .fromBufferAttribute().' );
 
 			}
 
@@ -1274,7 +1274,7 @@
 
 			if ( throwOnDegenerate !== undefined ) {
 
-				//console.warn( "THREE.Matrix3: .getInverse() can no longer be configured to throw on degenerate." );
+				console.warn( "THREE.Matrix3: .getInverse() can no longer be configured to throw on degenerate." );
 
 			}
 
@@ -2010,7 +2010,7 @@
 
 			if ( w !== undefined ) {
 
-				//console.warn( 'THREE.Vector4: .add() now only accepts one argument. Use .addVectors( a, b ) instead.' );
+				console.warn( 'THREE.Vector4: .add() now only accepts one argument. Use .addVectors( a, b ) instead.' );
 				return this.addVectors( v, w );
 
 			}
@@ -2061,7 +2061,7 @@
 
 			if ( w !== undefined ) {
 
-				//console.warn( 'THREE.Vector4: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.' );
+				console.warn( 'THREE.Vector4: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.' );
 				return this.subVectors( v, w );
 
 			}
@@ -2490,7 +2490,7 @@
 
 			if ( offset !== undefined ) {
 
-				//console.warn( 'THREE.Vector4: offset has been removed from .fromBufferAttribute().' );
+				console.warn( 'THREE.Vector4: offset has been removed from .fromBufferAttribute().' );
 
 			}
 
@@ -2933,7 +2933,7 @@
 					break;
 
 				default:
-					//console.warn( 'THREE.Quaternion: .setFromEuler() encountered an unknown order: ' + order );
+					console.warn( 'THREE.Quaternion: .setFromEuler() encountered an unknown order: ' + order );
 
 			}
 
@@ -3159,7 +3159,7 @@
 
 			if ( p !== undefined ) {
 
-				//console.warn( 'THREE.Quaternion: .multiply() now only accepts one argument. Use .multiplyQuaternions( a, b ) instead.' );
+				console.warn( 'THREE.Quaternion: .multiply() now only accepts one argument. Use .multiplyQuaternions( a, b ) instead.' );
 				return this.multiplyQuaternions( q, p );
 
 			}
@@ -3442,7 +3442,7 @@
 
 			if ( w !== undefined ) {
 
-				//console.warn( 'THREE.Vector3: .add() now only accepts one argument. Use .addVectors( a, b ) instead.' );
+				console.warn( 'THREE.Vector3: .add() now only accepts one argument. Use .addVectors( a, b ) instead.' );
 				return this.addVectors( v, w );
 
 			}
@@ -3489,7 +3489,7 @@
 
 			if ( w !== undefined ) {
 
-				//console.warn( 'THREE.Vector3: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.' );
+				console.warn( 'THREE.Vector3: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.' );
 				return this.subVectors( v, w );
 
 			}
@@ -3526,7 +3526,7 @@
 
 			if ( w !== undefined ) {
 
-				//console.warn( 'THREE.Vector3: .multiply() now only accepts one argument. Use .multiplyVectors( a, b ) instead.' );
+				console.warn( 'THREE.Vector3: .multiply() now only accepts one argument. Use .multiplyVectors( a, b ) instead.' );
 				return this.multiplyVectors( v, w );
 
 			}
@@ -3839,7 +3839,7 @@
 
 			if ( w !== undefined ) {
 
-				//console.warn( 'THREE.Vector3: .cross() now only accepts one argument. Use .crossVectors( a, b ) instead.' );
+				console.warn( 'THREE.Vector3: .cross() now only accepts one argument. Use .crossVectors( a, b ) instead.' );
 				return this.crossVectors( v, w );
 
 			}
@@ -4031,7 +4031,7 @@
 
 			if ( offset !== undefined ) {
 
-				//console.warn( 'THREE.Vector3: offset has been removed from .fromBufferAttribute().' );
+				console.warn( 'THREE.Vector3: offset has been removed from .fromBufferAttribute().' );
 
 			}
 
@@ -4402,7 +4402,7 @@
 
 			if ( n !== undefined ) {
 
-				//console.warn( 'THREE.Matrix4: .multiply() now only accepts one argument. Use .multiplyMatrices( a, b ) instead.' );
+				console.warn( 'THREE.Matrix4: .multiply() now only accepts one argument. Use .multiplyMatrices( a, b ) instead.' );
 				return this.multiplyMatrices( m, n );
 
 			}
@@ -4563,7 +4563,7 @@
 
 			if ( throwOnDegenerate !== undefined ) {
 
-				//console.warn( "THREE.Matrix4: .getInverse() can no longer be configured to throw on degenerate." );
+				console.warn( "THREE.Matrix4: .getInverse() can no longer be configured to throw on degenerate." );
 
 			}
 
@@ -4841,7 +4841,7 @@
 
 			if ( far === undefined ) {
 
-				//console.warn( 'THREE.Matrix4: .makePerspective() has been redefined and has a new signature. Please check the docs.' );
+				console.warn( 'THREE.Matrix4: .makePerspective() has been redefined and has a new signature. Please check the docs.' );
 
 			}
 
@@ -5205,7 +5205,7 @@
 
 				default:
 
-					//console.warn( 'THREE.Euler: .setFromRotationMatrix() encountered an unknown order: ' + order );
+					console.warn( 'THREE.Euler: .setFromRotationMatrix() encountered an unknown order: ' + order );
 
 			}
 
@@ -5790,7 +5790,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Object3D: .getWorldPosition() target is now required' );
+				console.warn( 'THREE.Object3D: .getWorldPosition() target is now required' );
 				target = new Vector3();
 
 			}
@@ -5805,7 +5805,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Object3D: .getWorldQuaternion() target is now required' );
+				console.warn( 'THREE.Object3D: .getWorldQuaternion() target is now required' );
 				target = new Quaternion();
 
 			}
@@ -5822,7 +5822,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Object3D: .getWorldScale() target is now required' );
+				console.warn( 'THREE.Object3D: .getWorldScale() target is now required' );
 				target = new Vector3();
 
 			}
@@ -5839,7 +5839,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Object3D: .getWorldDirection() target is now required' );
+				console.warn( 'THREE.Object3D: .getWorldDirection() target is now required' );
 				target = new Vector3();
 
 			}
@@ -6472,7 +6472,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Box3: .getCenter() target is now required' );
+				console.warn( 'THREE.Box3: .getCenter() target is now required' );
 				target = new Vector3();
 
 			}
@@ -6485,7 +6485,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Box3: .getSize() target is now required' );
+				console.warn( 'THREE.Box3: .getSize() target is now required' );
 				target = new Vector3();
 
 			}
@@ -6580,7 +6580,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Box3: .getParameter() target is now required' );
+				console.warn( 'THREE.Box3: .getParameter() target is now required' );
 				target = new Vector3();
 
 			}
@@ -6716,7 +6716,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Box3: .clampPoint() target is now required' );
+				console.warn( 'THREE.Box3: .clampPoint() target is now required' );
 				target = new Vector3();
 
 			}
@@ -6956,7 +6956,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Sphere: .clampPoint() target is now required' );
+				console.warn( 'THREE.Sphere: .clampPoint() target is now required' );
 				target = new Vector3();
 
 			}
@@ -6978,7 +6978,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Sphere: .getBoundingBox() target is now required' );
+				console.warn( 'THREE.Sphere: .getBoundingBox() target is now required' );
 				target = new Box3();
 
 			}
@@ -7073,7 +7073,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Ray: .at() target is now required' );
+				console.warn( 'THREE.Ray: .at() target is now required' );
 				target = new Vector3();
 
 			}
@@ -7102,7 +7102,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Ray: .closestPointToPoint() target is now required' );
+				console.warn( 'THREE.Ray: .closestPointToPoint() target is now required' );
 				target = new Vector3();
 
 			}
@@ -7646,7 +7646,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Plane: .projectPoint() target is now required' );
+				console.warn( 'THREE.Plane: .projectPoint() target is now required' );
 				target = new Vector3();
 
 			}
@@ -7659,7 +7659,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Plane: .intersectLine() target is now required' );
+				console.warn( 'THREE.Plane: .intersectLine() target is now required' );
 				target = new Vector3();
 
 			}
@@ -7721,7 +7721,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Plane: .coplanarPoint() target is now required' );
+				console.warn( 'THREE.Plane: .coplanarPoint() target is now required' );
 				target = new Vector3();
 
 			}
@@ -7791,7 +7791,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Triangle: .getNormal() target is now required' );
+				console.warn( 'THREE.Triangle: .getNormal() target is now required' );
 				target = new Vector3();
 
 			}
@@ -7829,7 +7829,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Triangle: .getBarycoord() target is now required' );
+				console.warn( 'THREE.Triangle: .getBarycoord() target is now required' );
 				target = new Vector3();
 
 			}
@@ -7936,7 +7936,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Triangle: .getMidpoint() target is now required' );
+				console.warn( 'THREE.Triangle: .getMidpoint() target is now required' );
 				target = new Vector3();
 
 			}
@@ -7955,7 +7955,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Triangle: .getPlane() target is now required' );
+				console.warn( 'THREE.Triangle: .getPlane() target is now required' );
 				target = new Plane();
 
 			}
@@ -7998,7 +7998,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Triangle: .closestPointToPoint() target is now required' );
+				console.warn( 'THREE.Triangle: .closestPointToPoint() target is now required' );
 				target = new Vector3();
 
 			}
@@ -8250,7 +8250,7 @@
 
 				if ( parseFloat( string ) < 1 ) {
 
-					//console.warn( 'THREE.Color: Alpha component of ' + style + ' will be ignored.' );
+					console.warn( 'THREE.Color: Alpha component of ' + style + ' will be ignored.' );
 
 				}
 
@@ -8372,7 +8372,7 @@
 			} else {
 
 				// unknown color
-				//console.warn( 'THREE.Color: Unknown color ' + style );
+				console.warn( 'THREE.Color: Unknown color ' + style );
 
 			}
 
@@ -8492,7 +8492,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Color: .getHSL() target is now required' );
+				console.warn( 'THREE.Color: .getHSL() target is now required' );
 				target = { h: 0, s: 0, l: 0 };
 
 			}
@@ -8857,7 +8857,7 @@
 
 				if ( newValue === undefined ) {
 
-					//console.warn( "THREE.Material: '" + key + "' parameter is undefined." );
+					console.warn( "THREE.Material: '" + key + "' parameter is undefined." );
 					continue;
 
 				}
@@ -8865,7 +8865,7 @@
 				// for backward compatability if shading is set in the constructor
 				if ( key === 'shading' ) {
 
-					//console.warn( 'THREE.' + this.type + ': .shading has been removed. Use the boolean .flatShading instead.' );
+					console.warn( 'THREE.' + this.type + ': .shading has been removed. Use the boolean .flatShading instead.' );
 					this.flatShading = ( newValue === FlatShading ) ? true : false;
 					continue;
 
@@ -8875,7 +8875,7 @@
 
 				if ( currentValue === undefined ) {
 
-					//console.warn( "THREE." + this.type + ": '" + key + "' is not a property of this material." );
+					console.warn( "THREE." + this.type + ": '" + key + "' is not a property of this material." );
 					continue;
 
 				}
@@ -9420,7 +9420,7 @@
 
 				if ( color === undefined ) {
 
-					//console.warn( 'THREE.BufferAttribute.copyColorsArray(): color is undefined', i );
+					console.warn( 'THREE.BufferAttribute.copyColorsArray(): color is undefined', i );
 					color = new Color();
 
 				}
@@ -9446,7 +9446,7 @@
 
 				if ( vector === undefined ) {
 
-					//console.warn( 'THREE.BufferAttribute.copyVector2sArray(): vector is undefined', i );
+					console.warn( 'THREE.BufferAttribute.copyVector2sArray(): vector is undefined', i );
 					vector = new Vector2();
 
 				}
@@ -9471,7 +9471,7 @@
 
 				if ( vector === undefined ) {
 
-					//console.warn( 'THREE.BufferAttribute.copyVector3sArray(): vector is undefined', i );
+					console.warn( 'THREE.BufferAttribute.copyVector3sArray(): vector is undefined', i );
 					vector = new Vector3();
 
 				}
@@ -9497,7 +9497,7 @@
 
 				if ( vector === undefined ) {
 
-					//console.warn( 'THREE.BufferAttribute.copyVector4sArray(): vector is undefined', i );
+					console.warn( 'THREE.BufferAttribute.copyVector4sArray(): vector is undefined', i );
 					vector = new Vector4();
 
 				}
@@ -10014,7 +10014,7 @@
 
 					} else {
 
-						//console.warn( 'THREE.DirectGeometry.fromGeometry(): Undefined vertexUv ', i$2 );
+						console.warn( 'THREE.DirectGeometry.fromGeometry(): Undefined vertexUv ', i$2 );
 
 						this.uvs.push( new Vector2(), new Vector2(), new Vector2() );
 
@@ -10032,7 +10032,7 @@
 
 					} else {
 
-						//console.warn( 'THREE.DirectGeometry.fromGeometry(): Undefined vertexUv2 ', i$2 );
+						console.warn( 'THREE.DirectGeometry.fromGeometry(): Undefined vertexUv2 ', i$2 );
 
 						this.uvs2.push( new Vector2(), new Vector2(), new Vector2() );
 
@@ -10928,7 +10928,7 @@
 
 				offset = 0;
 
-				//console.warn(
+				console.warn(
 					'THREE.BufferGeometry.merge(): Overwriting original geometry, starting at offset=0. '
 					+ 'Use BufferGeometryUtils.mergeBufferGeometries() for lossless merge.'
 				);
@@ -11010,7 +11010,7 @@
 
 			if ( this.index === null ) {
 
-				//console.warn( 'THREE.BufferGeometry.toNonIndexed(): Geometry is already non-indexed.' );
+				console.warn( 'THREE.BufferGeometry.toNonIndexed(): Geometry is already non-indexed.' );
 				return this;
 
 			}
@@ -13680,7 +13680,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Camera: .getWorldDirection() target is now required' );
+				console.warn( 'THREE.Camera: .getWorldDirection() target is now required' );
 				target = new Vector3();
 
 			}
@@ -14084,7 +14084,7 @@
 
 		if ( Number.isInteger( options ) ) {
 
-			//console.warn( 'THREE.WebGLCubeRenderTarget: constructor signature is now WebGLCubeRenderTarget( size, options )' );
+			console.warn( 'THREE.WebGLCubeRenderTarget: constructor signature is now WebGLCubeRenderTarget( size, options )' );
 
 			options = dummy;
 
@@ -14639,7 +14639,7 @@
 
 			} else if ( array instanceof Float64Array ) {
 
-				//console.warn( 'THREE.WebGLAttributes: Unsupported data buffer format: Float64Array.' );
+				console.warn( 'THREE.WebGLAttributes: Unsupported data buffer format: Float64Array.' );
 
 			} else if ( array instanceof Uint16Array ) {
 
@@ -16483,7 +16483,7 @@
 
 		if ( maxPrecision !== precision ) {
 
-			//console.warn( 'THREE.WebGLRenderer:', precision, 'not supported, using', maxPrecision, 'instead.' );
+			console.warn( 'THREE.WebGLRenderer:', precision, 'not supported, using', maxPrecision, 'instead.' );
 			precision = maxPrecision;
 
 		}
@@ -16749,7 +16749,7 @@
 
 				if ( ! this.has( name ) ) {
 
-					//console.warn( 'THREE.WebGLRenderer: ' + name + ' extension not supported.' );
+					console.warn( 'THREE.WebGLRenderer: ' + name + ' extension not supported.' );
 
 				}
 
@@ -18377,7 +18377,7 @@
 			case LogLuvEncoding:
 				return [ 'LogLuv', '( value )' ];
 			default:
-				//console.warn( 'THREE.WebGLProgram: Unsupported encoding:', encoding );
+				console.warn( 'THREE.WebGLProgram: Unsupported encoding:', encoding );
 				return [ 'Linear', '( value )' ];
 
 		}
@@ -18441,7 +18441,7 @@
 				break;
 
 			default:
-				//console.warn( 'THREE.WebGLProgram: Unsupported toneMapping:', toneMapping );
+				console.warn( 'THREE.WebGLProgram: Unsupported toneMapping:', toneMapping );
 				toneMappingName = 'Linear';
 
 		}
@@ -18569,7 +18569,7 @@
 
 	function deprecatedLoopReplacer( match, start, end, snippet ) {
 
-		//console.warn( 'WebGLProgram: #pragma unroll_loop shader syntax is deprecated. Please use #pragma unroll_loop_start syntax instead.' );
+		console.warn( 'WebGLProgram: #pragma unroll_loop shader syntax is deprecated. Please use #pragma unroll_loop_start syntax instead.' );
 		return loopReplacer( match, start, end, snippet );
 
 	}
@@ -19079,7 +19079,7 @@
 
 			} else if ( programLog !== '' ) {
 
-				//console.warn( 'THREE.WebGLProgram: gl.getProgramInfoLog()', programLog );
+				console.warn( 'THREE.WebGLProgram: gl.getProgramInfoLog()', programLog );
 
 			} else if ( vertexLog === '' || fragmentLog === '' ) {
 
@@ -19256,7 +19256,7 @@
 
 				if ( maxBones < bones.length ) {
 
-					//console.warn( 'THREE.WebGLRenderer: Skeleton has ' + bones.length + ' bones. This GPU supports ' + maxBones + '.' );
+					console.warn( 'THREE.WebGLRenderer: Skeleton has ' + bones.length + ' bones. This GPU supports ' + maxBones + '.' );
 					return 0;
 
 				}
@@ -19281,7 +19281,7 @@
 
 			} else if ( map.isWebGLRenderTarget ) {
 
-				//console.warn( "THREE.WebGLPrograms.getTextureEncodingFromMap: don't use render targets as textures. Use their .texture property instead." );
+				console.warn( "THREE.WebGLPrograms.getTextureEncodingFromMap: don't use render targets as textures. Use their .texture property instead." );
 				encoding = map.texture.encoding;
 
 			}
@@ -19310,7 +19310,7 @@
 
 				if ( precision !== material.precision ) {
 
-					//console.warn( 'THREE.WebGLProgram.getParameters:', material.precision, 'not supported, using', precision, 'instead.' );
+					console.warn( 'THREE.WebGLProgram.getParameters:', material.precision, 'not supported, using', precision, 'instead.' );
 
 				}
 
@@ -20689,7 +20689,7 @@
 
 				if ( shadow === undefined ) {
 
-					//console.warn( 'THREE.WebGLShadowMap:', light, 'has no shadow.' );
+					console.warn( 'THREE.WebGLShadowMap:', light, 'has no shadow.' );
 					continue;
 
 				}
@@ -20896,7 +20896,7 @@
 
 					} else {
 
-						//console.warn( 'THREE.WebGLShadowMap: THREE.SkinnedMesh with material.skinning set to false:', object );
+						console.warn( 'THREE.WebGLShadowMap: THREE.SkinnedMesh with material.skinning set to false:', object );
 
 					}
 
@@ -22050,7 +22050,7 @@
 					var context = canvas.getContext( '2d' );
 					context.drawImage( image, 0, 0, width, height );
 
-					//console.warn( 'THREE.WebGLRenderer: Texture has been resized from (' + image.width + 'x' + image.height + ') to (' + width + 'x' + height + ').' );
+					console.warn( 'THREE.WebGLRenderer: Texture has been resized from (' + image.width + 'x' + image.height + ') to (' + width + 'x' + height + ').' );
 
 					return canvas;
 
@@ -22058,7 +22058,7 @@
 
 					if ( 'data' in image ) {
 
-						//console.warn( 'THREE.WebGLRenderer: Image in DataTexture is too big (' + image.width + 'x' + image.height + ').' );
+						console.warn( 'THREE.WebGLRenderer: Image in DataTexture is too big (' + image.width + 'x' + image.height + ').' );
 
 					}
 
@@ -22113,7 +22113,7 @@
 
 				if ( _gl[ internalFormatName ] !== undefined ) { return _gl[ internalFormatName ]; }
 
-				//console.warn( 'THREE.WebGLRenderer: Attempt to use non-existing WebGL internal format \'' + internalFormatName + '\'' );
+				console.warn( 'THREE.WebGLRenderer: Attempt to use non-existing WebGL internal format \'' + internalFormatName + '\'' );
 
 			}
 
@@ -22273,7 +22273,7 @@
 
 			if ( textureUnit >= maxTextures ) {
 
-				//console.warn( 'THREE.WebGLTextures: Trying to use ' + textureUnit + ' texture units while this GPU supports only ' + maxTextures );
+				console.warn( 'THREE.WebGLTextures: Trying to use ' + textureUnit + ' texture units while this GPU supports only ' + maxTextures );
 
 			}
 
@@ -22297,11 +22297,11 @@
 
 				if ( image === undefined ) {
 
-					//console.warn( 'THREE.WebGLRenderer: Texture marked for update but image is undefined' );
+					console.warn( 'THREE.WebGLRenderer: Texture marked for update but image is undefined' );
 
 				} else if ( image.complete === false ) {
 
-					//console.warn( 'THREE.WebGLRenderer: Texture marked for update but image is incomplete' );
+					console.warn( 'THREE.WebGLRenderer: Texture marked for update but image is incomplete' );
 
 				} else {
 
@@ -22411,7 +22411,7 @@
 
 								} else {
 
-									//console.warn( 'THREE.WebGLRenderer: Attempt to load unsupported compressed texture format in .setTextureCube()' );
+									console.warn( 'THREE.WebGLRenderer: Attempt to load unsupported compressed texture format in .setTextureCube()' );
 
 								}
 
@@ -22535,7 +22535,7 @@
 
 				if ( texture.wrapS !== ClampToEdgeWrapping || texture.wrapT !== ClampToEdgeWrapping ) {
 
-					//console.warn( 'THREE.WebGLRenderer: Texture is not power of two. Texture.wrapS and Texture.wrapT should be set to THREE.ClampToEdgeWrapping.' );
+					console.warn( 'THREE.WebGLRenderer: Texture is not power of two. Texture.wrapS and Texture.wrapT should be set to THREE.ClampToEdgeWrapping.' );
 
 				}
 
@@ -22544,7 +22544,7 @@
 
 				if ( texture.minFilter !== NearestFilter && texture.minFilter !== LinearFilter ) {
 
-					//console.warn( 'THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter should be set to THREE.NearestFilter or THREE.LinearFilter.' );
+					console.warn( 'THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter should be set to THREE.NearestFilter or THREE.LinearFilter.' );
 
 				}
 
@@ -22659,7 +22659,7 @@
 					// (https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/)
 					if ( texture.type !== UnsignedShortType && texture.type !== UnsignedIntType ) {
 
-						//console.warn( 'THREE.WebGLRenderer: Use UnsignedShortType or UnsignedIntType for DepthFormat DepthTexture.' );
+						console.warn( 'THREE.WebGLRenderer: Use UnsignedShortType or UnsignedIntType for DepthFormat DepthTexture.' );
 
 						texture.type = UnsignedShortType;
 						glType = utils.convert( texture.type );
@@ -22679,7 +22679,7 @@
 					// (https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/)
 					if ( texture.type !== UnsignedInt248Type ) {
 
-						//console.warn( 'THREE.WebGLRenderer: Use UnsignedInt248Type for DepthStencilFormat DepthTexture.' );
+						console.warn( 'THREE.WebGLRenderer: Use UnsignedInt248Type for DepthStencilFormat DepthTexture.' );
 
 						texture.type = UnsignedInt248Type;
 						glType = utils.convert( texture.type );
@@ -22731,7 +22731,7 @@
 
 						} else {
 
-							//console.warn( 'THREE.WebGLRenderer: Attempt to load unsupported compressed texture format in .uploadTexture()' );
+							console.warn( 'THREE.WebGLRenderer: Attempt to load unsupported compressed texture format in .uploadTexture()' );
 
 						}
 
@@ -22999,7 +22999,7 @@
 
 				renderTarget.texture.format = RGBAFormat;
 
-				//console.warn( 'THREE.WebGLRenderer: Rendering to textures with RGB format is not supported. Using RGBA format instead.' );
+				console.warn( 'THREE.WebGLRenderer: Rendering to textures with RGB format is not supported. Using RGBA format instead.' );
 
 			}
 
@@ -23050,7 +23050,7 @@
 
 					} else {
 
-						//console.warn( 'THREE.WebGLRenderer: WebGLMultisampleRenderTarget can only be used with WebGL2.' );
+						console.warn( 'THREE.WebGLRenderer: WebGLMultisampleRenderTarget can only be used with WebGL2.' );
 
 					}
 
@@ -23147,7 +23147,7 @@
 
 				} else {
 
-					//console.warn( 'THREE.WebGLRenderer: WebGLMultisampleRenderTarget can only be used with WebGL2.' );
+					console.warn( 'THREE.WebGLRenderer: WebGLMultisampleRenderTarget can only be used with WebGL2.' );
 
 				}
 
@@ -23188,7 +23188,7 @@
 
 				if ( warnedTexture2D === false ) {
 
-					//console.warn( "THREE.WebGLTextures.safeSetTexture2D: don't use render targets as textures. Use their .texture property instead." );
+					console.warn( "THREE.WebGLTextures.safeSetTexture2D: don't use render targets as textures. Use their .texture property instead." );
 					warnedTexture2D = true;
 
 				}
@@ -23207,7 +23207,7 @@
 
 				if ( warnedTextureCube === false ) {
 
-					//console.warn( "THREE.WebGLTextures.safeSetTextureCube: don't use cube render targets as textures. Use their .texture property instead." );
+					console.warn( "THREE.WebGLTextures.safeSetTextureCube: don't use cube render targets as textures. Use their .texture property instead." );
 					warnedTextureCube = true;
 
 				}
@@ -23758,7 +23758,7 @@
 
 			if ( scope.isPresenting === true ) {
 
-				//console.warn( 'THREE.WebXRManager: Cannot change framebuffer scale while presenting.' );
+				console.warn( 'THREE.WebXRManager: Cannot change framebuffer scale while presenting.' );
 
 			}
 
@@ -23770,7 +23770,7 @@
 
 			if ( scope.isPresenting === true ) {
 
-				//console.warn( 'THREE.WebXRManager: Cannot change reference space type while presenting.' );
+				console.warn( 'THREE.WebXRManager: Cannot change reference space type while presenting.' );
 
 			}
 
@@ -25124,7 +25124,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'WebGLRenderer: .getsize() now requires a Vector2 as an argument' );
+				console.warn( 'WebGLRenderer: .getsize() now requires a Vector2 as an argument' );
 
 				target = new Vector2();
 
@@ -25138,7 +25138,7 @@
 
 			if ( xr.isPresenting ) {
 
-				//console.warn( 'THREE.WebGLRenderer: Can\'t change size while VR device is presenting.' );
+				console.warn( 'THREE.WebGLRenderer: Can\'t change size while VR device is presenting.' );
 				return;
 
 			}
@@ -25164,7 +25164,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'WebGLRenderer: .getdrawingBufferSize() now requires a Vector2 as an argument' );
+				console.warn( 'WebGLRenderer: .getdrawingBufferSize() now requires a Vector2 as an argument' );
 
 				target = new Vector2();
 
@@ -25192,7 +25192,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'WebGLRenderer: .getCurrentViewport() now requires a Vector4 as an argument' );
+				console.warn( 'WebGLRenderer: .getCurrentViewport() now requires a Vector4 as an argument' );
 
 				target = new Vector4();
 
@@ -25707,14 +25707,14 @@
 
 			if ( arguments[ 2 ] !== undefined ) {
 
-				//console.warn( 'THREE.WebGLRenderer.render(): the renderTarget argument has been removed. Use .setRenderTarget() instead.' );
+				console.warn( 'THREE.WebGLRenderer.render(): the renderTarget argument has been removed. Use .setRenderTarget() instead.' );
 				renderTarget = arguments[ 2 ];
 
 			}
 
 			if ( arguments[ 3 ] !== undefined ) {
 
-				//console.warn( 'THREE.WebGLRenderer.render(): the forceClear argument has been removed. Use .clear() instead.' );
+				console.warn( 'THREE.WebGLRenderer.render(): the forceClear argument has been removed. Use .clear() instead.' );
 				forceClear = arguments[ 3 ];
 
 			}
@@ -27806,7 +27806,7 @@
 
 			} else {
 
-				//console.warn( 'THREE.SkinnedMesh: Unrecognized bindMode: ' + this.bindMode );
+				console.warn( 'THREE.SkinnedMesh: Unrecognized bindMode: ' + this.bindMode );
 
 			}
 
@@ -27893,7 +27893,7 @@
 
 			} else {
 
-				//console.warn( 'THREE.Skeleton boneInverses is the wrong length.' );
+				console.warn( 'THREE.Skeleton boneInverses is the wrong length.' );
 
 				this.boneInverses = [];
 
@@ -28287,7 +28287,7 @@
 
 				} else {
 
-					//console.warn( 'THREE.Line.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.' );
+					console.warn( 'THREE.Line.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.' );
 
 				}
 
@@ -28549,7 +28549,7 @@
 
 				} else {
 
-					//console.warn( 'THREE.LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.' );
+					console.warn( 'THREE.LineSegments.computeLineDistances(): Computation only possible with non-indexed BufferGeometry.' );
 
 				}
 
@@ -29902,7 +29902,7 @@
 			closed: closed
 		};
 
-		if ( taper !== undefined ) { //console.warn( 'THREE.TubeGeometry: taper has been removed.' ); }
+		if ( taper !== undefined ) { console.warn( 'THREE.TubeGeometry: taper has been removed.' ); }
 
 		var bufferGeometry = new TubeBufferGeometry( path, tubularSegments, radius, radialSegments, closed );
 
@@ -30123,7 +30123,7 @@
 			q: q
 		};
 
-		if ( heightScale !== undefined ) { //console.warn( 'THREE.TorusKnotGeometry: heightScale has been deprecated. Use .scale( x, y, z ) instead.' ); }
+		if ( heightScale !== undefined ) { console.warn( 'THREE.TorusKnotGeometry: heightScale has been deprecated. Use .scale( x, y, z ) instead.' ); }
 
 		this.fromBufferGeometry( new TorusKnotBufferGeometry( radius, tube, tubularSegments, radialSegments, p, q ) );
 		this.mergeVertices();
@@ -31419,7 +31419,7 @@
 
 			if ( options.amount !== undefined ) {
 
-				//console.warn( 'THREE.ExtrudeBufferGeometry: amount has been renamed to depth.' );
+				console.warn( 'THREE.ExtrudeBufferGeometry: amount has been renamed to depth.' );
 				depth = options.amount;
 
 			}
@@ -32686,7 +32686,7 @@
 
 		if ( typeof curveSegments === 'object' ) {
 
-			//console.warn( 'THREE.ShapeGeometry: Options parameter has been removed.' );
+			console.warn( 'THREE.ShapeGeometry: Options parameter has been removed.' );
 
 			curveSegments = curveSegments.curveSegments;
 
@@ -35478,7 +35478,7 @@
 
 				}
 
-				//console.warn( 'THREE.KeyframeTrack:', message );
+				console.warn( 'THREE.KeyframeTrack:', message );
 				return this;
 
 			}
@@ -36920,7 +36920,7 @@
 						// Some browsers return HTTP Status 0 when using non-http protocol
 						// e.g. 'file://' or 'data://'. Handle as success.
 
-						if ( this.status === 0 ) { //console.warn( 'THREE.FileLoader: HTTP Status 0 received.' ); }
+						if ( this.status === 0 ) { console.warn( 'THREE.FileLoader: HTTP Status 0 received.' ); }
 
 						// Add to cache only on HTTP success, so that we do not cache
 						// error response bodies as proper responses to requests.
@@ -37569,7 +37569,7 @@
 
 		getPoint: function ( /* t, optionalTarget */ ) {
 
-			//console.warn( 'THREE.Curve: .getPoint() not implemented.' );
+			console.warn( 'THREE.Curve: .getPoint() not implemented.' );
 			return null;
 
 		},
@@ -40647,7 +40647,7 @@
 
 				if ( textures[ name ] === undefined ) {
 
-					//console.warn( 'THREE.MaterialLoader: Undefined texture', name );
+					console.warn( 'THREE.MaterialLoader: Undefined texture', name );
 
 				}
 
@@ -41621,7 +41621,7 @@
 
 						default:
 
-							//console.warn( 'THREE.ObjectLoader: Unsupported geometry type "' + data.type + '"' );
+							console.warn( 'THREE.ObjectLoader: Unsupported geometry type "' + data.type + '"' );
 
 							continue;
 
@@ -41794,7 +41794,7 @@
 
 				if ( typeof value === 'number' ) { return value; }
 
-				//console.warn( 'THREE.ObjectLoader.parseTexture: Constant should be in numeric form.', value );
+				console.warn( 'THREE.ObjectLoader.parseTexture: Constant should be in numeric form.', value );
 
 				return type[ value ];
 
@@ -41810,13 +41810,13 @@
 
 					if ( data.image === undefined ) {
 
-						//console.warn( 'THREE.ObjectLoader: No "image" specified for', data.uuid );
+						console.warn( 'THREE.ObjectLoader: No "image" specified for', data.uuid );
 
 					}
 
 					if ( images[ data.image ] === undefined ) {
 
-						//console.warn( 'THREE.ObjectLoader: Undefined image', data.image );
+						console.warn( 'THREE.ObjectLoader: Undefined image', data.image );
 
 					}
 
@@ -41883,7 +41883,7 @@
 
 				if ( geometries[ name ] === undefined ) {
 
-					//console.warn( 'THREE.ObjectLoader: Undefined geometry', name );
+					console.warn( 'THREE.ObjectLoader: Undefined geometry', name );
 
 				}
 
@@ -41905,7 +41905,7 @@
 
 						if ( materials[ uuid ] === undefined ) {
 
-							//console.warn( 'THREE.ObjectLoader: Undefined material', uuid );
+							console.warn( 'THREE.ObjectLoader: Undefined material', uuid );
 
 						}
 
@@ -41919,7 +41919,7 @@
 
 				if ( materials[ name ] === undefined ) {
 
-					//console.warn( 'THREE.ObjectLoader: Undefined material', name );
+					console.warn( 'THREE.ObjectLoader: Undefined material', name );
 
 				}
 
@@ -42026,7 +42026,7 @@
 
 				case 'SkinnedMesh':
 
-					//console.warn( 'THREE.ObjectLoader.parseObject() does not support SkinnedMesh yet.' );
+					console.warn( 'THREE.ObjectLoader.parseObject() does not support SkinnedMesh yet.' );
 
 				case 'Mesh':
 
@@ -42210,13 +42210,13 @@
 
 		if ( typeof createImageBitmap === 'undefined' ) {
 
-			//console.warn( 'THREE.ImageBitmapLoader: createImageBitmap() not supported.' );
+			console.warn( 'THREE.ImageBitmapLoader: createImageBitmap() not supported.' );
 
 		}
 
 		if ( typeof fetch === 'undefined' ) {
 
-			//console.warn( 'THREE.ImageBitmapLoader: fetch() not supported.' );
+			console.warn( 'THREE.ImageBitmapLoader: fetch() not supported.' );
 
 		}
 
@@ -42770,7 +42770,7 @@
 
 				} catch ( e ) {
 
-					//console.warn( 'THREE.FontLoader: typeface.js support is being deprecated. Use typeface.json instead.' );
+					console.warn( 'THREE.FontLoader: typeface.js support is being deprecated. Use typeface.json instead.' );
 					json = JSON.parse( text.substring( 65, text.length - 2 ) );
 
 				}
@@ -43371,14 +43371,14 @@
 
 			if ( this.isPlaying === true ) {
 
-				//console.warn( 'THREE.Audio: Audio is already playing.' );
+				console.warn( 'THREE.Audio: Audio is already playing.' );
 				return;
 
 			}
 
 			if ( this.hasPlaybackControl === false ) {
 
-				//console.warn( 'THREE.Audio: this Audio has no playback control.' );
+				console.warn( 'THREE.Audio: this Audio has no playback control.' );
 				return;
 
 			}
@@ -43408,7 +43408,7 @@
 
 			if ( this.hasPlaybackControl === false ) {
 
-				//console.warn( 'THREE.Audio: this Audio has no playback control.' );
+				console.warn( 'THREE.Audio: this Audio has no playback control.' );
 				return;
 
 			}
@@ -43442,7 +43442,7 @@
 
 			if ( this.hasPlaybackControl === false ) {
 
-				//console.warn( 'THREE.Audio: this Audio has no playback control.' );
+				console.warn( 'THREE.Audio: this Audio has no playback control.' );
 				return;
 
 			}
@@ -43569,7 +43569,7 @@
 
 			if ( this.hasPlaybackControl === false ) {
 
-				//console.warn( 'THREE.Audio: this Audio has no playback control.' );
+				console.warn( 'THREE.Audio: this Audio has no playback control.' );
 				return;
 
 			}
@@ -43602,7 +43602,7 @@
 
 			if ( this.hasPlaybackControl === false ) {
 
-				//console.warn( 'THREE.Audio: this Audio has no playback control.' );
+				console.warn( 'THREE.Audio: this Audio has no playback control.' );
 				return false;
 
 			}
@@ -43615,7 +43615,7 @@
 
 			if ( this.hasPlaybackControl === false ) {
 
-				//console.warn( 'THREE.Audio: this Audio has no playback control.' );
+				console.warn( 'THREE.Audio: this Audio has no playback control.' );
 				return;
 
 			}
@@ -46717,7 +46717,7 @@
 
 		if ( typeof value === 'string' ) {
 
-			//console.warn( 'THREE.Uniform: Type parameter is no longer needed.' );
+			console.warn( 'THREE.Uniform: Type parameter is no longer needed.' );
 			value = arguments[ 1 ];
 
 		}
@@ -46811,7 +46811,7 @@
 			PointCloud: {
 				get: function () {
 
-					//console.warn( 'THREE.Raycaster: params.PointCloud has been renamed to params.Points.' );
+					console.warn( 'THREE.Raycaster: params.PointCloud has been renamed to params.Points.' );
 					return this.Points;
 
 				}
@@ -46898,7 +46898,7 @@
 
 			if ( Array.isArray( objects ) === false ) {
 
-				//console.warn( 'THREE.Raycaster.intersectObjects: objects is not an Array.' );
+				console.warn( 'THREE.Raycaster.intersectObjects: objects is not an Array.' );
 				return intersects;
 
 			}
@@ -47150,7 +47150,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Box2: .getCenter() target is now required' );
+				console.warn( 'THREE.Box2: .getCenter() target is now required' );
 				target = new Vector2();
 
 			}
@@ -47163,7 +47163,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Box2: .getSize() target is now required' );
+				console.warn( 'THREE.Box2: .getSize() target is now required' );
 				target = new Vector2();
 
 			}
@@ -47220,7 +47220,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Box2: .getParameter() target is now required' );
+				console.warn( 'THREE.Box2: .getParameter() target is now required' );
 				target = new Vector2();
 
 			}
@@ -47245,7 +47245,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Box2: .clampPoint() target is now required' );
+				console.warn( 'THREE.Box2: .clampPoint() target is now required' );
 				target = new Vector2();
 
 			}
@@ -47340,7 +47340,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Line3: .getCenter() target is now required' );
+				console.warn( 'THREE.Line3: .getCenter() target is now required' );
 				target = new Vector3();
 
 			}
@@ -47353,7 +47353,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Line3: .delta() target is now required' );
+				console.warn( 'THREE.Line3: .delta() target is now required' );
 				target = new Vector3();
 
 			}
@@ -47378,7 +47378,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Line3: .at() target is now required' );
+				console.warn( 'THREE.Line3: .at() target is now required' );
 				target = new Vector3();
 
 			}
@@ -47413,7 +47413,7 @@
 
 			if ( target === undefined ) {
 
-				//console.warn( 'THREE.Line3: .closestPointToPoint() target is now required' );
+				console.warn( 'THREE.Line3: .closestPointToPoint() target is now required' );
 				target = new Vector3();
 
 			}
@@ -48310,7 +48310,7 @@
 
 		if ( object !== undefined ) {
 
-			//console.warn( 'THREE.BoxHelper: .update() has no longer arguments.' );
+			console.warn( 'THREE.BoxHelper: .update() has no longer arguments.' );
 
 		}
 
@@ -49065,7 +49065,7 @@
 
 			if ( samples > MAX_SAMPLES ) {
 
-				//console.warn( ("sigmaRadians, " + sigmaRadians + ", is too large and will clip, as it requested " + samples + " samples when the maximum is set to " + MAX_SAMPLES) );
+				console.warn( ("sigmaRadians, " + sigmaRadians + ", is too large and will clip, as it requested " + samples + " samples when the maximum is set to " + MAX_SAMPLES) );
 
 			}
 
@@ -49335,7 +49335,7 @@
 
 	function Face4( a, b, c, d, normal, color, materialIndex ) {
 
-		//console.warn( 'THREE.Face4 has been removed. A THREE.Face3 will be created instead.' );
+		console.warn( 'THREE.Face4 has been removed. A THREE.Face3 will be created instead.' );
 		return new Face3( a, b, c, normal, color, materialIndex );
 
 	}
@@ -49348,7 +49348,7 @@
 
 	function MeshFaceMaterial( materials ) {
 
-		//console.warn( 'THREE.MeshFaceMaterial has been removed. Use an Array instead.' );
+		console.warn( 'THREE.MeshFaceMaterial has been removed. Use an Array instead.' );
 		return materials;
 
 	}
@@ -49357,7 +49357,7 @@
 
 		if ( materials === undefined ) { materials = []; }
 
-		//console.warn( 'THREE.MultiMaterial has been removed. Use an Array instead.' );
+		console.warn( 'THREE.MultiMaterial has been removed. Use an Array instead.' );
 		materials.isMultiMaterial = true;
 		materials.materials = materials;
 		materials.clone = function () {
@@ -49372,49 +49372,49 @@
 
 	function PointCloud( geometry, material ) {
 
-		//console.warn( 'THREE.PointCloud has been renamed to THREE.Points.' );
+		console.warn( 'THREE.PointCloud has been renamed to THREE.Points.' );
 		return new Points( geometry, material );
 
 	}
 
 	function Particle( material ) {
 
-		//console.warn( 'THREE.Particle has been renamed to THREE.Sprite.' );
+		console.warn( 'THREE.Particle has been renamed to THREE.Sprite.' );
 		return new Sprite( material );
 
 	}
 
 	function ParticleSystem( geometry, material ) {
 
-		//console.warn( 'THREE.ParticleSystem has been renamed to THREE.Points.' );
+		console.warn( 'THREE.ParticleSystem has been renamed to THREE.Points.' );
 		return new Points( geometry, material );
 
 	}
 
 	function PointCloudMaterial( parameters ) {
 
-		//console.warn( 'THREE.PointCloudMaterial has been renamed to THREE.PointsMaterial.' );
+		console.warn( 'THREE.PointCloudMaterial has been renamed to THREE.PointsMaterial.' );
 		return new PointsMaterial( parameters );
 
 	}
 
 	function ParticleBasicMaterial( parameters ) {
 
-		//console.warn( 'THREE.ParticleBasicMaterial has been renamed to THREE.PointsMaterial.' );
+		console.warn( 'THREE.ParticleBasicMaterial has been renamed to THREE.PointsMaterial.' );
 		return new PointsMaterial( parameters );
 
 	}
 
 	function ParticleSystemMaterial( parameters ) {
 
-		//console.warn( 'THREE.ParticleSystemMaterial has been renamed to THREE.PointsMaterial.' );
+		console.warn( 'THREE.ParticleSystemMaterial has been renamed to THREE.PointsMaterial.' );
 		return new PointsMaterial( parameters );
 
 	}
 
 	function Vertex( x, y, z ) {
 
-		//console.warn( 'THREE.Vertex has been removed. Use THREE.Vector3 instead.' );
+		console.warn( 'THREE.Vertex has been removed. Use THREE.Vector3 instead.' );
 		return new Vector3( x, y, z );
 
 	}
@@ -49423,70 +49423,70 @@
 
 	function DynamicBufferAttribute( array, itemSize ) {
 
-		//console.warn( 'THREE.DynamicBufferAttribute has been removed. Use new THREE.BufferAttribute().setUsage( THREE.DynamicDrawUsage ) instead.' );
+		console.warn( 'THREE.DynamicBufferAttribute has been removed. Use new THREE.BufferAttribute().setUsage( THREE.DynamicDrawUsage ) instead.' );
 		return new BufferAttribute( array, itemSize ).setUsage( DynamicDrawUsage );
 
 	}
 
 	function Int8Attribute( array, itemSize ) {
 
-		//console.warn( 'THREE.Int8Attribute has been removed. Use new THREE.Int8BufferAttribute() instead.' );
+		console.warn( 'THREE.Int8Attribute has been removed. Use new THREE.Int8BufferAttribute() instead.' );
 		return new Int8BufferAttribute( array, itemSize );
 
 	}
 
 	function Uint8Attribute( array, itemSize ) {
 
-		//console.warn( 'THREE.Uint8Attribute has been removed. Use new THREE.Uint8BufferAttribute() instead.' );
+		console.warn( 'THREE.Uint8Attribute has been removed. Use new THREE.Uint8BufferAttribute() instead.' );
 		return new Uint8BufferAttribute( array, itemSize );
 
 	}
 
 	function Uint8ClampedAttribute( array, itemSize ) {
 
-		//console.warn( 'THREE.Uint8ClampedAttribute has been removed. Use new THREE.Uint8ClampedBufferAttribute() instead.' );
+		console.warn( 'THREE.Uint8ClampedAttribute has been removed. Use new THREE.Uint8ClampedBufferAttribute() instead.' );
 		return new Uint8ClampedBufferAttribute( array, itemSize );
 
 	}
 
 	function Int16Attribute( array, itemSize ) {
 
-		//console.warn( 'THREE.Int16Attribute has been removed. Use new THREE.Int16BufferAttribute() instead.' );
+		console.warn( 'THREE.Int16Attribute has been removed. Use new THREE.Int16BufferAttribute() instead.' );
 		return new Int16BufferAttribute( array, itemSize );
 
 	}
 
 	function Uint16Attribute( array, itemSize ) {
 
-		//console.warn( 'THREE.Uint16Attribute has been removed. Use new THREE.Uint16BufferAttribute() instead.' );
+		console.warn( 'THREE.Uint16Attribute has been removed. Use new THREE.Uint16BufferAttribute() instead.' );
 		return new Uint16BufferAttribute( array, itemSize );
 
 	}
 
 	function Int32Attribute( array, itemSize ) {
 
-		//console.warn( 'THREE.Int32Attribute has been removed. Use new THREE.Int32BufferAttribute() instead.' );
+		console.warn( 'THREE.Int32Attribute has been removed. Use new THREE.Int32BufferAttribute() instead.' );
 		return new Int32BufferAttribute( array, itemSize );
 
 	}
 
 	function Uint32Attribute( array, itemSize ) {
 
-		//console.warn( 'THREE.Uint32Attribute has been removed. Use new THREE.Uint32BufferAttribute() instead.' );
+		console.warn( 'THREE.Uint32Attribute has been removed. Use new THREE.Uint32BufferAttribute() instead.' );
 		return new Uint32BufferAttribute( array, itemSize );
 
 	}
 
 	function Float32Attribute( array, itemSize ) {
 
-		//console.warn( 'THREE.Float32Attribute has been removed. Use new THREE.Float32BufferAttribute() instead.' );
+		console.warn( 'THREE.Float32Attribute has been removed. Use new THREE.Float32BufferAttribute() instead.' );
 		return new Float32BufferAttribute( array, itemSize );
 
 	}
 
 	function Float64Attribute( array, itemSize ) {
 
-		//console.warn( 'THREE.Float64Attribute has been removed. Use new THREE.Float64BufferAttribute() instead.' );
+		console.warn( 'THREE.Float64Attribute has been removed. Use new THREE.Float64BufferAttribute() instead.' );
 		return new Float64BufferAttribute( array, itemSize );
 
 	}
@@ -49511,7 +49511,7 @@
 
 		createPointsGeometry: function ( divisions ) {
 
-			//console.warn( 'THREE.CurvePath: .createPointsGeometry() has been removed. Use new THREE.Geometry().setFromPoints( points ) instead.' );
+			console.warn( 'THREE.CurvePath: .createPointsGeometry() has been removed. Use new THREE.Geometry().setFromPoints( points ) instead.' );
 
 			// generate geometry from path points (for Line or Points objects)
 
@@ -49522,7 +49522,7 @@
 
 		createSpacedPointsGeometry: function ( divisions ) {
 
-			//console.warn( 'THREE.CurvePath: .createSpacedPointsGeometry() has been removed. Use new THREE.Geometry().setFromPoints( points ) instead.' );
+			console.warn( 'THREE.CurvePath: .createSpacedPointsGeometry() has been removed. Use new THREE.Geometry().setFromPoints( points ) instead.' );
 
 			// generate geometry from equidistant sampling along the path
 
@@ -49533,7 +49533,7 @@
 
 		createGeometry: function ( points ) {
 
-			//console.warn( 'THREE.CurvePath: .createGeometry() has been removed. Use new THREE.Geometry().setFromPoints( points ) instead.' );
+			console.warn( 'THREE.CurvePath: .createGeometry() has been removed. Use new THREE.Geometry().setFromPoints( points ) instead.' );
 
 			var geometry = new Geometry();
 
@@ -49556,7 +49556,7 @@
 
 		fromPoints: function ( points ) {
 
-			//console.warn( 'THREE.Path: .fromPoints() has been renamed to .setFromPoints().' );
+			console.warn( 'THREE.Path: .fromPoints() has been renamed to .setFromPoints().' );
 			return this.setFromPoints( points );
 
 		}
@@ -49567,7 +49567,7 @@
 
 	function ClosedSplineCurve3( points ) {
 
-		//console.warn( 'THREE.ClosedSplineCurve3 has been deprecated. Use THREE.CatmullRomCurve3 instead.' );
+		console.warn( 'THREE.ClosedSplineCurve3 has been deprecated. Use THREE.CatmullRomCurve3 instead.' );
 
 		CatmullRomCurve3.call( this, points );
 		this.type = 'catmullrom';
@@ -49581,7 +49581,7 @@
 
 	function SplineCurve3( points ) {
 
-		//console.warn( 'THREE.SplineCurve3 has been deprecated. Use THREE.CatmullRomCurve3 instead.' );
+		console.warn( 'THREE.SplineCurve3 has been deprecated. Use THREE.CatmullRomCurve3 instead.' );
 
 		CatmullRomCurve3.call( this, points );
 		this.type = 'catmullrom';
@@ -49594,7 +49594,7 @@
 
 	function Spline( points ) {
 
-		//console.warn( 'THREE.Spline has been removed. Use THREE.CatmullRomCurve3 instead.' );
+		console.warn( 'THREE.Spline has been removed. Use THREE.CatmullRomCurve3 instead.' );
 
 		CatmullRomCurve3.call( this, points );
 		this.type = 'catmullrom';
@@ -49627,21 +49627,21 @@
 
 	function AxisHelper( size ) {
 
-		//console.warn( 'THREE.AxisHelper has been renamed to THREE.AxesHelper.' );
+		console.warn( 'THREE.AxisHelper has been renamed to THREE.AxesHelper.' );
 		return new AxesHelper( size );
 
 	}
 
 	function BoundingBoxHelper( object, color ) {
 
-		//console.warn( 'THREE.BoundingBoxHelper has been deprecated. Creating a THREE.BoxHelper instead.' );
+		console.warn( 'THREE.BoundingBoxHelper has been deprecated. Creating a THREE.BoxHelper instead.' );
 		return new BoxHelper( object, color );
 
 	}
 
 	function EdgesHelper( object, hex ) {
 
-		//console.warn( 'THREE.EdgesHelper has been removed. Use THREE.EdgesGeometry instead.' );
+		console.warn( 'THREE.EdgesHelper has been removed. Use THREE.EdgesGeometry instead.' );
 		return new LineSegments( new EdgesGeometry( object.geometry ), new LineBasicMaterial( { color: hex !== undefined ? hex : 0xffffff } ) );
 
 	}
@@ -49660,7 +49660,7 @@
 
 	function WireframeHelper( object, hex ) {
 
-		//console.warn( 'THREE.WireframeHelper has been removed. Use THREE.WireframeGeometry instead.' );
+		console.warn( 'THREE.WireframeHelper has been removed. Use THREE.WireframeGeometry instead.' );
 		return new LineSegments( new WireframeGeometry( object.geometry ), new LineBasicMaterial( { color: hex !== undefined ? hex : 0xffffff } ) );
 
 	}
@@ -49671,7 +49671,7 @@
 
 		extractUrlBase: function ( url ) {
 
-			//console.warn( 'THREE.Loader: .extractUrlBase() has been deprecated. Use THREE.LoaderUtils.extractUrlBase() instead.' );
+			console.warn( 'THREE.Loader: .extractUrlBase() has been deprecated. Use THREE.LoaderUtils.extractUrlBase() instead.' );
 			return LoaderUtils.extractUrlBase( url );
 
 		}
@@ -49696,14 +49696,14 @@
 
 	function XHRLoader( manager ) {
 
-		//console.warn( 'THREE.XHRLoader has been renamed to THREE.FileLoader.' );
+		console.warn( 'THREE.XHRLoader has been renamed to THREE.FileLoader.' );
 		return new FileLoader( manager );
 
 	}
 
 	function BinaryTextureLoader( manager ) {
 
-		//console.warn( 'THREE.BinaryTextureLoader has been renamed to THREE.DataTextureLoader.' );
+		console.warn( 'THREE.BinaryTextureLoader has been renamed to THREE.DataTextureLoader.' );
 		return new DataTextureLoader( manager );
 
 	}
@@ -49712,7 +49712,7 @@
 
 		setTexturePath: function ( value ) {
 
-			//console.warn( 'THREE.ObjectLoader: .setTexturePath() has been renamed to .setResourcePath().' );
+			console.warn( 'THREE.ObjectLoader: .setTexturePath() has been renamed to .setResourcePath().' );
 			return this.setResourcePath( value );
 
 		}
@@ -49725,25 +49725,25 @@
 
 		center: function ( optionalTarget ) {
 
-			//console.warn( 'THREE.Box2: .center() has been renamed to .getCenter().' );
+			console.warn( 'THREE.Box2: .center() has been renamed to .getCenter().' );
 			return this.getCenter( optionalTarget );
 
 		},
 		empty: function () {
 
-			//console.warn( 'THREE.Box2: .empty() has been renamed to .isEmpty().' );
+			console.warn( 'THREE.Box2: .empty() has been renamed to .isEmpty().' );
 			return this.isEmpty();
 
 		},
 		isIntersectionBox: function ( box ) {
 
-			//console.warn( 'THREE.Box2: .isIntersectionBox() has been renamed to .intersectsBox().' );
+			console.warn( 'THREE.Box2: .isIntersectionBox() has been renamed to .intersectsBox().' );
 			return this.intersectsBox( box );
 
 		},
 		size: function ( optionalTarget ) {
 
-			//console.warn( 'THREE.Box2: .size() has been renamed to .getSize().' );
+			console.warn( 'THREE.Box2: .size() has been renamed to .getSize().' );
 			return this.getSize( optionalTarget );
 
 		}
@@ -49753,31 +49753,31 @@
 
 		center: function ( optionalTarget ) {
 
-			//console.warn( 'THREE.Box3: .center() has been renamed to .getCenter().' );
+			console.warn( 'THREE.Box3: .center() has been renamed to .getCenter().' );
 			return this.getCenter( optionalTarget );
 
 		},
 		empty: function () {
 
-			//console.warn( 'THREE.Box3: .empty() has been renamed to .isEmpty().' );
+			console.warn( 'THREE.Box3: .empty() has been renamed to .isEmpty().' );
 			return this.isEmpty();
 
 		},
 		isIntersectionBox: function ( box ) {
 
-			//console.warn( 'THREE.Box3: .isIntersectionBox() has been renamed to .intersectsBox().' );
+			console.warn( 'THREE.Box3: .isIntersectionBox() has been renamed to .intersectsBox().' );
 			return this.intersectsBox( box );
 
 		},
 		isIntersectionSphere: function ( sphere ) {
 
-			//console.warn( 'THREE.Box3: .isIntersectionSphere() has been renamed to .intersectsSphere().' );
+			console.warn( 'THREE.Box3: .isIntersectionSphere() has been renamed to .intersectsSphere().' );
 			return this.intersectsSphere( sphere );
 
 		},
 		size: function ( optionalTarget ) {
 
-			//console.warn( 'THREE.Box3: .size() has been renamed to .getSize().' );
+			console.warn( 'THREE.Box3: .size() has been renamed to .getSize().' );
 			return this.getSize( optionalTarget );
 
 		}
@@ -49787,7 +49787,7 @@
 
 		empty: function () {
 
-			//console.warn( 'THREE.Sphere: .empty() has been renamed to .isEmpty().' );
+			console.warn( 'THREE.Sphere: .empty() has been renamed to .isEmpty().' );
 			return this.isEmpty();
 
 		},
@@ -49796,14 +49796,14 @@
 
 	Frustum.prototype.setFromMatrix = function ( m ) {
 
-		//console.warn( 'THREE.Frustum: .setFromMatrix() has been renamed to .setFromProjectionMatrix().' );
+		console.warn( 'THREE.Frustum: .setFromMatrix() has been renamed to .setFromProjectionMatrix().' );
 		return this.setFromProjectionMatrix( m );
 
 	};
 
 	Line3.prototype.center = function ( optionalTarget ) {
 
-		//console.warn( 'THREE.Line3: .center() has been renamed to .getCenter().' );
+		console.warn( 'THREE.Line3: .center() has been renamed to .getCenter().' );
 		return this.getCenter( optionalTarget );
 
 	};
@@ -49812,21 +49812,21 @@
 
 		random16: function () {
 
-			//console.warn( 'THREE.Math: .random16() has been deprecated. Use Math.random() instead.' );
+			console.warn( 'THREE.Math: .random16() has been deprecated. Use Math.random() instead.' );
 			return Math.random();
 
 		},
 
 		nearestPowerOfTwo: function ( value ) {
 
-			//console.warn( 'THREE.Math: .nearestPowerOfTwo() has been renamed to .floorPowerOfTwo().' );
+			console.warn( 'THREE.Math: .nearestPowerOfTwo() has been renamed to .floorPowerOfTwo().' );
 			return MathUtils.floorPowerOfTwo( value );
 
 		},
 
 		nextPowerOfTwo: function ( value ) {
 
-			//console.warn( 'THREE.Math: .nextPowerOfTwo() has been renamed to .ceilPowerOfTwo().' );
+			console.warn( 'THREE.Math: .nextPowerOfTwo() has been renamed to .ceilPowerOfTwo().' );
 			return MathUtils.ceilPowerOfTwo( value );
 
 		}
@@ -49837,13 +49837,13 @@
 
 		flattenToArrayOffset: function ( array, offset ) {
 
-			//console.warn( "THREE.Matrix3: .flattenToArrayOffset() has been deprecated. Use .toArray() instead." );
+			console.warn( "THREE.Matrix3: .flattenToArrayOffset() has been deprecated. Use .toArray() instead." );
 			return this.toArray( array, offset );
 
 		},
 		multiplyVector3: function ( vector ) {
 
-			//console.warn( 'THREE.Matrix3: .multiplyVector3() has been removed. Use vector.applyMatrix3( matrix ) instead.' );
+			console.warn( 'THREE.Matrix3: .multiplyVector3() has been removed. Use vector.applyMatrix3( matrix ) instead.' );
 			return vector.applyMatrix3( this );
 
 		},
@@ -49854,7 +49854,7 @@
 		},
 		applyToBufferAttribute: function ( attribute ) {
 
-			//console.warn( 'THREE.Matrix3: .applyToBufferAttribute() has been removed. Use attribute.applyMatrix3( matrix ) instead.' );
+			console.warn( 'THREE.Matrix3: .applyToBufferAttribute() has been removed. Use attribute.applyMatrix3( matrix ) instead.' );
 			return attribute.applyMatrix3( this );
 
 		},
@@ -49870,42 +49870,42 @@
 
 		extractPosition: function ( m ) {
 
-			//console.warn( 'THREE.Matrix4: .extractPosition() has been renamed to .copyPosition().' );
+			console.warn( 'THREE.Matrix4: .extractPosition() has been renamed to .copyPosition().' );
 			return this.copyPosition( m );
 
 		},
 		flattenToArrayOffset: function ( array, offset ) {
 
-			//console.warn( "THREE.Matrix4: .flattenToArrayOffset() has been deprecated. Use .toArray() instead." );
+			console.warn( "THREE.Matrix4: .flattenToArrayOffset() has been deprecated. Use .toArray() instead." );
 			return this.toArray( array, offset );
 
 		},
 		getPosition: function () {
 
-			//console.warn( 'THREE.Matrix4: .getPosition() has been removed. Use Vector3.setFromMatrixPosition( matrix ) instead.' );
+			console.warn( 'THREE.Matrix4: .getPosition() has been removed. Use Vector3.setFromMatrixPosition( matrix ) instead.' );
 			return new Vector3().setFromMatrixColumn( this, 3 );
 
 		},
 		setRotationFromQuaternion: function ( q ) {
 
-			//console.warn( 'THREE.Matrix4: .setRotationFromQuaternion() has been renamed to .makeRotationFromQuaternion().' );
+			console.warn( 'THREE.Matrix4: .setRotationFromQuaternion() has been renamed to .makeRotationFromQuaternion().' );
 			return this.makeRotationFromQuaternion( q );
 
 		},
 		multiplyToArray: function () {
 
-			//console.warn( 'THREE.Matrix4: .multiplyToArray() has been removed.' );
+			console.warn( 'THREE.Matrix4: .multiplyToArray() has been removed.' );
 
 		},
 		multiplyVector3: function ( vector ) {
 
-			//console.warn( 'THREE.Matrix4: .multiplyVector3() has been removed. Use vector.applyMatrix4( matrix ) instead.' );
+			console.warn( 'THREE.Matrix4: .multiplyVector3() has been removed. Use vector.applyMatrix4( matrix ) instead.' );
 			return vector.applyMatrix4( this );
 
 		},
 		multiplyVector4: function ( vector ) {
 
-			//console.warn( 'THREE.Matrix4: .multiplyVector4() has been removed. Use vector.applyMatrix4( matrix ) instead.' );
+			console.warn( 'THREE.Matrix4: .multiplyVector4() has been removed. Use vector.applyMatrix4( matrix ) instead.' );
 			return vector.applyMatrix4( this );
 
 		},
@@ -49916,13 +49916,13 @@
 		},
 		rotateAxis: function ( v ) {
 
-			//console.warn( 'THREE.Matrix4: .rotateAxis() has been removed. Use Vector3.transformDirection( matrix ) instead.' );
+			console.warn( 'THREE.Matrix4: .rotateAxis() has been removed. Use Vector3.transformDirection( matrix ) instead.' );
 			v.transformDirection( this );
 
 		},
 		crossVector: function ( vector ) {
 
-			//console.warn( 'THREE.Matrix4: .crossVector() has been removed. Use vector.applyMatrix4( matrix ) instead.' );
+			console.warn( 'THREE.Matrix4: .crossVector() has been removed. Use vector.applyMatrix4( matrix ) instead.' );
 			return vector.applyMatrix4( this );
 
 		},
@@ -49953,7 +49953,7 @@
 		},
 		applyToBufferAttribute: function ( attribute ) {
 
-			//console.warn( 'THREE.Matrix4: .applyToBufferAttribute() has been removed. Use attribute.applyMatrix4( matrix ) instead.' );
+			console.warn( 'THREE.Matrix4: .applyToBufferAttribute() has been removed. Use attribute.applyMatrix4( matrix ) instead.' );
 			return attribute.applyMatrix4( this );
 
 		},
@@ -49964,7 +49964,7 @@
 		},
 		makeFrustum: function ( left, right, bottom, top, near, far ) {
 
-			//console.warn( 'THREE.Matrix4: .makeFrustum() has been removed. Use .makePerspective( left, right, top, bottom, near, far ) instead.' );
+			console.warn( 'THREE.Matrix4: .makeFrustum() has been removed. Use .makePerspective( left, right, top, bottom, near, far ) instead.' );
 			return this.makePerspective( left, right, top, bottom, near, far );
 
 		}
@@ -49973,14 +49973,14 @@
 
 	Plane.prototype.isIntersectionLine = function ( line ) {
 
-		//console.warn( 'THREE.Plane: .isIntersectionLine() has been renamed to .intersectsLine().' );
+		console.warn( 'THREE.Plane: .isIntersectionLine() has been renamed to .intersectsLine().' );
 		return this.intersectsLine( line );
 
 	};
 
 	Quaternion.prototype.multiplyVector3 = function ( vector ) {
 
-		//console.warn( 'THREE.Quaternion: .multiplyVector3() has been removed. Use is now vector.applyQuaternion( quaternion ) instead.' );
+		console.warn( 'THREE.Quaternion: .multiplyVector3() has been removed. Use is now vector.applyQuaternion( quaternion ) instead.' );
 		return vector.applyQuaternion( this );
 
 	};
@@ -49989,19 +49989,19 @@
 
 		isIntersectionBox: function ( box ) {
 
-			//console.warn( 'THREE.Ray: .isIntersectionBox() has been renamed to .intersectsBox().' );
+			console.warn( 'THREE.Ray: .isIntersectionBox() has been renamed to .intersectsBox().' );
 			return this.intersectsBox( box );
 
 		},
 		isIntersectionPlane: function ( plane ) {
 
-			//console.warn( 'THREE.Ray: .isIntersectionPlane() has been renamed to .intersectsPlane().' );
+			console.warn( 'THREE.Ray: .isIntersectionPlane() has been renamed to .intersectsPlane().' );
 			return this.intersectsPlane( plane );
 
 		},
 		isIntersectionSphere: function ( sphere ) {
 
-			//console.warn( 'THREE.Ray: .isIntersectionSphere() has been renamed to .intersectsSphere().' );
+			console.warn( 'THREE.Ray: .isIntersectionSphere() has been renamed to .intersectsSphere().' );
 			return this.intersectsSphere( sphere );
 
 		}
@@ -50012,31 +50012,31 @@
 
 		area: function () {
 
-			//console.warn( 'THREE.Triangle: .area() has been renamed to .getArea().' );
+			console.warn( 'THREE.Triangle: .area() has been renamed to .getArea().' );
 			return this.getArea();
 
 		},
 		barycoordFromPoint: function ( point, target ) {
 
-			//console.warn( 'THREE.Triangle: .barycoordFromPoint() has been renamed to .getBarycoord().' );
+			console.warn( 'THREE.Triangle: .barycoordFromPoint() has been renamed to .getBarycoord().' );
 			return this.getBarycoord( point, target );
 
 		},
 		midpoint: function ( target ) {
 
-			//console.warn( 'THREE.Triangle: .midpoint() has been renamed to .getMidpoint().' );
+			console.warn( 'THREE.Triangle: .midpoint() has been renamed to .getMidpoint().' );
 			return this.getMidpoint( target );
 
 		},
 		normal: function ( target ) {
 
-			//console.warn( 'THREE.Triangle: .normal() has been renamed to .getNormal().' );
+			console.warn( 'THREE.Triangle: .normal() has been renamed to .getNormal().' );
 			return this.getNormal( target );
 
 		},
 		plane: function ( target ) {
 
-			//console.warn( 'THREE.Triangle: .plane() has been renamed to .getPlane().' );
+			console.warn( 'THREE.Triangle: .plane() has been renamed to .getPlane().' );
 			return this.getPlane( target );
 
 		}
@@ -50047,13 +50047,13 @@
 
 		barycoordFromPoint: function ( point, a, b, c, target ) {
 
-			//console.warn( 'THREE.Triangle: .barycoordFromPoint() has been renamed to .getBarycoord().' );
+			console.warn( 'THREE.Triangle: .barycoordFromPoint() has been renamed to .getBarycoord().' );
 			return Triangle.getBarycoord( point, a, b, c, target );
 
 		},
 		normal: function ( a, b, c, target ) {
 
-			//console.warn( 'THREE.Triangle: .normal() has been renamed to .getNormal().' );
+			console.warn( 'THREE.Triangle: .normal() has been renamed to .getNormal().' );
 			return Triangle.getNormal( a, b, c, target );
 
 		}
@@ -50064,19 +50064,19 @@
 
 		extractAllPoints: function ( divisions ) {
 
-			//console.warn( 'THREE.Shape: .extractAllPoints() has been removed. Use .extractPoints() instead.' );
+			console.warn( 'THREE.Shape: .extractAllPoints() has been removed. Use .extractPoints() instead.' );
 			return this.extractPoints( divisions );
 
 		},
 		extrude: function ( options ) {
 
-			//console.warn( 'THREE.Shape: .extrude() has been removed. Use ExtrudeGeometry() instead.' );
+			console.warn( 'THREE.Shape: .extrude() has been removed. Use ExtrudeGeometry() instead.' );
 			return new ExtrudeGeometry( this, options );
 
 		},
 		makeGeometry: function ( options ) {
 
-			//console.warn( 'THREE.Shape: .makeGeometry() has been removed. Use ShapeGeometry() instead.' );
+			console.warn( 'THREE.Shape: .makeGeometry() has been removed. Use ShapeGeometry() instead.' );
 			return new ShapeGeometry( this, options );
 
 		}
@@ -50087,19 +50087,19 @@
 
 		fromAttribute: function ( attribute, index, offset ) {
 
-			//console.warn( 'THREE.Vector2: .fromAttribute() has been renamed to .fromBufferAttribute().' );
+			console.warn( 'THREE.Vector2: .fromAttribute() has been renamed to .fromBufferAttribute().' );
 			return this.fromBufferAttribute( attribute, index, offset );
 
 		},
 		distanceToManhattan: function ( v ) {
 
-			//console.warn( 'THREE.Vector2: .distanceToManhattan() has been renamed to .manhattanDistanceTo().' );
+			console.warn( 'THREE.Vector2: .distanceToManhattan() has been renamed to .manhattanDistanceTo().' );
 			return this.manhattanDistanceTo( v );
 
 		},
 		lengthManhattan: function () {
 
-			//console.warn( 'THREE.Vector2: .lengthManhattan() has been renamed to .manhattanLength().' );
+			console.warn( 'THREE.Vector2: .lengthManhattan() has been renamed to .manhattanLength().' );
 			return this.manhattanLength();
 
 		}
@@ -50120,43 +50120,43 @@
 		},
 		getPositionFromMatrix: function ( m ) {
 
-			//console.warn( 'THREE.Vector3: .getPositionFromMatrix() has been renamed to .setFromMatrixPosition().' );
+			console.warn( 'THREE.Vector3: .getPositionFromMatrix() has been renamed to .setFromMatrixPosition().' );
 			return this.setFromMatrixPosition( m );
 
 		},
 		getScaleFromMatrix: function ( m ) {
 
-			//console.warn( 'THREE.Vector3: .getScaleFromMatrix() has been renamed to .setFromMatrixScale().' );
+			console.warn( 'THREE.Vector3: .getScaleFromMatrix() has been renamed to .setFromMatrixScale().' );
 			return this.setFromMatrixScale( m );
 
 		},
 		getColumnFromMatrix: function ( index, matrix ) {
 
-			//console.warn( 'THREE.Vector3: .getColumnFromMatrix() has been renamed to .setFromMatrixColumn().' );
+			console.warn( 'THREE.Vector3: .getColumnFromMatrix() has been renamed to .setFromMatrixColumn().' );
 			return this.setFromMatrixColumn( matrix, index );
 
 		},
 		applyProjection: function ( m ) {
 
-			//console.warn( 'THREE.Vector3: .applyProjection() has been removed. Use .applyMatrix4( m ) instead.' );
+			console.warn( 'THREE.Vector3: .applyProjection() has been removed. Use .applyMatrix4( m ) instead.' );
 			return this.applyMatrix4( m );
 
 		},
 		fromAttribute: function ( attribute, index, offset ) {
 
-			//console.warn( 'THREE.Vector3: .fromAttribute() has been renamed to .fromBufferAttribute().' );
+			console.warn( 'THREE.Vector3: .fromAttribute() has been renamed to .fromBufferAttribute().' );
 			return this.fromBufferAttribute( attribute, index, offset );
 
 		},
 		distanceToManhattan: function ( v ) {
 
-			//console.warn( 'THREE.Vector3: .distanceToManhattan() has been renamed to .manhattanDistanceTo().' );
+			console.warn( 'THREE.Vector3: .distanceToManhattan() has been renamed to .manhattanDistanceTo().' );
 			return this.manhattanDistanceTo( v );
 
 		},
 		lengthManhattan: function () {
 
-			//console.warn( 'THREE.Vector3: .lengthManhattan() has been renamed to .manhattanLength().' );
+			console.warn( 'THREE.Vector3: .lengthManhattan() has been renamed to .manhattanLength().' );
 			return this.manhattanLength();
 
 		}
@@ -50167,13 +50167,13 @@
 
 		fromAttribute: function ( attribute, index, offset ) {
 
-			//console.warn( 'THREE.Vector4: .fromAttribute() has been renamed to .fromBufferAttribute().' );
+			console.warn( 'THREE.Vector4: .fromAttribute() has been renamed to .fromBufferAttribute().' );
 			return this.fromBufferAttribute( attribute, index, offset );
 
 		},
 		lengthManhattan: function () {
 
-			//console.warn( 'THREE.Vector4: .lengthManhattan() has been renamed to .manhattanLength().' );
+			console.warn( 'THREE.Vector4: .lengthManhattan() has been renamed to .manhattanLength().' );
 			return this.manhattanLength();
 
 		}
@@ -50196,7 +50196,7 @@
 		},
 		applyMatrix: function ( matrix ) {
 
-			//console.warn( 'THREE.Geometry: .applyMatrix() has been renamed to .applyMatrix4().' );
+			console.warn( 'THREE.Geometry: .applyMatrix() has been renamed to .applyMatrix4().' );
 			return this.applyMatrix4( matrix );
 
 		}
@@ -50207,18 +50207,18 @@
 
 		getChildByName: function ( name ) {
 
-			//console.warn( 'THREE.Object3D: .getChildByName() has been renamed to .getObjectByName().' );
+			console.warn( 'THREE.Object3D: .getChildByName() has been renamed to .getObjectByName().' );
 			return this.getObjectByName( name );
 
 		},
 		renderDepth: function () {
 
-			//console.warn( 'THREE.Object3D: .renderDepth has been removed. Use .renderOrder, instead.' );
+			console.warn( 'THREE.Object3D: .renderDepth has been removed. Use .renderOrder, instead.' );
 
 		},
 		translate: function ( distance, axis ) {
 
-			//console.warn( 'THREE.Object3D: .translate() has been removed. Use .translateOnAxis( axis, distance ) instead.' );
+			console.warn( 'THREE.Object3D: .translate() has been removed. Use .translateOnAxis( axis, distance ) instead.' );
 			return this.translateOnAxis( axis, distance );
 
 		},
@@ -50229,7 +50229,7 @@
 		},
 		applyMatrix: function ( matrix ) {
 
-			//console.warn( 'THREE.Object3D: .applyMatrix() has been renamed to .applyMatrix4().' );
+			console.warn( 'THREE.Object3D: .applyMatrix() has been renamed to .applyMatrix4().' );
 			return this.applyMatrix4( matrix );
 
 		}
@@ -50241,13 +50241,13 @@
 		eulerOrder: {
 			get: function () {
 
-				//console.warn( 'THREE.Object3D: .eulerOrder is now .rotation.order.' );
+				console.warn( 'THREE.Object3D: .eulerOrder is now .rotation.order.' );
 				return this.rotation.order;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.Object3D: .eulerOrder is now .rotation.order.' );
+				console.warn( 'THREE.Object3D: .eulerOrder is now .rotation.order.' );
 				this.rotation.order = value;
 
 			}
@@ -50255,12 +50255,12 @@
 		useQuaternion: {
 			get: function () {
 
-				//console.warn( 'THREE.Object3D: .useQuaternion has been removed. The library now uses quaternions by default.' );
+				console.warn( 'THREE.Object3D: .useQuaternion has been removed. The library now uses quaternions by default.' );
 
 			},
 			set: function () {
 
-				//console.warn( 'THREE.Object3D: .useQuaternion has been removed. The library now uses quaternions by default.' );
+				console.warn( 'THREE.Object3D: .useQuaternion has been removed. The library now uses quaternions by default.' );
 
 			}
 		}
@@ -50300,7 +50300,7 @@
 		objects: {
 			get: function () {
 
-				//console.warn( 'THREE.LOD: .objects has been renamed to .levels.' );
+				console.warn( 'THREE.LOD: .objects has been renamed to .levels.' );
 				return this.levels;
 
 			}
@@ -50312,12 +50312,12 @@
 
 		get: function () {
 
-			//console.warn( 'THREE.Skeleton: useVertexTexture has been removed.' );
+			console.warn( 'THREE.Skeleton: useVertexTexture has been removed.' );
 
 		},
 		set: function () {
 
-			//console.warn( 'THREE.Skeleton: useVertexTexture has been removed.' );
+			console.warn( 'THREE.Skeleton: useVertexTexture has been removed.' );
 
 		}
 
@@ -50333,13 +50333,13 @@
 
 		get: function () {
 
-			//console.warn( 'THREE.Curve: .__arcLengthDivisions is now .arcLengthDivisions.' );
+			console.warn( 'THREE.Curve: .__arcLengthDivisions is now .arcLengthDivisions.' );
 			return this.arcLengthDivisions;
 
 		},
 		set: function ( value ) {
 
-			//console.warn( 'THREE.Curve: .__arcLengthDivisions is now .arcLengthDivisions.' );
+			console.warn( 'THREE.Curve: .__arcLengthDivisions is now .arcLengthDivisions.' );
 			this.arcLengthDivisions = value;
 
 		}
@@ -50350,7 +50350,7 @@
 
 	PerspectiveCamera.prototype.setLens = function ( focalLength, filmGauge ) {
 
-		//console.warn( "THREE.PerspectiveCamera.setLens is deprecated. " +
+		console.warn( "THREE.PerspectiveCamera.setLens is deprecated. " +
 				"Use .setFocalLength and .filmGauge for a photographic setup." );
 
 		if ( filmGauge !== undefined ) { this.filmGauge = filmGauge; }
@@ -50364,14 +50364,14 @@
 		onlyShadow: {
 			set: function () {
 
-				//console.warn( 'THREE.Light: .onlyShadow has been removed.' );
+				console.warn( 'THREE.Light: .onlyShadow has been removed.' );
 
 			}
 		},
 		shadowCameraFov: {
 			set: function ( value ) {
 
-				//console.warn( 'THREE.Light: .shadowCameraFov is now .shadow.camera.fov.' );
+				console.warn( 'THREE.Light: .shadowCameraFov is now .shadow.camera.fov.' );
 				this.shadow.camera.fov = value;
 
 			}
@@ -50379,7 +50379,7 @@
 		shadowCameraLeft: {
 			set: function ( value ) {
 
-				//console.warn( 'THREE.Light: .shadowCameraLeft is now .shadow.camera.left.' );
+				console.warn( 'THREE.Light: .shadowCameraLeft is now .shadow.camera.left.' );
 				this.shadow.camera.left = value;
 
 			}
@@ -50387,7 +50387,7 @@
 		shadowCameraRight: {
 			set: function ( value ) {
 
-				//console.warn( 'THREE.Light: .shadowCameraRight is now .shadow.camera.right.' );
+				console.warn( 'THREE.Light: .shadowCameraRight is now .shadow.camera.right.' );
 				this.shadow.camera.right = value;
 
 			}
@@ -50395,7 +50395,7 @@
 		shadowCameraTop: {
 			set: function ( value ) {
 
-				//console.warn( 'THREE.Light: .shadowCameraTop is now .shadow.camera.top.' );
+				console.warn( 'THREE.Light: .shadowCameraTop is now .shadow.camera.top.' );
 				this.shadow.camera.top = value;
 
 			}
@@ -50403,7 +50403,7 @@
 		shadowCameraBottom: {
 			set: function ( value ) {
 
-				//console.warn( 'THREE.Light: .shadowCameraBottom is now .shadow.camera.bottom.' );
+				console.warn( 'THREE.Light: .shadowCameraBottom is now .shadow.camera.bottom.' );
 				this.shadow.camera.bottom = value;
 
 			}
@@ -50411,7 +50411,7 @@
 		shadowCameraNear: {
 			set: function ( value ) {
 
-				//console.warn( 'THREE.Light: .shadowCameraNear is now .shadow.camera.near.' );
+				console.warn( 'THREE.Light: .shadowCameraNear is now .shadow.camera.near.' );
 				this.shadow.camera.near = value;
 
 			}
@@ -50419,7 +50419,7 @@
 		shadowCameraFar: {
 			set: function ( value ) {
 
-				//console.warn( 'THREE.Light: .shadowCameraFar is now .shadow.camera.far.' );
+				console.warn( 'THREE.Light: .shadowCameraFar is now .shadow.camera.far.' );
 				this.shadow.camera.far = value;
 
 			}
@@ -50427,14 +50427,14 @@
 		shadowCameraVisible: {
 			set: function () {
 
-				//console.warn( 'THREE.Light: .shadowCameraVisible has been removed. Use new THREE.CameraHelper( light.shadow.camera ) instead.' );
+				console.warn( 'THREE.Light: .shadowCameraVisible has been removed. Use new THREE.CameraHelper( light.shadow.camera ) instead.' );
 
 			}
 		},
 		shadowBias: {
 			set: function ( value ) {
 
-				//console.warn( 'THREE.Light: .shadowBias is now .shadow.bias.' );
+				console.warn( 'THREE.Light: .shadowBias is now .shadow.bias.' );
 				this.shadow.bias = value;
 
 			}
@@ -50442,14 +50442,14 @@
 		shadowDarkness: {
 			set: function () {
 
-				//console.warn( 'THREE.Light: .shadowDarkness has been removed.' );
+				console.warn( 'THREE.Light: .shadowDarkness has been removed.' );
 
 			}
 		},
 		shadowMapWidth: {
 			set: function ( value ) {
 
-				//console.warn( 'THREE.Light: .shadowMapWidth is now .shadow.mapSize.width.' );
+				console.warn( 'THREE.Light: .shadowMapWidth is now .shadow.mapSize.width.' );
 				this.shadow.mapSize.width = value;
 
 			}
@@ -50457,7 +50457,7 @@
 		shadowMapHeight: {
 			set: function ( value ) {
 
-				//console.warn( 'THREE.Light: .shadowMapHeight is now .shadow.mapSize.height.' );
+				console.warn( 'THREE.Light: .shadowMapHeight is now .shadow.mapSize.height.' );
 				this.shadow.mapSize.height = value;
 
 			}
@@ -50471,7 +50471,7 @@
 		length: {
 			get: function () {
 
-				//console.warn( 'THREE.BufferAttribute: .length has been deprecated. Use .count instead.' );
+				console.warn( 'THREE.BufferAttribute: .length has been deprecated. Use .count instead.' );
 				return this.array.length;
 
 			}
@@ -50479,13 +50479,13 @@
 		dynamic: {
 			get: function () {
 
-				//console.warn( 'THREE.BufferAttribute: .dynamic has been deprecated. Use .usage instead.' );
+				console.warn( 'THREE.BufferAttribute: .dynamic has been deprecated. Use .usage instead.' );
 				return this.usage === DynamicDrawUsage;
 
 			},
 			set: function ( /* value */ ) {
 
-				//console.warn( 'THREE.BufferAttribute: .dynamic has been deprecated. Use .usage instead.' );
+				console.warn( 'THREE.BufferAttribute: .dynamic has been deprecated. Use .usage instead.' );
 				this.setUsage( DynamicDrawUsage );
 
 			}
@@ -50496,7 +50496,7 @@
 	Object.assign( BufferAttribute.prototype, {
 		setDynamic: function ( value ) {
 
-			//console.warn( 'THREE.BufferAttribute: .setDynamic() has been deprecated. Use .setUsage() instead.' );
+			console.warn( 'THREE.BufferAttribute: .setDynamic() has been deprecated. Use .setUsage() instead.' );
 			this.setUsage( value === true ? DynamicDrawUsage : StaticDrawUsage );
 			return this;
 
@@ -50517,17 +50517,17 @@
 
 		addIndex: function ( index ) {
 
-			//console.warn( 'THREE.BufferGeometry: .addIndex() has been renamed to .setIndex().' );
+			console.warn( 'THREE.BufferGeometry: .addIndex() has been renamed to .setIndex().' );
 			this.setIndex( index );
 
 		},
 		addAttribute: function ( name, attribute ) {
 
-			//console.warn( 'THREE.BufferGeometry: .addAttribute() has been renamed to .setAttribute().' );
+			console.warn( 'THREE.BufferGeometry: .addAttribute() has been renamed to .setAttribute().' );
 
 			if ( ! ( attribute && attribute.isBufferAttribute ) && ! ( attribute && attribute.isInterleavedBufferAttribute ) ) {
 
-				//console.warn( 'THREE.BufferGeometry: .addAttribute() now expects ( name, attribute ).' );
+				console.warn( 'THREE.BufferGeometry: .addAttribute() now expects ( name, attribute ).' );
 
 				return this.setAttribute( name, new BufferAttribute( arguments[ 1 ], arguments[ 2 ] ) );
 
@@ -50535,7 +50535,7 @@
 
 			if ( name === 'index' ) {
 
-				//console.warn( 'THREE.BufferGeometry.addAttribute: Use .setIndex() for index attribute.' );
+				console.warn( 'THREE.BufferGeometry.addAttribute: Use .setIndex() for index attribute.' );
 				this.setIndex( attribute );
 
 				return this;
@@ -50549,40 +50549,40 @@
 
 			if ( indexOffset !== undefined ) {
 
-				//console.warn( 'THREE.BufferGeometry: .addDrawCall() no longer supports indexOffset.' );
+				console.warn( 'THREE.BufferGeometry: .addDrawCall() no longer supports indexOffset.' );
 
 			}
 
-			//console.warn( 'THREE.BufferGeometry: .addDrawCall() is now .addGroup().' );
+			console.warn( 'THREE.BufferGeometry: .addDrawCall() is now .addGroup().' );
 			this.addGroup( start, count );
 
 		},
 		clearDrawCalls: function () {
 
-			//console.warn( 'THREE.BufferGeometry: .clearDrawCalls() is now .clearGroups().' );
+			console.warn( 'THREE.BufferGeometry: .clearDrawCalls() is now .clearGroups().' );
 			this.clearGroups();
 
 		},
 		computeTangents: function () {
 
-			//console.warn( 'THREE.BufferGeometry: .computeTangents() has been removed.' );
+			console.warn( 'THREE.BufferGeometry: .computeTangents() has been removed.' );
 
 		},
 		computeOffsets: function () {
 
-			//console.warn( 'THREE.BufferGeometry: .computeOffsets() has been removed.' );
+			console.warn( 'THREE.BufferGeometry: .computeOffsets() has been removed.' );
 
 		},
 		removeAttribute: function ( name ) {
 
-			//console.warn( 'THREE.BufferGeometry: .removeAttribute() has been renamed to .deleteAttribute().' );
+			console.warn( 'THREE.BufferGeometry: .removeAttribute() has been renamed to .deleteAttribute().' );
 
 			return this.deleteAttribute( name );
 
 		},
 		applyMatrix: function ( matrix ) {
 
-			//console.warn( 'THREE.BufferGeometry: .applyMatrix() has been renamed to .applyMatrix4().' );
+			console.warn( 'THREE.BufferGeometry: .applyMatrix() has been renamed to .applyMatrix4().' );
 			return this.applyMatrix4( matrix );
 
 		}
@@ -50602,7 +50602,7 @@
 		offsets: {
 			get: function () {
 
-				//console.warn( 'THREE.BufferGeometry: .offsets has been renamed to .groups.' );
+				console.warn( 'THREE.BufferGeometry: .offsets has been renamed to .groups.' );
 				return this.groups;
 
 			}
@@ -50615,13 +50615,13 @@
 		maxInstancedCount: {
 			get: function () {
 
-				//console.warn( 'THREE.InstancedBufferGeometry: .maxInstancedCount has been renamed to .instanceCount.' );
+				console.warn( 'THREE.InstancedBufferGeometry: .maxInstancedCount has been renamed to .instanceCount.' );
 				return this.instanceCount;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.InstancedBufferGeometry: .maxInstancedCount has been renamed to .instanceCount.' );
+				console.warn( 'THREE.InstancedBufferGeometry: .maxInstancedCount has been renamed to .instanceCount.' );
 				this.instanceCount = value;
 
 			}
@@ -50634,13 +50634,13 @@
 		linePrecision: {
 			get: function () {
 
-				//console.warn( 'THREE.Raycaster: .linePrecision has been deprecated. Use .params.Line.threshold instead.' );
+				console.warn( 'THREE.Raycaster: .linePrecision has been deprecated. Use .params.Line.threshold instead.' );
 				return this.params.Line.threshold;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.Raycaster: .linePrecision has been deprecated. Use .params.Line.threshold instead.' );
+				console.warn( 'THREE.Raycaster: .linePrecision has been deprecated. Use .params.Line.threshold instead.' );
 				this.params.Line.threshold = value;
 
 			}
@@ -50653,13 +50653,13 @@
 		dynamic: {
 			get: function () {
 
-				//console.warn( 'THREE.InterleavedBuffer: .length has been deprecated. Use .usage instead.' );
+				console.warn( 'THREE.InterleavedBuffer: .length has been deprecated. Use .usage instead.' );
 				return this.usage === DynamicDrawUsage;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.InterleavedBuffer: .length has been deprecated. Use .usage instead.' );
+				console.warn( 'THREE.InterleavedBuffer: .length has been deprecated. Use .usage instead.' );
 				this.setUsage( value );
 
 			}
@@ -50670,7 +50670,7 @@
 	Object.assign( InterleavedBuffer.prototype, {
 		setDynamic: function ( value ) {
 
-			//console.warn( 'THREE.InterleavedBuffer: .setDynamic() has been deprecated. Use .setUsage() instead.' );
+			console.warn( 'THREE.InterleavedBuffer: .setDynamic() has been deprecated. Use .setUsage() instead.' );
 			this.setUsage( value === true ? DynamicDrawUsage : StaticDrawUsage );
 			return this;
 
@@ -50713,14 +50713,14 @@
 		dynamic: {
 			set: function () {
 
-				//console.warn( 'THREE.Uniform: .dynamic has been removed. Use object.onBeforeRender() instead.' );
+				console.warn( 'THREE.Uniform: .dynamic has been removed. Use object.onBeforeRender() instead.' );
 
 			}
 		},
 		onUpdate: {
 			value: function () {
 
-				//console.warn( 'THREE.Uniform: .onUpdate() has been removed. Use object.onBeforeRender() instead.' );
+				console.warn( 'THREE.Uniform: .onUpdate() has been removed. Use object.onBeforeRender() instead.' );
 				return this;
 
 			}
@@ -50735,12 +50735,12 @@
 		wrapAround: {
 			get: function () {
 
-				//console.warn( 'THREE.Material: .wrapAround has been removed.' );
+				console.warn( 'THREE.Material: .wrapAround has been removed.' );
 
 			},
 			set: function () {
 
-				//console.warn( 'THREE.Material: .wrapAround has been removed.' );
+				console.warn( 'THREE.Material: .wrapAround has been removed.' );
 
 			}
 		},
@@ -50748,12 +50748,12 @@
 		overdraw: {
 			get: function () {
 
-				//console.warn( 'THREE.Material: .overdraw has been removed.' );
+				console.warn( 'THREE.Material: .overdraw has been removed.' );
 
 			},
 			set: function () {
 
-				//console.warn( 'THREE.Material: .overdraw has been removed.' );
+				console.warn( 'THREE.Material: .overdraw has been removed.' );
 
 			}
 		},
@@ -50761,7 +50761,7 @@
 		wrapRGB: {
 			get: function () {
 
-				//console.warn( 'THREE.Material: .wrapRGB has been removed.' );
+				console.warn( 'THREE.Material: .wrapRGB has been removed.' );
 				return new Color();
 
 			}
@@ -50775,7 +50775,7 @@
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.' + this.type + ': .shading has been removed. Use the boolean .flatShading instead.' );
+				console.warn( 'THREE.' + this.type + ': .shading has been removed. Use the boolean .flatShading instead.' );
 				this.flatShading = ( value === FlatShading );
 
 			}
@@ -50784,13 +50784,13 @@
 		stencilMask: {
 			get: function () {
 
-				//console.warn( 'THREE.' + this.type + ': .stencilMask has been removed. Use .stencilFuncMask instead.' );
+				console.warn( 'THREE.' + this.type + ': .stencilMask has been removed. Use .stencilFuncMask instead.' );
 				return this.stencilFuncMask;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.' + this.type + ': .stencilMask has been removed. Use .stencilFuncMask instead.' );
+				console.warn( 'THREE.' + this.type + ': .stencilMask has been removed. Use .stencilFuncMask instead.' );
 				this.stencilFuncMask = value;
 
 			}
@@ -50803,13 +50803,13 @@
 		metal: {
 			get: function () {
 
-				//console.warn( 'THREE.MeshPhongMaterial: .metal has been removed. Use THREE.MeshStandardMaterial instead.' );
+				console.warn( 'THREE.MeshPhongMaterial: .metal has been removed. Use THREE.MeshStandardMaterial instead.' );
 				return false;
 
 			},
 			set: function () {
 
-				//console.warn( 'THREE.MeshPhongMaterial: .metal has been removed. Use THREE.MeshStandardMaterial instead' );
+				console.warn( 'THREE.MeshPhongMaterial: .metal has been removed. Use THREE.MeshStandardMaterial instead' );
 
 			}
 		}
@@ -50821,13 +50821,13 @@
 		transparency: {
 			get: function () {
 
-				//console.warn( 'THREE.MeshPhysicalMaterial: .transparency has been renamed to .transmission.' );
+				console.warn( 'THREE.MeshPhysicalMaterial: .transparency has been renamed to .transmission.' );
 				return this.transmission;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.MeshPhysicalMaterial: .transparency has been renamed to .transmission.' );
+				console.warn( 'THREE.MeshPhysicalMaterial: .transparency has been renamed to .transmission.' );
 				this.transmission = value;
 
 			}
@@ -50840,13 +50840,13 @@
 		derivatives: {
 			get: function () {
 
-				//console.warn( 'THREE.ShaderMaterial: .derivatives has been moved to .extensions.derivatives.' );
+				console.warn( 'THREE.ShaderMaterial: .derivatives has been moved to .extensions.derivatives.' );
 				return this.extensions.derivatives;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE. ShaderMaterial: .derivatives has been moved to .extensions.derivatives.' );
+				console.warn( 'THREE. ShaderMaterial: .derivatives has been moved to .extensions.derivatives.' );
 				this.extensions.derivatives = value;
 
 			}
@@ -50860,143 +50860,143 @@
 
 		clearTarget: function ( renderTarget, color, depth, stencil ) {
 
-			//console.warn( 'THREE.WebGLRenderer: .clearTarget() has been deprecated. Use .setRenderTarget() and .clear() instead.' );
+			console.warn( 'THREE.WebGLRenderer: .clearTarget() has been deprecated. Use .setRenderTarget() and .clear() instead.' );
 			this.setRenderTarget( renderTarget );
 			this.clear( color, depth, stencil );
 
 		},
 		animate: function ( callback ) {
 
-			//console.warn( 'THREE.WebGLRenderer: .animate() is now .setAnimationLoop().' );
+			console.warn( 'THREE.WebGLRenderer: .animate() is now .setAnimationLoop().' );
 			this.setAnimationLoop( callback );
 
 		},
 		getCurrentRenderTarget: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .getCurrentRenderTarget() is now .getRenderTarget().' );
+			console.warn( 'THREE.WebGLRenderer: .getCurrentRenderTarget() is now .getRenderTarget().' );
 			return this.getRenderTarget();
 
 		},
 		getMaxAnisotropy: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .getMaxAnisotropy() is now .capabilities.getMaxAnisotropy().' );
+			console.warn( 'THREE.WebGLRenderer: .getMaxAnisotropy() is now .capabilities.getMaxAnisotropy().' );
 			return this.capabilities.getMaxAnisotropy();
 
 		},
 		getPrecision: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .getPrecision() is now .capabilities.precision.' );
+			console.warn( 'THREE.WebGLRenderer: .getPrecision() is now .capabilities.precision.' );
 			return this.capabilities.precision;
 
 		},
 		resetGLState: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .resetGLState() is now .state.reset().' );
+			console.warn( 'THREE.WebGLRenderer: .resetGLState() is now .state.reset().' );
 			return this.state.reset();
 
 		},
 		supportsFloatTextures: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .supportsFloatTextures() is now .extensions.get( \'OES_texture_float\' ).' );
+			console.warn( 'THREE.WebGLRenderer: .supportsFloatTextures() is now .extensions.get( \'OES_texture_float\' ).' );
 			return this.extensions.get( 'OES_texture_float' );
 
 		},
 		supportsHalfFloatTextures: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .supportsHalfFloatTextures() is now .extensions.get( \'OES_texture_half_float\' ).' );
+			console.warn( 'THREE.WebGLRenderer: .supportsHalfFloatTextures() is now .extensions.get( \'OES_texture_half_float\' ).' );
 			return this.extensions.get( 'OES_texture_half_float' );
 
 		},
 		supportsStandardDerivatives: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .supportsStandardDerivatives() is now .extensions.get( \'OES_standard_derivatives\' ).' );
+			console.warn( 'THREE.WebGLRenderer: .supportsStandardDerivatives() is now .extensions.get( \'OES_standard_derivatives\' ).' );
 			return this.extensions.get( 'OES_standard_derivatives' );
 
 		},
 		supportsCompressedTextureS3TC: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .supportsCompressedTextureS3TC() is now .extensions.get( \'WEBGL_compressed_texture_s3tc\' ).' );
+			console.warn( 'THREE.WebGLRenderer: .supportsCompressedTextureS3TC() is now .extensions.get( \'WEBGL_compressed_texture_s3tc\' ).' );
 			return this.extensions.get( 'WEBGL_compressed_texture_s3tc' );
 
 		},
 		supportsCompressedTexturePVRTC: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .supportsCompressedTexturePVRTC() is now .extensions.get( \'WEBGL_compressed_texture_pvrtc\' ).' );
+			console.warn( 'THREE.WebGLRenderer: .supportsCompressedTexturePVRTC() is now .extensions.get( \'WEBGL_compressed_texture_pvrtc\' ).' );
 			return this.extensions.get( 'WEBGL_compressed_texture_pvrtc' );
 
 		},
 		supportsBlendMinMax: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .supportsBlendMinMax() is now .extensions.get( \'EXT_blend_minmax\' ).' );
+			console.warn( 'THREE.WebGLRenderer: .supportsBlendMinMax() is now .extensions.get( \'EXT_blend_minmax\' ).' );
 			return this.extensions.get( 'EXT_blend_minmax' );
 
 		},
 		supportsVertexTextures: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .supportsVertexTextures() is now .capabilities.vertexTextures.' );
+			console.warn( 'THREE.WebGLRenderer: .supportsVertexTextures() is now .capabilities.vertexTextures.' );
 			return this.capabilities.vertexTextures;
 
 		},
 		supportsInstancedArrays: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .supportsInstancedArrays() is now .extensions.get( \'ANGLE_instanced_arrays\' ).' );
+			console.warn( 'THREE.WebGLRenderer: .supportsInstancedArrays() is now .extensions.get( \'ANGLE_instanced_arrays\' ).' );
 			return this.extensions.get( 'ANGLE_instanced_arrays' );
 
 		},
 		enableScissorTest: function ( boolean ) {
 
-			//console.warn( 'THREE.WebGLRenderer: .enableScissorTest() is now .setScissorTest().' );
+			console.warn( 'THREE.WebGLRenderer: .enableScissorTest() is now .setScissorTest().' );
 			this.setScissorTest( boolean );
 
 		},
 		initMaterial: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .initMaterial() has been removed.' );
+			console.warn( 'THREE.WebGLRenderer: .initMaterial() has been removed.' );
 
 		},
 		addPrePlugin: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .addPrePlugin() has been removed.' );
+			console.warn( 'THREE.WebGLRenderer: .addPrePlugin() has been removed.' );
 
 		},
 		addPostPlugin: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .addPostPlugin() has been removed.' );
+			console.warn( 'THREE.WebGLRenderer: .addPostPlugin() has been removed.' );
 
 		},
 		updateShadowMap: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .updateShadowMap() has been removed.' );
+			console.warn( 'THREE.WebGLRenderer: .updateShadowMap() has been removed.' );
 
 		},
 		setFaceCulling: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .setFaceCulling() has been removed.' );
+			console.warn( 'THREE.WebGLRenderer: .setFaceCulling() has been removed.' );
 
 		},
 		allocTextureUnit: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .allocTextureUnit() has been removed.' );
+			console.warn( 'THREE.WebGLRenderer: .allocTextureUnit() has been removed.' );
 
 		},
 		setTexture: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .setTexture() has been removed.' );
+			console.warn( 'THREE.WebGLRenderer: .setTexture() has been removed.' );
 
 		},
 		setTexture2D: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .setTexture2D() has been removed.' );
+			console.warn( 'THREE.WebGLRenderer: .setTexture2D() has been removed.' );
 
 		},
 		setTextureCube: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .setTextureCube() has been removed.' );
+			console.warn( 'THREE.WebGLRenderer: .setTextureCube() has been removed.' );
 
 		},
 		getActiveMipMapLevel: function () {
 
-			//console.warn( 'THREE.WebGLRenderer: .getActiveMipMapLevel() is now .getActiveMipmapLevel().' );
+			console.warn( 'THREE.WebGLRenderer: .getActiveMipMapLevel() is now .getActiveMipmapLevel().' );
 			return this.getActiveMipmapLevel();
 
 		}
@@ -51013,7 +51013,7 @@
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.WebGLRenderer: .shadowMapEnabled is now .shadowMap.enabled.' );
+				console.warn( 'THREE.WebGLRenderer: .shadowMapEnabled is now .shadowMap.enabled.' );
 				this.shadowMap.enabled = value;
 
 			}
@@ -51026,7 +51026,7 @@
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.WebGLRenderer: .shadowMapType is now .shadowMap.type.' );
+				console.warn( 'THREE.WebGLRenderer: .shadowMapType is now .shadowMap.type.' );
 				this.shadowMap.type = value;
 
 			}
@@ -51034,20 +51034,20 @@
 		shadowMapCullFace: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderer: .shadowMapCullFace has been removed. Set Material.shadowSide instead.' );
+				console.warn( 'THREE.WebGLRenderer: .shadowMapCullFace has been removed. Set Material.shadowSide instead.' );
 				return undefined;
 
 			},
 			set: function ( /* value */ ) {
 
-				//console.warn( 'THREE.WebGLRenderer: .shadowMapCullFace has been removed. Set Material.shadowSide instead.' );
+				console.warn( 'THREE.WebGLRenderer: .shadowMapCullFace has been removed. Set Material.shadowSide instead.' );
 
 			}
 		},
 		context: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderer: .context has been removed. Use .getContext() instead.' );
+				console.warn( 'THREE.WebGLRenderer: .context has been removed. Use .getContext() instead.' );
 				return this.getContext();
 
 			}
@@ -51055,7 +51055,7 @@
 		vr: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderer: .vr has been renamed to .xr' );
+				console.warn( 'THREE.WebGLRenderer: .vr has been renamed to .xr' );
 				return this.xr;
 
 			}
@@ -51063,26 +51063,26 @@
 		gammaInput: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderer: .gammaInput has been removed. Set the encoding for textures via Texture.encoding instead.' );
+				console.warn( 'THREE.WebGLRenderer: .gammaInput has been removed. Set the encoding for textures via Texture.encoding instead.' );
 				return false;
 
 			},
 			set: function () {
 
-				//console.warn( 'THREE.WebGLRenderer: .gammaInput has been removed. Set the encoding for textures via Texture.encoding instead.' );
+				console.warn( 'THREE.WebGLRenderer: .gammaInput has been removed. Set the encoding for textures via Texture.encoding instead.' );
 
 			}
 		},
 		gammaOutput: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderer: .gammaOutput has been removed. Set WebGLRenderer.outputEncoding instead.' );
+				console.warn( 'THREE.WebGLRenderer: .gammaOutput has been removed. Set WebGLRenderer.outputEncoding instead.' );
 				return false;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.WebGLRenderer: .gammaOutput has been removed. Set WebGLRenderer.outputEncoding instead.' );
+				console.warn( 'THREE.WebGLRenderer: .gammaOutput has been removed. Set WebGLRenderer.outputEncoding instead.' );
 				this.outputEncoding = ( value === true ) ? sRGBEncoding : LinearEncoding;
 
 			}
@@ -51090,13 +51090,13 @@
 		toneMappingWhitePoint: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderer: .toneMappingWhitePoint has been removed.' );
+				console.warn( 'THREE.WebGLRenderer: .toneMappingWhitePoint has been removed.' );
 				return 1.0;
 
 			},
 			set: function () {
 
-				//console.warn( 'THREE.WebGLRenderer: .toneMappingWhitePoint has been removed.' );
+				console.warn( 'THREE.WebGLRenderer: .toneMappingWhitePoint has been removed.' );
 
 			}
 		},
@@ -51108,39 +51108,39 @@
 		cullFace: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderer: .shadowMap.cullFace has been removed. Set Material.shadowSide instead.' );
+				console.warn( 'THREE.WebGLRenderer: .shadowMap.cullFace has been removed. Set Material.shadowSide instead.' );
 				return undefined;
 
 			},
 			set: function ( /* cullFace */ ) {
 
-				//console.warn( 'THREE.WebGLRenderer: .shadowMap.cullFace has been removed. Set Material.shadowSide instead.' );
+				console.warn( 'THREE.WebGLRenderer: .shadowMap.cullFace has been removed. Set Material.shadowSide instead.' );
 
 			}
 		},
 		renderReverseSided: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderer: .shadowMap.renderReverseSided has been removed. Set Material.shadowSide instead.' );
+				console.warn( 'THREE.WebGLRenderer: .shadowMap.renderReverseSided has been removed. Set Material.shadowSide instead.' );
 				return undefined;
 
 			},
 			set: function () {
 
-				//console.warn( 'THREE.WebGLRenderer: .shadowMap.renderReverseSided has been removed. Set Material.shadowSide instead.' );
+				console.warn( 'THREE.WebGLRenderer: .shadowMap.renderReverseSided has been removed. Set Material.shadowSide instead.' );
 
 			}
 		},
 		renderSingleSided: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderer: .shadowMap.renderSingleSided has been removed. Set Material.shadowSide instead.' );
+				console.warn( 'THREE.WebGLRenderer: .shadowMap.renderSingleSided has been removed. Set Material.shadowSide instead.' );
 				return undefined;
 
 			},
 			set: function () {
 
-				//console.warn( 'THREE.WebGLRenderer: .shadowMap.renderSingleSided has been removed. Set Material.shadowSide instead.' );
+				console.warn( 'THREE.WebGLRenderer: .shadowMap.renderSingleSided has been removed. Set Material.shadowSide instead.' );
 
 			}
 		}
@@ -51149,7 +51149,7 @@
 
 	function WebGLRenderTargetCube( width, height, options ) {
 
-		//console.warn( 'THREE.WebGLRenderTargetCube( width, height, options ) is now WebGLCubeRenderTarget( size, options ).' );
+		console.warn( 'THREE.WebGLRenderTargetCube( width, height, options ) is now WebGLCubeRenderTarget( size, options ).' );
 		return new WebGLCubeRenderTarget( width, options );
 
 	}
@@ -51161,13 +51161,13 @@
 		wrapS: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .wrapS is now .texture.wrapS.' );
+				console.warn( 'THREE.WebGLRenderTarget: .wrapS is now .texture.wrapS.' );
 				return this.texture.wrapS;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .wrapS is now .texture.wrapS.' );
+				console.warn( 'THREE.WebGLRenderTarget: .wrapS is now .texture.wrapS.' );
 				this.texture.wrapS = value;
 
 			}
@@ -51175,13 +51175,13 @@
 		wrapT: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .wrapT is now .texture.wrapT.' );
+				console.warn( 'THREE.WebGLRenderTarget: .wrapT is now .texture.wrapT.' );
 				return this.texture.wrapT;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .wrapT is now .texture.wrapT.' );
+				console.warn( 'THREE.WebGLRenderTarget: .wrapT is now .texture.wrapT.' );
 				this.texture.wrapT = value;
 
 			}
@@ -51189,13 +51189,13 @@
 		magFilter: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .magFilter is now .texture.magFilter.' );
+				console.warn( 'THREE.WebGLRenderTarget: .magFilter is now .texture.magFilter.' );
 				return this.texture.magFilter;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .magFilter is now .texture.magFilter.' );
+				console.warn( 'THREE.WebGLRenderTarget: .magFilter is now .texture.magFilter.' );
 				this.texture.magFilter = value;
 
 			}
@@ -51203,13 +51203,13 @@
 		minFilter: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .minFilter is now .texture.minFilter.' );
+				console.warn( 'THREE.WebGLRenderTarget: .minFilter is now .texture.minFilter.' );
 				return this.texture.minFilter;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .minFilter is now .texture.minFilter.' );
+				console.warn( 'THREE.WebGLRenderTarget: .minFilter is now .texture.minFilter.' );
 				this.texture.minFilter = value;
 
 			}
@@ -51217,13 +51217,13 @@
 		anisotropy: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .anisotropy is now .texture.anisotropy.' );
+				console.warn( 'THREE.WebGLRenderTarget: .anisotropy is now .texture.anisotropy.' );
 				return this.texture.anisotropy;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .anisotropy is now .texture.anisotropy.' );
+				console.warn( 'THREE.WebGLRenderTarget: .anisotropy is now .texture.anisotropy.' );
 				this.texture.anisotropy = value;
 
 			}
@@ -51231,13 +51231,13 @@
 		offset: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .offset is now .texture.offset.' );
+				console.warn( 'THREE.WebGLRenderTarget: .offset is now .texture.offset.' );
 				return this.texture.offset;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .offset is now .texture.offset.' );
+				console.warn( 'THREE.WebGLRenderTarget: .offset is now .texture.offset.' );
 				this.texture.offset = value;
 
 			}
@@ -51245,13 +51245,13 @@
 		repeat: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .repeat is now .texture.repeat.' );
+				console.warn( 'THREE.WebGLRenderTarget: .repeat is now .texture.repeat.' );
 				return this.texture.repeat;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .repeat is now .texture.repeat.' );
+				console.warn( 'THREE.WebGLRenderTarget: .repeat is now .texture.repeat.' );
 				this.texture.repeat = value;
 
 			}
@@ -51259,13 +51259,13 @@
 		format: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .format is now .texture.format.' );
+				console.warn( 'THREE.WebGLRenderTarget: .format is now .texture.format.' );
 				return this.texture.format;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .format is now .texture.format.' );
+				console.warn( 'THREE.WebGLRenderTarget: .format is now .texture.format.' );
 				this.texture.format = value;
 
 			}
@@ -51273,13 +51273,13 @@
 		type: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .type is now .texture.type.' );
+				console.warn( 'THREE.WebGLRenderTarget: .type is now .texture.type.' );
 				return this.texture.type;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .type is now .texture.type.' );
+				console.warn( 'THREE.WebGLRenderTarget: .type is now .texture.type.' );
 				this.texture.type = value;
 
 			}
@@ -51287,13 +51287,13 @@
 		generateMipmaps: {
 			get: function () {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .generateMipmaps is now .texture.generateMipmaps.' );
+				console.warn( 'THREE.WebGLRenderTarget: .generateMipmaps is now .texture.generateMipmaps.' );
 				return this.texture.generateMipmaps;
 
 			},
 			set: function ( value ) {
 
-				//console.warn( 'THREE.WebGLRenderTarget: .generateMipmaps is now .texture.generateMipmaps.' );
+				console.warn( 'THREE.WebGLRenderTarget: .generateMipmaps is now .texture.generateMipmaps.' );
 				this.texture.generateMipmaps = value;
 
 			}
@@ -51308,7 +51308,7 @@
 		load: {
 			value: function ( file ) {
 
-				//console.warn( 'THREE.Audio: .load has been deprecated. Use THREE.AudioLoader instead.' );
+				console.warn( 'THREE.Audio: .load has been deprecated. Use THREE.AudioLoader instead.' );
 				var scope = this;
 				var audioLoader = new AudioLoader();
 				audioLoader.load( file, function ( buffer ) {
@@ -51323,7 +51323,7 @@
 		startTime: {
 			set: function () {
 
-				//console.warn( 'THREE.Audio: .startTime is now .play( delay ).' );
+				console.warn( 'THREE.Audio: .startTime is now .play( delay ).' );
 
 			}
 		}
@@ -51332,7 +51332,7 @@
 
 	AudioAnalyser.prototype.getData = function () {
 
-		//console.warn( 'THREE.AudioAnalyser: .getData() is now .getFrequencyData().' );
+		console.warn( 'THREE.AudioAnalyser: .getData() is now .getFrequencyData().' );
 		return this.getFrequencyData();
 
 	};
@@ -51341,7 +51341,7 @@
 
 	CubeCamera.prototype.updateCubeMap = function ( renderer, scene ) {
 
-		//console.warn( 'THREE.CubeCamera: .updateCubeMap() is now .update().' );
+		console.warn( 'THREE.CubeCamera: .updateCubeMap() is now .update().' );
 		return this.update( renderer, scene );
 
 	};
@@ -51352,7 +51352,7 @@
 
 		merge: function ( geometry1, geometry2, materialIndexOffset ) {
 
-			//console.warn( 'THREE.GeometryUtils: .merge() has been moved to Geometry. Use geometry.merge( geometry2, matrix, materialIndexOffset ) instead.' );
+			console.warn( 'THREE.GeometryUtils: .merge() has been moved to Geometry. Use geometry.merge( geometry2, matrix, materialIndexOffset ) instead.' );
 			var matrix;
 
 			if ( geometry2.isMesh ) {
@@ -51370,7 +51370,7 @@
 
 		center: function ( geometry ) {
 
-			//console.warn( 'THREE.GeometryUtils: .center() has been moved to Geometry. Use geometry.center() instead.' );
+			console.warn( 'THREE.GeometryUtils: .center() has been moved to Geometry. Use geometry.center() instead.' );
 			return geometry.center();
 
 		}
@@ -51381,7 +51381,7 @@
 
 	ImageUtils.loadTexture = function ( url, mapping, onLoad, onError ) {
 
-		//console.warn( 'THREE.ImageUtils.loadTexture has been deprecated. Use THREE.TextureLoader() instead.' );
+		console.warn( 'THREE.ImageUtils.loadTexture has been deprecated. Use THREE.TextureLoader() instead.' );
 
 		var loader = new TextureLoader();
 		loader.setCrossOrigin( this.crossOrigin );
@@ -51396,7 +51396,7 @@
 
 	ImageUtils.loadTextureCube = function ( urls, mapping, onLoad, onError ) {
 
-		//console.warn( 'THREE.ImageUtils.loadTextureCube has been deprecated. Use THREE.CubeTextureLoader() instead.' );
+		console.warn( 'THREE.ImageUtils.loadTextureCube has been deprecated. Use THREE.CubeTextureLoader() instead.' );
 
 		var loader = new CubeTextureLoader();
 		loader.setCrossOrigin( this.crossOrigin );

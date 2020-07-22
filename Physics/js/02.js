@@ -17,37 +17,31 @@ function init() {
 
   var clock = new THREE.Clock();
   var scene = new Physijs.Scene({reportSize: 10, fixedTimeStep: 1 / 60});
-  initDefaultLighting(scene);
+  
+  // Positioning Lights
+
+  var spotLight = new THREE.SpotLight(0xffffff);
+  spotLight.position.set(0, 40, 70);
+  spotLight.shadow.mapSize.width = 2048;
+  spotLight.shadow.mapSize.height = 2048;
+  spotLight.shadow.camera.fov = 20;
+  spotLight.castShadow = true;
+  spotLight.decay = 2;
+  spotLight.penumbra = 0.05;
+  spotLight.name = "spotLight";
+  scene.add(spotLight);
+
+  var ambientLight = new THREE.AmbientLight(0x343434);
+  ambientLight.name = "ambientLight";
+  scene.add(ambientLight);
   scene.add(new THREE.AmbientLight(0x0393939));
 
   // Axis
   var axis = new THREE.AxisHelper(300);
   scene.add(axis);
 
-  // Create ramp
   var textureLoader = new THREE.TextureLoader();
-  var ramp_material = Physijs.createMaterial(
-    new THREE.MeshStandardMaterial(
-      {map: textureLoader.load('assets/textures/general/bathroom.jpg')}
-    ),
-    .9, .3
-  ); //Friction and restitution
-
-  // Adjust the texture
-  ramp_material.map.repeat.set(3, 3);
-  ramp_material.map.wrapS = THREE.RepeatWrapping;
-  ramp_material.map.wrapT = THREE.RepeatWrapping;
-
-  var ramp = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 0.1, 20), ramp_material, 0);
-  
-  ramp.castShadow = true;
-  ramp.receiveShadow = true;
-  ramp.position.y = 8;
-  ramp.rotation.y = THREE.MathUtils.degToRad(90);
-  ramp.rotation.z = THREE.MathUtils.degToRad(30);
-  scene.add(ramp);
-  
-  var sideBound = 5;
+  var sideBound = 5;            // BoxSize
 
   //createAxisOnObject(boxMesh, sideBound);     // Put center axis on object
   //createForcesDiagram(boxMesh, sideBound, 0); // id to identify collision and plot the forces
@@ -60,11 +54,141 @@ function init() {
     gravityY: -50,
     gravityZ: 0,
     mesh: null,
+    rampSlide: null,
+    frictionRamp: 0.9,
+    restitutionRamp: 0.3,
     //material: block_material,
     visibleBox: true,
     visibleAxis: true,
     animation: true,
     friction: 0.5,
+    angleRamp: 30,                              // Degrees of inclination of the ramp
+
+    createRamp: function(){
+      if(this.rampSlide != null)
+        scene.remove(this.rampSlide);         // Remove old version
+      
+      this.rampSlide = new THREE.Group;
+
+      var ramp_material = Physijs.createMaterial(
+        new THREE.MeshStandardMaterial(
+          {map: textureLoader.load('assets/textures/general/bathroom.jpg')}
+        ),
+        this.frictionRamp, this.restitutionRamp
+      ); //Friction and restitution
+    
+      // Adjust the texture
+      ramp_material.map.repeat.set(3, 3);
+      ramp_material.map.wrapS = THREE.RepeatWrapping;
+      ramp_material.map.wrapT = THREE.RepeatWrapping;
+    
+      var ramp = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 0.1, 20), ramp_material, 0);
+      ramp.castShadow = true;
+      ramp.receiveShadow = true;
+
+      let altura = Math.sin(this.angleRamp * (Math.PI/180)) * 30;
+      let fixDistRamp = 0.5;
+      ramp.position.y = altura/2 + fixDistRamp;    //  8
+      ramp.rotation.y = THREE.MathUtils.degToRad(90);
+      ramp.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
+      this.rampSlide.add(ramp);
+
+      var wall_material = Physijs.createMaterial(
+        new THREE.MeshStandardMaterial(
+          {map: textureLoader.load('assets/textures/general/bathroom.jpg'),
+          side: THREE.DoubleSide
+        }
+        ),
+        this.frictionRamp, this.restitutionRamp
+      ); //Friction and restitution
+    
+      // Adjust the texture
+      wall_material.map.repeat.set(3, 3);
+      wall_material.map.wrapS = THREE.RepeatWrapping;
+      wall_material.map.wrapT = THREE.RepeatWrapping;
+
+      /*Physijs.createMaterial(new THREE.MeshBasicMaterial({
+        transparent: true, opacity: 0.1, color: 0xc0000ff, side: THREE.DoubleSide
+      }), 0.9, 0.7);      */
+      /*Physijs.createMaterial(
+        new THREE.MeshStandardMaterial(
+          {map: textureLoader.load('assets/textures/general/wood-2.jpg')}
+        ),
+        .9, .3);*/
+
+
+      var backWall = new  Physijs.BoxMesh(new THREE.BoxGeometry(20, altura, 0.1), wall_material, 0);
+      backWall.position.z = - ((altura - altura/2) / Math.tan(this.angleRamp * (Math.PI/180)));
+      backWall.position.y = altura/2 + fixDistRamp;
+      this.rampSlide.add(backWall);
+
+      var groundWall = new  Physijs.BoxMesh(new THREE.BoxGeometry(20, 0.1, (altura / Math.tan(controls.angleRamp * (Math.PI/180)))), wall_material, 0);
+      groundWall.position.y = fixDistRamp;
+      this.rampSlide.add(groundWall);
+
+      // Adiciona os pontos da face lateral
+      // Left Side
+      var points = [];
+      points.push(new THREE.Vector3(10, altura + fixDistRamp, backWall.position.z));
+      points.push(new THREE.Vector3(10, fixDistRamp,  Math.round(
+        Math.sqrt(900 - Math.pow(altura, 2))/2
+      )
+      ));
+      points.push(new THREE.Vector3(10, fixDistRamp, backWall.position.z));
+      points.push(new THREE.Vector3(10, altura + fixDistRamp, backWall.position.z));
+
+      // Usa os mesmos pontos para criar o objeto geometrico convexo
+      var geometry = new THREE.ConvexGeometry( points );
+      geometry.computeVertexNormals();                        // Computa as normais
+      geometry.computeFaceNormals();                          // Computa as normais de cada face
+      geometry.normalsNeedUpdate = true;
+      var leftWall = new Physijs.ConvexMesh(geometry, wall_material, 0);
+    
+      this.rampSlide.add(leftWall);
+
+      // Ajuste da textura na superficie
+      var faces = geometry.faces;
+
+      /*geometry.faceVertexUvs[0] = [];
+
+      for (var i = 0; i < faces.length ; i++) {
+
+          var v1 = geometry.vertices[faces[i].a], 
+              v2 = geometry.vertices[faces[i].b], 
+              v3 = geometry.vertices[faces[i].c];
+
+          geometry.faceVertexUvs[0].push([
+              new THREE.Vector2((v1.x + offset.x)/range.x ,(v1.y + offset.y)/range.y),
+              new THREE.Vector2((v2.x + offset.x)/range.x ,(v2.y + offset.y)/range.y),
+              new THREE.Vector2((v3.x + offset.x)/range.x ,(v3.y + offset.y)/range.y)
+          ]);
+      }*/
+      console.log(faces);
+      geometry.uvsNeedUpdate = true;
+
+      // Right Side
+      points = [];
+      points.push(new THREE.Vector3(-10, altura + fixDistRamp, backWall.position.z));
+      points.push(new THREE.Vector3(-10, fixDistRamp, backWall.position.z));
+      points.push(new THREE.Vector3(-10, fixDistRamp,  Math.round(
+        Math.sqrt(900 - Math.pow(altura, 2))/2
+      )
+      ));
+      points.push(new THREE.Vector3(-10, altura + fixDistRamp, backWall.position.z));
+
+      // Usa os mesmos pontos para criar o objeto geometrico convexo
+      geometry = new THREE.ConvexGeometry( points );
+      geometry.computeVertexNormals();                        // Computa as normais
+      geometry.computeFaceNormals();                          // Computa as normais de cada face
+      geometry.normalsNeedUpdate = true;
+      var rightWall = new Physijs.ConvexMesh(geometry, wall_material, 0);
+      this.rampSlide.add(rightWall);
+
+      //rightWall.attributes.uvs.needsUpdate = true;
+      console.log(rightWall);
+
+      scene.add(this.rampSlide);
+    },
 
     createBox: function(){
       if(controls.mesh != null)
@@ -147,8 +271,9 @@ function init() {
 
     }
   };
-
-  controls.createBox();
+  
+  controls.createRamp();
+  //controls.createBox();
 
   var objectMenu = gui.addFolder("object Menu");
   objectMenu.add(controls, "resetSimulation");
@@ -186,6 +311,12 @@ function init() {
       controls.createBox();           // Recria o objeto pois a fisica é mudada
     }
   );
+  objectMenu.add(controls, "angleRamp", 0, 60, 2).onChange(
+    function(e) {
+      controls.createRamp();           // Recria o objeto pois a fisica é mudada
+    }
+  );
+  
 
   /*gui.add(controls, "gravityX", -100, 100, 1).onChange(function(e) {scene.setGravity(new THREE.Vector3(controls.gravityX, controls.gravityY, controls.gravityZ))});
   gui.add(controls, "gravityY", -100, 100, 1).onChange(function(e) {scene.setGravity(new THREE.Vector3(controls.gravityX, controls.gravityY, controls.gravityZ))});
