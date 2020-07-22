@@ -107,15 +107,11 @@ function init() {
       wall_material.map.wrapS = THREE.RepeatWrapping;
       wall_material.map.wrapT = THREE.RepeatWrapping;
 
-      /*Physijs.createMaterial(new THREE.MeshBasicMaterial({
-        transparent: true, opacity: 0.1, color: 0xc0000ff, side: THREE.DoubleSide
-      }), 0.9, 0.7);      */
-      /*Physijs.createMaterial(
-        new THREE.MeshStandardMaterial(
-          {map: textureLoader.load('assets/textures/general/wood-2.jpg')}
-        ),
-        .9, .3);*/
-
+      var wall_sides_material = Physijs.createMaterial(new THREE.MeshBasicMaterial({
+          transparent: true, opacity: 0.4, color: 0xcFFFFFF, side: THREE.DoubleSide
+        }),
+          this.frictionRamp, this.restitutionRamp
+      ); //Friction and restitution
 
       var backWall = new  Physijs.BoxMesh(new THREE.BoxGeometry(20, altura, 0.1), wall_material, 0);
       backWall.position.z = - ((altura - altura/2) / Math.tan(this.angleRamp * (Math.PI/180)));
@@ -127,12 +123,14 @@ function init() {
       this.rampSlide.add(groundWall);
 
       // Adiciona os pontos da face lateral
+
       // Left Side
       var points = [];
       points.push(new THREE.Vector3(10, altura + fixDistRamp, backWall.position.z));
-      points.push(new THREE.Vector3(10, fixDistRamp,  Math.round(
-        Math.sqrt(900 - Math.pow(altura, 2))/2
-      )
+      points.push(new THREE.Vector3(10, fixDistRamp, 
+        /*backWall.position.z + Math.round(
+        Math.sqrt(900 - Math.pow(altura, 2))*/
+        backWall.position.z + (Math.cos(this.angleRamp * Math.PI/180) * 30)
       ));
       points.push(new THREE.Vector3(10, fixDistRamp, backWall.position.z));
       points.push(new THREE.Vector3(10, altura + fixDistRamp, backWall.position.z));
@@ -142,12 +140,87 @@ function init() {
       geometry.computeVertexNormals();                        // Computa as normais
       geometry.computeFaceNormals();                          // Computa as normais de cada face
       geometry.normalsNeedUpdate = true;
-      var leftWall = new Physijs.ConvexMesh(geometry, wall_material, 0);
+      var leftWall = new Physijs.ConvexMesh(geometry, wall_sides_material, 0);
     
+     // geometry.faces = [];
+
+      //create a new face using vertices 0, 1, 2
+      /*var normal = new THREE.Vector3( 1, 0, 0 ); //optional
+      var color = new THREE.Color( 0xffaa00 ); //optional
+      var materialIndex = 0; //optional
+      var face = new THREE.Face3( 0, 1, 2, normal, color, materialIndex );*/
+
+      //add the face to the geometry's faces array
+      //geometry.faces.push( face );
+
+      geometry.computeVertexNormals();                        // Computa as normais
+      geometry.computeFaceNormals();                          // Computa as normais de cada face
+      geometry.normalsNeedUpdate = true;
+
+
+      /*console.log(geometry, geometry.faceVertexUvs);
+      let uvs = [];
+      let aux = {x: 0, y: 0};
+      aux.x = 0.5;
+      aux.y = 0.7;
+      uvs.push(aux);
+      aux = {x: 0, y: 0};
+      aux.x = 0.4;
+      aux.y = 0.1;
+      uvs.push(aux);
+      aux = {x: 0, y: 0};
+      aux.x = 0.4;
+      aux.y = 0.5;
+      uvs.push(aux);
+      geometry.faceVertexUvs = uvs;
+      geometry.uvsNeedUpdate = true;
+      console.log(geometry, geometry.faceVertexUvs);*/
+      //geometry.
+      /*geometry.faceVertexUvs[0].x = 0.5; 
+      geometry.faceVertexUvs[0].y = 0.7;
+
+      
+      geometry.faceVertexUvs[1].x = 0.4; 
+      geometry.faceVertexUvs[1].y = 0.1; 
+      geometry.faceVertexUvs[2].x = 0.4; 
+      geometry.faceVertexUvs[2].y = 0.5;*/
+
       this.rampSlide.add(leftWall);
 
+      //console.log("altura: " + altura, "angle: "+this.angleRamp, "backWall.position.z: "+ backWall.position.z);
+
       // Ajuste da textura na superficie
-      var faces = geometry.faces;
+      //var faces = geometry.faces;
+      //geometry.faces = [];
+
+      //create a new face using vertices 0, 1, 2
+      /*var normal = new THREE.Vector3( 1, 0, 0 ); //optional
+      var color = new THREE.Color( 0xffaa00 ); //optional
+      var materialIndex = 0; //optional
+      var face = new THREE.Face3( 0, 1, 2, normal, color, materialIndex );
+
+      //add the face to the geometry's faces array
+      geometry.faces.push( face );
+
+      geometry.computeVertexNormals();                        // Computa as normais
+      geometry.computeFaceNormals();                          // Computa as normais de cada face
+      geometry.normalsNeedUpdate = true;
+
+
+      console.log(geometry, geometry.faceVertexUvs);
+      geometry.faceVertexUvs[0].x = 0.5; 
+      geometry.faceVertexUvs[0].y = 0.7;*/
+
+      //geometry.uvsNeedUpdate = true;
+      /*geometry.faceVertexUvs[1].x = 0.4; 
+      geometry.faceVertexUvs[1].y = 0.1; 
+      geometry.faceVertexUvs[2].x = 0.4; 
+      geometry.faceVertexUvs[2].y = 0.5;*/
+
+      
+
+
+      //console.log(geometry);
 
       /*geometry.faceVertexUvs[0] = [];
 
@@ -163,17 +236,18 @@ function init() {
               new THREE.Vector2((v3.x + offset.x)/range.x ,(v3.y + offset.y)/range.y)
           ]);
       }*/
-      console.log(faces);
+      //console.log(faces);
       geometry.uvsNeedUpdate = true;
 
       // Right Side
       points = [];
       points.push(new THREE.Vector3(-10, altura + fixDistRamp, backWall.position.z));
-      points.push(new THREE.Vector3(-10, fixDistRamp, backWall.position.z));
-      points.push(new THREE.Vector3(-10, fixDistRamp,  Math.round(
-        Math.sqrt(900 - Math.pow(altura, 2))/2
-      )
+      points.push(new THREE.Vector3(-10, fixDistRamp, 
+        /*backWall.position.z + Math.round(
+        Math.sqrt(900 - Math.pow(altura, 2))*/
+      backWall.position.z + (Math.cos(this.angleRamp * Math.PI/180) * 30)
       ));
+      points.push(new THREE.Vector3(-10, fixDistRamp, backWall.position.z));
       points.push(new THREE.Vector3(-10, altura + fixDistRamp, backWall.position.z));
 
       // Usa os mesmos pontos para criar o objeto geometrico convexo
@@ -181,11 +255,11 @@ function init() {
       geometry.computeVertexNormals();                        // Computa as normais
       geometry.computeFaceNormals();                          // Computa as normais de cada face
       geometry.normalsNeedUpdate = true;
-      var rightWall = new Physijs.ConvexMesh(geometry, wall_material, 0);
+      var rightWall = new Physijs.ConvexMesh(geometry, wall_sides_material, 0);
       this.rampSlide.add(rightWall);
 
       //rightWall.attributes.uvs.needsUpdate = true;
-      console.log(rightWall);
+      //console.log(rightWall);
 
       scene.add(this.rampSlide);
     },
