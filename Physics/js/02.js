@@ -184,10 +184,14 @@ function init() {
     },
 
     createBox: function(){
-      if(this.mesh != null)
+      if(this.mesh != null){
         scene.remove(this.mesh);         // Remove old version       -- Box
-      if(this.groupForces != null)
+        this.mesh = null;
+      }
+      if(this.groupForces != null){
         scene.remove(this.groupForces);         // Remove old version -- GroupForces
+        this.groupForces = null;
+      }
 
       var block_material = Physijs.createMaterial(
         new THREE.MeshStandardMaterial(
@@ -200,17 +204,15 @@ function init() {
       this.mesh.castShadow = true;
       this.mesh.receiveShadow = true;
       if(this.ramp.length != 0){
+        this.mesh.position.x = this.startPosition.x;
         this.mesh.position.y = (this.startPosition.y * 16.50)/15;
         this.mesh.position.z = (this.startPosition.z * -9.5)/-12.99; //-9.5;
       }
       else{
+        this.mesh.position.x = this.startPosition.x;
         this.mesh.position.y = 16.50;
         this.mesh.position.z = -9.5;
       }
-
-      // Atualiza a posicao inicial do vetor
-      this.startPosition.y = this.mesh.position.y;
-      this.startPosition.z = this.mesh.position.z;
 
       this.mesh.rotation.y = THREE.MathUtils.degToRad(90);
       this.mesh.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
@@ -323,6 +325,7 @@ function init() {
     if(controls.animation){
       controls.updateForces();
       scene.simulate(undefined, 2);
+      //scene.simulate();
     }
     requestAnimationFrame(render);
     renderer.render(scene, camera);
