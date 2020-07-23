@@ -5,7 +5,7 @@ function init() {
 
 
   // use the defaults
-  var stats = initStats();
+  //var stats = initStats();
   var renderer = initRenderer();
   var camera = initCamera(new THREE.Vector3(70, 20, 0));
 
@@ -38,7 +38,7 @@ function init() {
 
   // Axis
   var axis = new THREE.AxisHelper(300);
-  scene.add(axis);
+  //scene.add(axis);
 
   var textureLoader = new THREE.TextureLoader();
   var sideBound = 5;            // BoxSize
@@ -217,7 +217,6 @@ function init() {
       scene.add(this.mesh);
 
       handleCollision = function( collided_with, linearVelocity, angularVelocity ) {
-        //console.log(collided_with);
         if(collided_with.name === "ground"){
           controls.groupForces.children[0].visible = false;
           controls.groupForces.children[1].visible = true;
@@ -231,37 +230,6 @@ function init() {
           console.log("Rampa");
         }
         this.collisions++;
-				/*switch ( ++this.collisions ) {
-					
-					case 1:
-            this.material.color.setHex(0xcc8855);
-            //console.log(collided_with);
-						break;
-					
-					case 2:
-            this.material.color.setHex(0xbb9955);
-            //console.log(collided_with);
-            /*this.rotation.set(0, 0, 0);
-            this.__dirtyRotation = true;
-            this.setAngularVelocity(new THREE.Vector3(0, 0, 0));
-						break;
-					
-					case 3:
-						this.material.color.setHex(0xaaaa55);
-						break;
-					
-					case 4:
-						this.material.color.setHex(0x99bb55);
-						break;
-					
-					case 5:
-						this.material.color.setHex(0x88cc55);
-						break;
-					
-					case 6:
-						this.material.color.setHex(0x77dd55);
-						break;
-				}*/
       }
       this.mesh.collisions = 0;
       this.mesh.addEventListener( 'collision', handleCollision );
@@ -307,19 +275,7 @@ function init() {
 
   var objectMenu = gui.addFolder("object Menu");
   objectMenu.add(controls, "resetSimulation");
-  objectMenu.add(controls, "animation").onChange(function(e){
-    if(controls.animation){
-      controls.mesh.mass = 1;
-    }
-    else{
-      
-      controls.mesh.mass = 0;
-
-      // You may also want to cancel the object's velocity
-      controls.mesh.setLinearVelocity(new THREE.Vector3(0, 0, 0));
-      controls.mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));
-    }
-  });
+  objectMenu.add(controls, "animation");
   /*objectMenu.add(controls, "visibleBox").onChange(function(e){
     if(controls.visibleBox){
       controls.mesh.visible = true;
@@ -353,23 +309,28 @@ function init() {
   gui.add(controls, "gravityY", -100, 100, 1).onChange(function(e) {scene.setGravity(new THREE.Vector3(controls.gravityX, controls.gravityY, controls.gravityZ))});
   gui.add(controls, "gravityZ", -100, 100, 1).onChange(function(e) {scene.setGravity(new THREE.Vector3(controls.gravityX, controls.gravityY, controls.gravityZ))});*/
 
-  scene.setGravity(new THREE.Vector3(0, -50, 0));
+  scene.setGravity(new THREE.Vector3(0, -9.8, 0));
   createGroundAndWalls(scene);
 
   // do the basic rendering
   render();
   function render() {
-    stats.update();
+    //stats.update();
     var delta = clock.getDelta();
     orbitControls.update(delta);                 // Atualiza o controle da câmera
 
     // Diagrama de forças
-    controls.updateForces();
-   
+    if(controls.animation){
+      controls.updateForces();
+      scene.simulate(undefined, 2);
+    }
     requestAnimationFrame(render);
-    scene.simulate(undefined, 2);
     renderer.render(scene, camera);
   }
+
+  // https://www.programmersought.com/article/5332673853/
+  //controls.mesh.setCcdMotionThreshold(20);
+  
 }
 
 // id to identify collision and plot the forces
