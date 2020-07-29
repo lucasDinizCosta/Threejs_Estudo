@@ -16,6 +16,14 @@
 
     <script type="text/javascript" src="libs/util.js"></script>
     <script type="text/javascript" src="js/02.js"></script>
+
+    <!-- Math Equations 
+    <script src="https://polyfill.io/v3/polyfill.min.js"></script>
+    <script id="MathJax-script" type="text/javascript" async src="libs/math/tex-mml-chtml.js"></script>
+-->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
+
     <link rel="stylesheet" href="libs/css/default.css">
 
     <style>
@@ -31,31 +39,32 @@
             width: 75%;
             height: 30%;
             background-color: rgba(7, 7, 9, 0.5);
-            display: none;
+            display: block;
             z-index: 1000;
         }
 
         #instructions {
             color: #ffffff;
             font-size: 1.8em;
-            width: 30%;
-            display: none;
+            width: 60%;
+            display: block;
             z-index: 1001;
         }
     </style>
 </head>
 
 <body>
-    <!--
     <div id="blocker">
 
         <div id="instructions">
-            
-            
+            <p>
+                When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
+  \[x = {-b \pm \sqrt{b^2-4ac} \over 2a}.\]
+            </p>
         </div>
 
     </div>
-    -->
+
 
     <canvas id="forces-canvas-box" width="130" height="150" 
     style="position: absolute; z-index: 1001;">
@@ -80,6 +89,8 @@
         ctx.lineWidth = 2;
         escreveTexto(ctx, "Forces", 37, 20);
         ctx.font = "12px Arial Black";
+        
+        //escreveTexto(ctx, "Normal", 42, 42);
         escreveTexto(ctx, "Normal", 42, 42);
         escreveTexto(ctx, "Weight", 42, 78);
         escreveTexto(ctx, "Friction", 42, 120);

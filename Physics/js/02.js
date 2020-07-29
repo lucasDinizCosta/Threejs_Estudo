@@ -65,8 +65,10 @@ function init() {
 
     // Paineis
     forcesCanvas: document.getElementById("forces-canvas-box"),
+    equations: document.getElementById("instructions"),
     panels: {
       forcesCanvas: true,
+      equations: true,
     },
 
     createRamp: function(){
@@ -307,6 +309,15 @@ function init() {
     }
     else{
       controls.forcesCanvas.style.display = "none";
+    }
+  });
+
+  objectMenu.add(controls.panels, "equations").onChange(function(e){
+    if(controls.panels.equations){
+      controls.equations.style.display = "block";
+    }
+    else{
+      controls.equations.style.display = "none";
     }
   });
   
