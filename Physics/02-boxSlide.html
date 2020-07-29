@@ -17,12 +17,89 @@
     <script type="text/javascript" src="libs/util.js"></script>
     <script type="text/javascript" src="js/02.js"></script>
     <link rel="stylesheet" href="libs/css/default.css">
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #blocker {
+            position: absolute;
+            width: 75%;
+            height: 30%;
+            background-color: rgba(7, 7, 9, 0.5);
+            display: none;
+            z-index: 1000;
+        }
+
+        #instructions {
+            color: #ffffff;
+            font-size: 1.8em;
+            width: 30%;
+            display: none;
+            z-index: 1001;
+        }
+    </style>
 </head>
 
 <body>
-    <div id="webgl-output"></div>
+    <!--
+    <div id="blocker">
+
+        <div id="instructions">
+            
+            
+        </div>
+
+    </div>
+    -->
+
+    <canvas id="forces-canvas-box" width="130" height="150" 
+    style="position: absolute; z-index: 1001;">
+        Seu browser não suporta canvas!
+    </canvas>
     <script type="text/javascript"> 
-        (function () { init() })(); 
+        init();
+
+        var tela = document.getElementById("forces-canvas-box");
+        tela.style.border = '2px solid #000';                       //Colocando borda no canvas
+        
+        var forcesCanvas = document.getElementById('forces-canvas-box');
+        forcesCanvas.style.left = (window.innerWidth - tela.width - 25) + "px";
+        forcesCanvas.style.bottom = '50px';
+
+        var ctx = tela.getContext("2d");
+        ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+        ctx.fillRect(0, 0, tela.width, tela.height);
+        ctx.font = "15px Arial Black";
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 2;
+        escreveTexto(ctx, "Forces", 37, 20);
+        ctx.font = "12px Arial Black";
+        escreveTexto(ctx, "Normal", 42, 42);
+        escreveTexto(ctx, "Weight", 42, 78);
+        escreveTexto(ctx, "Friction", 42, 120);
+        ctx.fillStyle = "green";
+        ctx.fillRect(10, 30, 20, 20);
+        ctx.strokeStyle = "black";
+        ctx.strokeRect(10, 30, 20, 20);
+        ctx.fillStyle = "red";
+        ctx.fillRect(10, 65, 20, 20);
+        ctx.strokeStyle = "black";
+        ctx.strokeRect(10, 65, 20, 20);
+        ctx.fillStyle = "blue";
+        ctx.fillRect(10, 105, 20, 20);
+        ctx.strokeStyle = "black";
+        ctx.strokeRect(10, 105, 20, 20);
+
+        function escreveTexto (ctx, texto, x, y) {
+            ctx.strokeText(texto, x, y);
+            ctx.fillText(texto, x, y);
+        }
     </script>
 </body>
 </html>

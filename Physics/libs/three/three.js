@@ -48776,7 +48776,7 @@
 
 	function BoundingBoxHelper( object, color ) {
 
-		console.warn( 'THREE.BoundingBoxHelper has been deprecated. Creating a THREE.BoxHelper instead.' );
+		//console.warn( 'THREE.BoundingBoxHelper has been deprecated. Creating a THREE.BoxHelper instead.' );
 		return new BoxHelper( object, color );
 
 	}
@@ -49131,19 +49131,19 @@
 
 		isIntersectionBox: function ( box ) {
 
-			console.warn( 'THREE.Ray: .isIntersectionBox() has been renamed to .intersectsBox().' );
+			//console.warn( 'THREE.Ray: .isIntersectionBox() has been renamed to .intersectsBox().' );
 			return this.intersectsBox( box );
 
 		},
 		isIntersectionPlane: function ( plane ) {
 
-			console.warn( 'THREE.Ray: .isIntersectionPlane() has been renamed to .intersectsPlane().' );
+			//console.warn( 'THREE.Ray: .isIntersectionPlane() has been renamed to .intersectsPlane().' );
 			return this.intersectsPlane( plane );
 
 		},
 		isIntersectionSphere: function ( sphere ) {
 
-			console.warn( 'THREE.Ray: .isIntersectionSphere() has been renamed to .intersectsSphere().' );
+			//console.warn( 'THREE.Ray: .isIntersectionSphere() has been renamed to .intersectsSphere().' );
 			return this.intersectsSphere( sphere );
 
 		}
@@ -49154,31 +49154,31 @@
 
 		area: function () {
 
-			console.warn( 'THREE.Triangle: .area() has been renamed to .getArea().' );
+			//console.warn( 'THREE.Triangle: .area() has been renamed to .getArea().' );
 			return this.getArea();
 
 		},
 		barycoordFromPoint: function ( point, target ) {
 
-			console.warn( 'THREE.Triangle: .barycoordFromPoint() has been renamed to .getBarycoord().' );
+			//console.warn( 'THREE.Triangle: .barycoordFromPoint() has been renamed to .getBarycoord().' );
 			return this.getBarycoord( point, target );
 
 		},
 		midpoint: function ( target ) {
 
-			console.warn( 'THREE.Triangle: .midpoint() has been renamed to .getMidpoint().' );
+			//console.warn( 'THREE.Triangle: .midpoint() has been renamed to .getMidpoint().' );
 			return this.getMidpoint( target );
 
 		},
 		normal: function ( target ) {
 
-			console.warn( 'THREE.Triangle: .normal() has been renamed to .getNormal().' );
+			//console.warn( 'THREE.Triangle: .normal() has been renamed to .getNormal().' );
 			return this.getNormal( target );
 
 		},
 		plane: function ( target ) {
 
-			console.warn( 'THREE.Triangle: .plane() has been renamed to .getPlane().' );
+			//console.warn( 'THREE.Triangle: .plane() has been renamed to .getPlane().' );
 			return this.getPlane( target );
 
 		}
@@ -49650,7 +49650,7 @@
 		},
 		setArray: function ( /* array */ ) {
 
-			console.error( 'THREE.BufferAttribute: .setArray has been removed. Use BufferGeometry .setAttribute to replace/resize attribute buffers' );
+			//console.error( 'THREE.BufferAttribute: .setArray has been removed. Use BufferGeometry .setAttribute to replace/resize attribute buffers' );
 
 		}
 	} );
@@ -49659,17 +49659,17 @@
 
 		addIndex: function ( index ) {
 
-			console.warn( 'THREE.BufferGeometry: .addIndex() has been renamed to .setIndex().' );
+			//console.warn( 'THREE.BufferGeometry: .addIndex() has been renamed to .setIndex().' );
 			this.setIndex( index );
 
 		},
 		addAttribute: function ( name, attribute ) {
 
-			console.warn( 'THREE.BufferGeometry: .addAttribute() has been renamed to .setAttribute().' );
+			//console.warn( 'THREE.BufferGeometry: .addAttribute() has been renamed to .setAttribute().' );
 
 			if ( ! ( attribute && attribute.isBufferAttribute ) && ! ( attribute && attribute.isInterleavedBufferAttribute ) ) {
 
-				console.warn( 'THREE.BufferGeometry: .addAttribute() now expects ( name, attribute ).' );
+				//console.warn( 'THREE.BufferGeometry: .addAttribute() now expects ( name, attribute ).' );
 
 				return this.setAttribute( name, new BufferAttribute( arguments[ 1 ], arguments[ 2 ] ) );
 
@@ -49677,7 +49677,7 @@
 
 			if ( name === 'index' ) {
 
-				console.warn( 'THREE.BufferGeometry.addAttribute: Use .setIndex() for index attribute.' );
+				//console.warn( 'THREE.BufferGeometry.addAttribute: Use .setIndex() for index attribute.' );
 				this.setIndex( attribute );
 
 				return this;

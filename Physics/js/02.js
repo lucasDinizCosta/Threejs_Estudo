@@ -1,22 +1,21 @@
 function init() {
-
   Physijs.scripts.worker = 'libs/other/physijs/physijs_worker.js';
   Physijs.scripts.ammo = 'ammo.js';
 
-
   // use the defaults
-  //var stats = initStats();
-  var renderer = initRenderer();
+  var stats = initStats();
+  var renderer = setRenderer();
   var camera = initCamera(new THREE.Vector3(70, 20, 0));
+  var gui = new dat.GUI();
 
   // Enable mouse rotation, pan, zoom etc.
   var orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
   orbitControls.target.set(0, 0, 0);
   orbitControls.minDistance = 25;
   orbitControls.maxDistance = 100;
-
   var clock = new THREE.Clock();
   var scene = new Physijs.Scene({reportSize: 10, fixedTimeStep: 1 / 60});
+  scene.setGravity(new THREE.Vector3(0, -9.8, 0));
   
   // Positioning Lights
 
@@ -37,17 +36,16 @@ function init() {
   scene.add(new THREE.AmbientLight(0x0393939));
 
   // Axis
-  var axis = new THREE.AxisHelper(300);
+  //var axis = new THREE.AxisHelper(300);
   //scene.add(axis);
 
   var textureLoader = new THREE.TextureLoader();
   var sideBound = 5;            // BoxSize
 
   // setup controls
-  var gui = new dat.GUI();
   var controls = {
     gravityX: 0,
-    gravityY: -50,
+    gravityY: -9.8,
     gravityZ: 0,
     mesh: null,
     ramp: [],
@@ -63,6 +61,12 @@ function init() {
       x: 0,
       y: 0,
       z: 0,
+    },
+
+    // Paineis
+    forcesCanvas: document.getElementById("forces-canvas-box"),
+    panels: {
+      forcesCanvas: true,
     },
 
     createRamp: function(){
@@ -168,7 +172,7 @@ function init() {
       points.push(new THREE.Vector3(-10, fixDistRamp, 
         /*backWall.position.z + Math.round(
         Math.sqrt(900 - Math.pow(altura, 2))*/
-      backWall.position.z + (Math.cos(this.angleRamp * Math.PI/180) * 30)
+        backWall.position.z + (Math.cos(this.angleRamp * Math.PI/180) * 30)
       ));
       points.push(new THREE.Vector3(-10, fixDistRamp, backWall.position.z));
       points.push(new THREE.Vector3(-10, altura + fixDistRamp, backWall.position.z));
@@ -205,12 +209,12 @@ function init() {
       this.mesh.receiveShadow = true;
       if(this.ramp.length != 0){
         this.mesh.position.x = this.startPosition.x;
-        this.mesh.position.y = (this.startPosition.y * 16.50)/15;
+        this.mesh.position.y = (this.startPosition.y * 16.47)/15;
         this.mesh.position.z = (this.startPosition.z * -9.5)/-12.99; //-9.5;
       }
       else{
         this.mesh.position.x = this.startPosition.x;
-        this.mesh.position.y = 16.50;
+        this.mesh.position.y = 16.47;
         this.mesh.position.z = -9.5;
       }
 
@@ -243,6 +247,9 @@ function init() {
     },
 
     resetSimulation: function(){
+      this.createRamp();           // Recria o objeto pois a fisica é mudada
+      this.createBox();           // Recria o objeto pois a fisica é mudada
+      /*
       this.mesh.position.x = this.startPosition.x;
       this.mesh.position.y = this.startPosition.y;
       this.mesh.position.z = this.startPosition.z;
@@ -259,6 +266,7 @@ function init() {
       // You may also want to cancel the object's velocity
       this.mesh.setLinearVelocity(new THREE.Vector3(0, 0, 0));
       this.mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));
+      */
 
     },
 
@@ -269,33 +277,20 @@ function init() {
         this.groupForces.position.z = this.mesh.position.z;
       }
 
-    }
+    },
+
   };
   
   controls.createRamp();
   controls.createBox();
 
+  // Criando atributos do menu lateral
   var objectMenu = gui.addFolder("object Menu");
   objectMenu.add(controls, "resetSimulation");
   objectMenu.add(controls, "animation");
-  /*objectMenu.add(controls, "visibleBox").onChange(function(e){
-    if(controls.visibleBox){
-      controls.mesh.visible = true;
-    }
-    else{
-      controls.mesh.visible = false;
-    }
-  });
-  objectMenu.add(controls, "visibleAxis").onChange(function(e){
-    if(controls.visibleAxis){
-      controls.mesh.getObjectByName("Axis").visible = true;
-    }
-    else{
-      controls.mesh.getObjectByName("Axis").visible = false;
-    }
-  });*/
   objectMenu.add(controls, "friction", 0, 1, 0.01).onChange(
     function(e) {
+      controls.createRamp();           // Recria o objeto pois a fisica é mudada
       controls.createBox();           // Recria o objeto pois a fisica é mudada
     }
   );
@@ -305,35 +300,62 @@ function init() {
       controls.createBox();           // Recria o objeto pois a fisica é mudada
     }
   );
+  //objectMenu.add(controls, "panels.forcesCanvas");
+  objectMenu.add(controls.panels, "forcesCanvas").onChange(function(e){
+    if(controls.panels.forcesCanvas){
+      controls.forcesCanvas.style.display = "block";
+    }
+    else{
+      controls.forcesCanvas.style.display = "none";
+    }
+  });
   
 
-  /*gui.add(controls, "gravityX", -100, 100, 1).onChange(function(e) {scene.setGravity(new THREE.Vector3(controls.gravityX, controls.gravityY, controls.gravityZ))});
-  gui.add(controls, "gravityY", -100, 100, 1).onChange(function(e) {scene.setGravity(new THREE.Vector3(controls.gravityX, controls.gravityY, controls.gravityZ))});
-  gui.add(controls, "gravityZ", -100, 100, 1).onChange(function(e) {scene.setGravity(new THREE.Vector3(controls.gravityX, controls.gravityY, controls.gravityZ))});*/
+  window.addEventListener('resize', function(){
+    onResize(camera, renderer);
+  });  // Ajuste de tela
 
-  scene.setGravity(new THREE.Vector3(0, -9.8, 0));
   createGroundAndWalls(scene);
-
-  // do the basic rendering
   render();
   function render() {
-    //stats.update();
+    stats.update();
     var delta = clock.getDelta();
     orbitControls.update(delta);                 // Atualiza o controle da câmera
 
     // Diagrama de forças
-    if(controls.animation){
+    /*if(controls.animation){
       controls.updateForces();
       scene.simulate(undefined, 2);
       //scene.simulate();
-    }
-    requestAnimationFrame(render);
+    }*/
+    controls.updateForces();
+    scene.simulate(undefined, 2); //scene.simulate();
     renderer.render(scene, camera);
+    requestAnimationFrame(render);
   }
 
   // https://www.programmersought.com/article/5332673853/
-  //controls.mesh.setCcdMotionThreshold(20);
+  //controls.mesh.setCcdMotionThreshold(1);
   
+}
+
+function setRenderer(){
+  var renderer = new THREE.WebGLRenderer();
+  renderer.setClearColor(0x222);
+  renderer.setPixelRatio(devicePixelRatio);
+  renderer.setSize(innerWidth, innerHeight);
+  document.body.appendChild(renderer.domElement);
+  return renderer;
+}
+
+function onResize(camera, renderer) {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  // Update the panels position
+  controls.forcesCanvas.style.left = (window.innerWidth - tela.width - 25) + "px";
+  controls.forcesCanvas.style.bottom = '50px';
 }
 
 // id to identify collision and plot the forces
