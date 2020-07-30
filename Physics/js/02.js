@@ -65,7 +65,7 @@ function init() {
 
     // Paineis
     forcesCanvas: document.getElementById("forces-canvas-box"),
-    equations: document.getElementById("instructions"),
+    equations: document.getElementById("equations"),
     panels: {
       forcesCanvas: true,
       equations: true,
@@ -364,9 +364,6 @@ function onResize(camera, renderer) {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-  // Update the panels position
-  controls.forcesCanvas.style.left = (window.innerWidth - tela.width - 25) + "px";
-  controls.forcesCanvas.style.bottom = '50px';
 }
 
 // id to identify collision and plot the forces

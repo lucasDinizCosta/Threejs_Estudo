@@ -21,50 +21,45 @@
     <script src="https://polyfill.io/v3/polyfill.min.js"></script>
     <script id="MathJax-script" type="text/javascript" async src="libs/math/tex-mml-chtml.js"></script>
 -->
+    <script>
+        /*MathJax = {
+            tex: {
+                tags: 'all'  // should be 'ams', 'none', or 'all'
+            }
+        };*/
+    </script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
 
     <link rel="stylesheet" href="libs/css/default.css">
-
-    <style>
-        html,
-        body {
-            margin: 0;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        #blocker {
-            position: absolute;
-            width: 75%;
-            height: 30%;
-            background-color: rgba(7, 7, 9, 0.5);
-            display: block;
-            z-index: 1000;
-        }
-
-        #instructions {
-            color: #ffffff;
-            font-size: 1.8em;
-            width: 60%;
-            display: block;
-            z-index: 1001;
-        }
-    </style>
 </head>
 
 <body>
-    <div id="blocker">
+    <div id="equations" style="position: absolute; width: 75%; height: 30%; 
+    background-color: rgba(7, 7, 9, 0.5); display: block; z-index: 1000; border: 2px solid #000">
+        <div id="content" style="color: #ffffff; width: 75%; display: block;
+        z-index: 1001;">
+            <h1 style="font-size: 1.3em; text-align: center;">
+                Equations \(a \ne 0\)
+            </h1>
+            \(\mu * \overrightarrow{N} \)
+            <math>\begin(Friction)T = 2\end(Friction)</math>
 
-        <div id="instructions">
-            <p>
+            \begin{equation} Friction = \mu * \overrightarrow{N} \end{equation}
+            \begin{equation}
+            Friction = \mu * \overrightarrow{N}
+            \end{equation}
+            
+            
+            <p style="font-size: 1.2em;">
+                
+                <hr>
                 When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
   \[x = {-b \pm \sqrt{b^2-4ac} \over 2a}.\]
             </p>
         </div>
 
     </div>
-
 
     <canvas id="forces-canvas-box" width="130" height="150" 
     style="position: absolute; z-index: 1001;">
@@ -79,6 +74,10 @@
         var forcesCanvas = document.getElementById('forces-canvas-box');
         forcesCanvas.style.left = (window.innerWidth - tela.width - 25) + "px";
         forcesCanvas.style.bottom = '50px';
+
+        var equations = document.getElementById('equations');
+        equations.style.left = "5%";//(window.innerWidth/) + "px";
+        equations.style.bottom = '50px';
 
         var ctx = tela.getContext("2d");
         ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
@@ -111,6 +110,21 @@
             ctx.strokeText(texto, x, y);
             ctx.fillText(texto, x, y);
         }
+
+        function onResizePanels(camera, renderer) {
+
+            // Update the panels position
+            forcesCanvas.style.left = (window.innerWidth - tela.width - 25) + "px";
+            forcesCanvas.style.bottom = '50px';
+
+            equations.style.left = "5%";//(window.innerWidth/) + "px";
+            equations.style.bottom = '50px';
+        }
+
+        window.addEventListener('resize', function(){
+            onResizePanels();
+        });  // Ajuste de tela
+
     </script>
 </body>
 </html>
