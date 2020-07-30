@@ -285,6 +285,7 @@ function init() {
   
   controls.createRamp();
   controls.createBox();
+  document.getElementById("frictionIndex").innerHTML = controls.friction;
 
   // Criando atributos do menu lateral
   var objectMenu = gui.addFolder("object Menu");
@@ -294,6 +295,7 @@ function init() {
     function(e) {
       controls.createRamp();           // Recria o objeto pois a fisica é mudada
       controls.createBox();           // Recria o objeto pois a fisica é mudada
+      document.getElementById("frictionIndex").innerHTML = controls.friction;
     }
   );
   objectMenu.add(controls, "angleRamp", 0, 60, 2).onChange(
@@ -352,7 +354,7 @@ function init() {
 
 function setRenderer(){
   var renderer = new THREE.WebGLRenderer();
-  renderer.setClearColor(0x222);
+  renderer.setClearColor(0x000);
   renderer.setPixelRatio(devicePixelRatio);
   renderer.setSize(innerWidth, innerHeight);
   document.body.appendChild(renderer.domElement);
