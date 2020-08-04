@@ -278,7 +278,6 @@ function init() {
         this.groupForces.position.y = this.mesh.position.y + sideBound * 1.75; 
         this.groupForces.position.z = this.mesh.position.z;
       }
-
     },
 
   };
@@ -304,7 +303,6 @@ function init() {
       controls.createBox();           // Recria o objeto pois a fisica é mudada
     }
   );
-  //objectMenu.add(controls, "panels.forcesCanvas");
   objectMenu.add(controls.panels, "forcesCanvas").onChange(function(e){
     if(controls.panels.forcesCanvas){
       controls.forcesCanvas.style.display = "block";

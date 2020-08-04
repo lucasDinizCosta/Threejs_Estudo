@@ -4,7 +4,7 @@
 
 <head>
     <title>Example 02 - Box Slide</title>
-    <script type="text/javascript" charset="UTF-8" src="libs/three/three.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="libs/three.js"></script>
     <script type="text/javascript" charset="UTF-8" src="libs/three/controls/OrbitControls.js"></script>
     <script type="text/javascript" charset="UTF-8" src="libs/other/physijs/physi.js"></script>
 
@@ -20,16 +20,9 @@
     <!-- Math Equations 
     <script src="https://polyfill.io/v3/polyfill.min.js"></script>
     <script id="MathJax-script" type="text/javascript" async src="libs/math/tex-mml-chtml.js"></script>
--->
-    <script>
-        /*MathJax = {
-            tex: {
-                tags: 'all'  // should be 'ams', 'none', or 'all'
-            }
-        };*/
-    </script>
+    -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.1/es5/tex-mml-chtml.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js"></script>
 
     <link rel="stylesheet" href="libs/css/default.css">
 
@@ -47,10 +40,10 @@
 </head>
 
 <body>
-    <div id="equations" style="position: absolute; width: 75%; height: 30%; overflow: auto;
-    background-color: rgba(7, 7, 9, 0.5); display: block; z-index: 1000; border: 2px solid #000">
-        <div id="content" style="color: #ffffff; width: 100%; display: block;
-        z-index: 1001; ">
+    <div id="equations" style="position: absolute; width: 90%; height: 30%; overflow: auto;
+    background-color: rgba(7, 7, 9, 0.5); display: flex; z-index: 1000; border: 2px solid #000">
+        <div id="content" style="color: #ffffff; width: 80%; display: flex;
+        z-index: 1001;  overflow: auto;">
             <table >
                 <tr>
                     <th colspan="5" style="font-size: 1.3em; text-align: center;">Instructions</th>
@@ -60,40 +53,75 @@
                   <th colspan="3">Dates</th>
                 </tr>
                 <tr>
-                    <td style="width:25%">Weight = \(m * \overrightarrow{G} \)</td>
-                    <td style="width:25%">Friction = \(\mu * \overrightarrow{N} \)</td>
+                    <td style="width:25%">Weight: \(\overrightarrow{W}\) = \(m * \overrightarrow{G} \)</td>
+                    <td style="width:25%">Friction: \(\overrightarrow{Fr}\) = \(\mu * \overrightarrow{N} \)</td>
+
                     <td style="width:16%">Mass: m = 1.0 Kg</td>
                     <td style="width:16%">Gravity: \(\overrightarrow{G}\) = <span id="gravity">9.8</span> m/\(s^2\)</td>
-                    <td style="width:16%">Weight = \(m * \overrightarrow{G} \)</td>
+                    <td style="width:16%">\(\mu\) = <span id="frictionIndex"></span></td>
+                </tr>
+                <tr>
+                    <td style="width:25%">\(\overrightarrow{W_x}\) = \(\overrightarrow{W} * sin(\theta) \)</td>
+                    <td style="width:25%">\(\overrightarrow{W_y}\) = \(\overrightarrow{W} * cos(\theta) \)</td>
+
+                    <td style="width:16%">Angle: \(\theta\) = <span id="thetaAngleDegree">30</span>° 
+                        = <span id="thetaAngleRadians">45</span> rad</td>
+                    <td style="width:16%">\(\overrightarrow{W_x}\) = <span id="weightX">30</span> N</td>
+                    <td style="width:16%">\(\overrightarrow{W_y}\) = <span id="weightY">45</span> N</td>
+                </tr>
+                <tr>
+                    <td style="width:25%">Normal: \(\overrightarrow{N}\) = \(\overrightarrow{W_y}\)</td>
+                    <td style="width:25%"></td>
+
+                    <td style="width:16%">\(\overrightarrow{W}\) = <span id="weight">30</span> N</td>
+                    <td style="width:16%">\(\overrightarrow{W_y}\) = <span id="thetaAngleDegree">30</span> N</td>
+                    <td style="width:16%">Mass: m = 1.0 Kg</td>
+                </tr>
+                <tr>
+                    <td style="width:25%"></td>
+                    <td style="width:25%"></td>
+
+                    <td style="width:16%">\(\overrightarrow{W_x}\) = <span id="weightX">30</span> N</td>
+                    <td style="width:16%">\(\overrightarrow{W_y}\) = <span id="thetaAngleDegree">30</span> N</td>
+                    <td style="width:16%">Mass: m = 1.0 Kg</td>
                 </tr>
             </table>
             
-            <h1 style="font-size: 1.3em; text-align: center;">
-                Equations \(a \ne 0\)
-            </h1>
+        </div>
+        <div id="canvasContent" style="color: #ffffff; 
+        z-index: 1002;
+        width: 20%;
+        display: flex;
+        overflow: auto;
+        border: 2px solid #FFF"
+        "
+        
+        >
+
+            <div id="canvasContent" style="color: #ffffff; 
+            z-index: 1002;
+            width: 133px;
+            height: 153px;
+            display: flex;
+            overflow: auto;
+            border: 2px solid #FFF;
+            margin-top: 10%;
+            margin-left: 15%;
+            text-align:center;
+            "
             
-            Friction = \(\mu * \overrightarrow{N} \)  || \(\mu\) = <span id="frictionIndex"></span>
-            \begin{equation} Friction = \mu * \overrightarrow{N} \end{equation}
-            \begin{equation}
-            Friction = \mu * \overrightarrow{N}
-            \end{equation}
-            
-            
-            <p style="font-size: 1.2em;">
-                
-                <hr>
-                When \(a \ne 0\), there are two solutions to \(ax^2 + bx + c = 0\) and they are
-  \[x = {-b \pm \sqrt{b^2-4ac} \over 2a}.\]
-            </p>
-            
+            >
+                <canvas id="forces-canvas-box" width="130" height="150" 
+                style="position: absolute; z-index: 1001;
+                ">
+                    Seu browser não suporta canvas!
+                </canvas>
+            </div>
         </div>
 
     </div>
 
-    <canvas id="forces-canvas-box" width="130" height="150" 
-    style="position: absolute; z-index: 1001;">
-        Seu browser não suporta canvas!
-    </canvas>
+    
     <script type="text/javascript"> 
         init();
 
@@ -101,8 +129,8 @@
         tela.style.border = '2px solid #000';                       //Colocando borda no canvas
         
         var forcesCanvas = document.getElementById('forces-canvas-box');
-        forcesCanvas.style.left = (window.innerWidth - tela.width - 25) + "px";
-        forcesCanvas.style.bottom = '50px';
+        /*forcesCanvas.style.left = (window.innerWidth - tela.width - 25) + "px";
+        forcesCanvas.style.bottom = '50px';*/
 
         var equations = document.getElementById('equations');
         equations.style.left = "5%";//(window.innerWidth/) + "px";
@@ -143,8 +171,8 @@
         function onResizePanels(camera, renderer) {
 
             // Update the panels position
-            forcesCanvas.style.left = (window.innerWidth - tela.width - 25) + "px";
-            forcesCanvas.style.bottom = '50px';
+            //forcesCanvas.style.left = (window.innerWidth - tela.width - 25) + "px";
+            //forcesCanvas.style.bottom = '50px';
 
             equations.style.left = "5%";//(window.innerWidth/) + "px";
             equations.style.bottom = '50px';
