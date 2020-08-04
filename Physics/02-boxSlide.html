@@ -42,10 +42,19 @@
 </head>
 
 <body>
-    <div id="equations" style="position: absolute; width: 90%; height: 30%; overflow: auto;
-    background-color: rgba(7, 7, 9, 0.5); display: flex; z-index: 1000; border: 2px solid #000">
-        <div id="content" style="color: #ffffff; width: 95%; display: flex;
-        z-index: 1001;  overflow: auto;">
+    <div id="equations" style="position: absolute; width: 90%; height: 30%;
+    background-color: rgba(7, 7, 9, 0.5); display: flex; z-index: 1000; border: 2px solid #000 ">
+        <div id="content" style="color: #ffffff; 
+        z-index: 1001; width: 100%; overflow: auto;">
+            <div id="canvasContent" style="color: #f31010; 
+            z-index: 1001; display: block;
+            border: 2px solid rgb(146, 15, 15)"
+            >
+                <canvas id="forces-canvas-box" style="display: block;" width="130px" height="150px">
+                    Seu browser não suporta canvas!
+                </canvas>
+    
+            </div>
             <table >
                 <tr>
                     <th colspan="5" style="font-size: 1.3em; text-align: center;">Instructions</th>
@@ -90,97 +99,80 @@
             </table>
             
         </div>
-        <div id="canvasContent" style="color: #ffffff; 
-        z-index: 1002;
-        width: 20%;
-        display: flex;
-        overflow: auto;
-        border: 2px solid #FFF"
-        "
-        >
-        <canvas id="forces-canvas-box" width=100%
-                style="position: absolute; z-index: 1001;
-                ">
-                    Seu browser não suporta canvas!
-                </canvas>
-            <div id="canvasContent" style="color: #ffffff; 
-            z-index: 1002;
-            width: 100%;
-            height: 100%;
-            
-            border: 2px solid #FFF;
-            display: block;
-            "
-            
-            >
-            <!--
-                width: 133px;
-            height: 153px;
-
-            Canvas
-            width="130" height="150" 
-            -->
-                
-            </div>
-        </div>
-
     </div>
 
     
     <script type="text/javascript"> 
         init();
 
-        var tela = document.getElementById("forces-canvas-box");
-        tela.style.border = '2px solid #000';                       //Colocando borda no canvas
+        var forcesCanvas = document.getElementById("forces-canvas-box");
+        forcesCanvas.style.border = "2px solid #000";                       //Colocando borda no canvas
+
         
-        var forcesCanvas = document.getElementById('forces-canvas-box');
+        //var forcesCanvas = document.getElementById("forces-canvas-box");
         /*forcesCanvas.style.left = (window.innerWidth - tela.width - 25) + "px";
         forcesCanvas.style.bottom = '50px';*/
+        //tela.width = 100%1;
 
-        var equations = document.getElementById('equations');
-        equations.style.left = "5%";//(window.innerWidth/) + "px";
-        equations.style.bottom = '50px';
+        var equations = document.getElementById("equations");
+        equations.style.left = "5%";
+        equations.style.bottom = "50px";
 
-        var ctx = tela.getContext("2d");
-        ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
-        ctx.fillRect(0, 0, tela.width, tela.height);
-        ctx.font = "15px Arial Black";
-        ctx.fillStyle = "white";
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 2;
-        escreveTexto(ctx, "Forces", 37, 20);
-        ctx.font = "12px Arial Black";
+        var ctx = forcesCanvas.getContext("2d");
+        adjustForcesPanel();
+
+        drawForcesPanel(ctx);
         
-        //escreveTexto(ctx, "Normal", 42, 42);
-        escreveTexto(ctx, "Normal", 42, 42);
-        escreveTexto(ctx, "Weight", 42, 78);
-        escreveTexto(ctx, "Friction", 42, 120);
-        ctx.fillStyle = "green";
-        ctx.fillRect(10, 30, 20, 20);
-        ctx.strokeStyle = "black";
-        ctx.strokeRect(10, 30, 20, 20);
-        ctx.fillStyle = "red";
-        ctx.fillRect(10, 65, 20, 20);
-        ctx.strokeStyle = "black";
-        ctx.strokeRect(10, 65, 20, 20);
-        ctx.fillStyle = "blue";
-        ctx.fillRect(10, 105, 20, 20);
-        ctx.strokeStyle = "black";
-        ctx.strokeRect(10, 105, 20, 20);
 
         function escreveTexto (ctx, texto, x, y) {
             ctx.strokeText(texto, x, y);
             ctx.fillText(texto, x, y);
         }
 
-        function onResizePanels(camera, renderer) {
-
-            // Update the panels position
-            //forcesCanvas.style.left = (window.innerWidth - tela.width - 25) + "px";
-            //forcesCanvas.style.bottom = '50px';
-
+        function onResizePanels() {
             equations.style.left = "5%";//(window.innerWidth/) + "px";
             equations.style.bottom = '50px';
+            adjustForcesPanel();
+            drawForcesPanel(ctx);
+        }
+
+        function adjustForcesPanel(){
+            // Make it visually fill the positioned parent
+            forcesCanvas.style.width ='100%';
+            //canvas.style.height='100%';
+
+            // ...then set the internal size to match
+            forcesCanvas.width  = forcesCanvas.offsetWidth;
+            //canvas.height = canvas.offsetHeight;
+            forcesCanvas.height = 60;
+        }
+        
+        function drawForcesPanel(ctx){
+            ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+            ctx.fillRect(0, 0, forcesCanvas.width, forcesCanvas.height);
+            ctx.font = "15px Arial Black";
+            ctx.fillStyle = "white";
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 2;
+            escreveTexto(ctx, "Forces", forcesCanvas.width/2.1, 20);
+            ctx.font = "12px Arial Black";
+            
+            //escreveTexto(ctx, "Normal", 42, 42);
+            escreveTexto(ctx, "Normal", forcesCanvas.width/100 + 30, 45);
+            escreveTexto(ctx, "Weight", forcesCanvas.width/8 + 30, 45);
+            escreveTexto(ctx, "Friction", forcesCanvas.width/4.2 + 30, 45);
+            ctx.fillStyle = "green";
+            ctx.fillRect(forcesCanvas.width/100, 30, 20, 20);
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(forcesCanvas.width/100, 30, 20, 20);
+            ctx.fillStyle = "red";
+            ctx.fillRect(forcesCanvas.width/8, 30, 20, 20);
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(forcesCanvas.width/8, 30, 20, 20);
+            ctx.fillStyle = "blue";
+            ctx.fillRect(forcesCanvas.width/4.2, 30, 20, 20);
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(forcesCanvas.width/4.2, 30, 20, 20);
         }
 
         window.addEventListener('resize', function(){
