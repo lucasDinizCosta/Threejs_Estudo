@@ -3,6 +3,8 @@
 <html>
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     <title>Example 02 - Box Slide</title>
     <script type="text/javascript" charset="UTF-8" src="libs/three.js"></script>
     <script type="text/javascript" charset="UTF-8" src="libs/three/controls/OrbitControls.js"></script>
@@ -42,7 +44,7 @@
 <body>
     <div id="equations" style="position: absolute; width: 90%; height: 30%; overflow: auto;
     background-color: rgba(7, 7, 9, 0.5); display: flex; z-index: 1000; border: 2px solid #000">
-        <div id="content" style="color: #ffffff; width: 80%; display: flex;
+        <div id="content" style="color: #ffffff; width: 95%; display: flex;
         z-index: 1001;  overflow: auto;">
             <table >
                 <tr>
@@ -95,27 +97,30 @@
         overflow: auto;
         border: 2px solid #FFF"
         "
-        
         >
-
-            <div id="canvasContent" style="color: #ffffff; 
-            z-index: 1002;
-            width: 133px;
-            height: 153px;
-            display: flex;
-            overflow: auto;
-            border: 2px solid #FFF;
-            margin-top: 10%;
-            margin-left: 15%;
-            text-align:center;
-            "
-            
-            >
-                <canvas id="forces-canvas-box" width="130" height="150" 
+        <canvas id="forces-canvas-box" width=100%
                 style="position: absolute; z-index: 1001;
                 ">
                     Seu browser não suporta canvas!
                 </canvas>
+            <div id="canvasContent" style="color: #ffffff; 
+            z-index: 1002;
+            width: 100%;
+            height: 100%;
+            
+            border: 2px solid #FFF;
+            display: block;
+            "
+            
+            >
+            <!--
+                width: 133px;
+            height: 153px;
+
+            Canvas
+            width="130" height="150" 
+            -->
+                
             </div>
         </div>
 
