@@ -66,11 +66,9 @@ function init() {
     },
 
     // Paineis
-    forcesCanvas: document.getElementById("forces-canvas-box"),
-    equations: document.getElementById("equations"),
+    informations: document.getElementById("informations"),
     panels: {
-      forcesCanvas: true,
-      equations: true,
+      informations: true,
     },
 
     createRamp: function(){
@@ -251,9 +249,9 @@ function init() {
     },
 
     resetSimulation: function(){
-      this.createRamp();           // Recria o objeto pois a fisica é mudada
-      this.createBox();           // Recria o objeto pois a fisica é mudada
-      /*
+      //this.createRamp();           // Recria o objeto pois a fisica é mudada
+      //this.createBox();           // Recria o objeto pois a fisica é mudada
+      
       this.mesh.position.x = this.startPosition.x;
       this.mesh.position.y = this.startPosition.y;
       this.mesh.position.z = this.startPosition.z;
@@ -270,6 +268,7 @@ function init() {
       // You may also want to cancel the object's velocity
       this.mesh.setLinearVelocity(new THREE.Vector3(0, 0, 0));
       this.mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));
+      /*
       */
 
     },
@@ -333,21 +332,12 @@ function init() {
       document.getElementById("thetaAngleRadians").innerHTML = THREE.MathUtils.degToRad(controls.angleRamp).toFixed(3);
     }
   );
-  objectMenu.add(controls.panels, "forcesCanvas").onChange(function(e){
-    if(controls.panels.forcesCanvas){
-      controls.forcesCanvas.style.display = "block";
+  objectMenu.add(controls.panels, "informations").onChange(function(e){
+    if(controls.panels.informations){
+      controls.informations.style.display = "flex";
     }
     else{
-      controls.forcesCanvas.style.display = "none";
-    }
-  });
-
-  objectMenu.add(controls.panels, "equations").onChange(function(e){
-    if(controls.panels.equations){
-      controls.equations.style.display = "block";
-    }
-    else{
-      controls.equations.style.display = "none";
+      controls.informations.style.display = "none";
     }
   });
   
