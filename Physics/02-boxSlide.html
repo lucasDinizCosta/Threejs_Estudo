@@ -43,10 +43,9 @@
 
 <body>
     <div id="equations" style="position: absolute; width: 90%; height: 30%;
-    background-color: rgba(7, 7, 9, 0.5); display: flex; z-index: 1000; border: 2px solid #000 ">
+    background-color: rgba(7, 7, 9, 0.6); display: flex; z-index: 1000; border: 2px solid #000 ">
         <div id="content" style="color: #ffffff; 
         z-index: 1001; width: 100%; overflow: auto;">
-            
             <canvas id="forces-canvas-box" style="display: block;" width="130px" height="150px">
                 Seu browser não suporta canvas!
             </canvas>
@@ -63,33 +62,33 @@
                     <td style="width:25%">Friction: \(\overrightarrow{Fr}\) = \(\mu * \overrightarrow{N} \)</td>
 
                     <td style="width:16%">Mass: m = 1.0 Kg</td>
-                    <td style="width:16%">Gravity: \(\overrightarrow{G}\) = <span id="gravity">9.8</span> m/\(s^2\)</td>
-                    <td style="width:16%">\(\mu\) = <span id="frictionIndex"></span></td>
+                    <td style="width:16%">Gravity: \(\overrightarrow{G}\) = <span id="gravityCoefficient"></span> m/\(s^2\)</td>
+                    <td style="width:16%">\(\mu\) = <span id="frictionCoefficient"></span></td>
                 </tr>
                 <tr>
                     <td style="width:25%">\(\overrightarrow{W_x}\) = \(\overrightarrow{W} * sin(\theta) \)</td>
                     <td style="width:25%">\(\overrightarrow{W_y}\) = \(\overrightarrow{W} * cos(\theta) \)</td>
 
-                    <td style="width:16%">Angle: \(\theta\) = <span id="thetaAngleDegree">30</span>° 
-                        = <span id="thetaAngleRadians">45</span> rad</td>
-                    <td style="width:16%">\(\overrightarrow{W_x}\) = <span id="weightX">30</span> N</td>
-                    <td style="width:16%">\(\overrightarrow{W_y}\) = <span id="weightY">45</span> N</td>
+                    <td style="width:16%">Angle: \(\theta\) = <span id="thetaAngleDegree"></span>° 
+                        = <span id="thetaAngleRadians"></span> rad</td>
+                    <td style="width:16%">\(\sin(\theta)\) = <span id="thetaAngleSin"></span></td>
+                    <td style="width:16%">\(\cos(\theta)\) = <span id="thetaAngleCos"></span></td>
                 </tr>
                 <tr>
                     <td style="width:25%">Normal: \(\overrightarrow{N}\) = \(\overrightarrow{W_y}\)</td>
                     <td style="width:25%"></td>
 
-                    <td style="width:16%">\(\overrightarrow{W}\) = <span id="weight">30</span> N</td>
-                    <td style="width:16%">\(\overrightarrow{W_y}\) = <span id="thetaAngleDegree">30</span> N</td>
-                    <td style="width:16%">Mass: m = 1.0 Kg</td>
+                    <td style="width:16%">\(\tan(\theta)\) = <span id="thetaAngleTan"></span></td>
+                    <td style="width:16%">\(\overrightarrow{W}\) = <span id="weightForce"></span> N</td>
+                    <td style="width:16%">\(\overrightarrow{W_x}\) = <span id="weightXForce"></span> N</td>
                 </tr>
                 <tr>
                     <td style="width:25%"></td>
                     <td style="width:25%"></td>
 
-                    <td style="width:16%">\(\overrightarrow{W_x}\) = <span id="weightX">30</span> N</td>
-                    <td style="width:16%">\(\overrightarrow{W_y}\) = <span id="thetaAngleDegree">30</span> N</td>
-                    <td style="width:16%">Mass: m = 1.0 Kg</td>
+                    <td style="width:16%">\(\overrightarrow{W_y}\) = <span id="weightYForce"></span> N</td>
+                    <td style="width:16%">\(\overrightarrow{N}\) = <span id="normalForce"></span> N</td>
+                    <td style="width:16%">\(\overrightarrow{Fr}\) = <span id="frictionForce"></span> N</td>
                 </tr>
             </table>
             
@@ -155,9 +154,9 @@
                 ctx.font = "12px Arial Black";
                 
                 //escreveTexto(ctx, "Normal", 42, 42);
-                escreveTexto(ctx, "Normal", 10 + 30, 45);
-                escreveTexto(ctx, "Weight", 120 + 30, 45);
-                escreveTexto(ctx, "Friction", 250, 45);
+                escreveTexto(ctx, "Normal (N)", 10 + 30, 45);
+                escreveTexto(ctx, "Weight (W)", 120 + 30, 45);
+                escreveTexto(ctx, "Friction (Fr)", 250, 45);
                 ctx.fillStyle = "green";
                 ctx.fillRect(10, 30, 20, 20);
                 ctx.strokeStyle = "black";
@@ -182,21 +181,21 @@
                 ctx.font = "12px Arial Black";
                 
                 //escreveTexto(ctx, "Normal", 42, 42);
-                escreveTexto(ctx, "Normal", forcesCanvas.width/100 + 30, 45);
-                escreveTexto(ctx, "Weight", forcesCanvas.width/8 + 30, 45);
-                escreveTexto(ctx, "Friction", forcesCanvas.width/4.2 + 30, 45);
+                escreveTexto(ctx, "Normal (N)", forcesCanvas.width/100 + 30, 45);
+                escreveTexto(ctx, "Weight (W)", forcesCanvas.width/6 + 30, 45);
+                escreveTexto(ctx, "Friction (Fr)", forcesCanvas.width/3 + 30, 45);
                 ctx.fillStyle = "green";
                 ctx.fillRect(forcesCanvas.width/100, 30, 20, 20);
                 ctx.strokeStyle = "black";
                 ctx.strokeRect(forcesCanvas.width/100, 30, 20, 20);
                 ctx.fillStyle = "red";
-                ctx.fillRect(forcesCanvas.width/8, 30, 20, 20);
+                ctx.fillRect(forcesCanvas.width/6, 30, 20, 20);
                 ctx.strokeStyle = "black";
-                ctx.strokeRect(forcesCanvas.width/8, 30, 20, 20);
+                ctx.strokeRect(forcesCanvas.width/6, 30, 20, 20);
                 ctx.fillStyle = "blue";
-                ctx.fillRect(forcesCanvas.width/4.2, 30, 20, 20);
+                ctx.fillRect(forcesCanvas.width/3, 30, 20, 20);
                 ctx.strokeStyle = "black";
-                ctx.strokeRect(forcesCanvas.width/4.2, 30, 20, 20);
+                ctx.strokeRect(forcesCanvas.width/3, 30, 20, 20);
             }
         }
 
