@@ -46,15 +46,10 @@
     background-color: rgba(7, 7, 9, 0.6); display: flex; z-index: 1000; border: 2px solid #000 ">
         <div id="content" style="color: #ffffff; 
         z-index: 1001; width: 100%; overflow: auto;">
-            
+            <canvas id="forces-canvas-box" style="display: block; overflow: auto;" width="130px" height="150px">
+                Seu browser não suporta canvas!
+            </canvas>
             <table>
-                <tr>
-                    <th colspan="5" style="font-size: 1.3em; text-align: center;">
-                        <canvas id="forces-canvas-box" style="display: block;" width="130px" height="150px">
-                            Seu browser não suporta canvas!
-                        </canvas>
-                    </th>
-                </tr>
                 <tr>
                     <th colspan="5" style="font-size: 1.3em; text-align: center;">Informations</th>
                 </tr>
@@ -118,9 +113,9 @@
         informations.style.bottom = "50px";
 
         var ctx = forcesCanvas.getContext("2d");
-        adjustForcesPanel();
-
-        drawForcesPanel(ctx);
+        //adjustForcesPanel();
+        onResizePanels();
+        //drawForcesPanel(ctx);
         
 
         function escreveTexto (ctx, texto, x, y) {
@@ -132,6 +127,9 @@
             informations.style.left = "5%";//(window.innerWidth/) + "px";
             informations.style.bottom = '50px';
             adjustForcesPanel();
+            if(window.width < 450){
+                forcesCanvas.width = "500px";
+            }
             drawForcesPanel(ctx);
         }
 
@@ -156,24 +154,24 @@
                 ctx.strokeStyle = "black";
                 ctx.lineWidth = 2;
                 escreveTexto(ctx, "Forces", forcesCanvas.width/2, 20);
-                ctx.font = "12px Arial Black";
+                ctx.font = "15px Arial Black";
                 
                 //escreveTexto(ctx, "Normal", 42, 42);
                 escreveTexto(ctx, "Normal (N)", 10 + 30, 45);
-                escreveTexto(ctx, "Weight (W)", 120 + 30, 45);
-                escreveTexto(ctx, "Friction (Fr)", 250, 45);
+                escreveTexto(ctx, "Weight (W)", 150 + 30, 45);
+                escreveTexto(ctx, "Friction (Fr)", 290 + 30, 45);
                 ctx.fillStyle = "green";
                 ctx.fillRect(10, 30, 20, 20);
                 ctx.strokeStyle = "black";
                 ctx.strokeRect(10, 30, 20, 20);
                 ctx.fillStyle = "red";
-                ctx.fillRect(120, 30, 20, 20);
+                ctx.fillRect(150, 30, 20, 20);
                 ctx.strokeStyle = "black";
-                ctx.strokeRect(120, 30, 20, 20);
+                ctx.strokeRect(150, 30, 20, 20);
                 ctx.fillStyle = "blue";
-                ctx.fillRect(220, 30, 20, 20);
+                ctx.fillRect(290, 30, 20, 20);
                 ctx.strokeStyle = "black";
-                ctx.strokeRect(220, 30, 20, 20);
+                ctx.strokeRect(290, 30, 20, 20);
             }
             else{
                 ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
