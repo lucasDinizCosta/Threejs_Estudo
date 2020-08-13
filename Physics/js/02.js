@@ -273,7 +273,7 @@ function init() {
 
       this.mesh.rotation.set(0, 0, 0);
       this.mesh.rotation.y = THREE.MathUtils.degToRad(90);
-      this.mesh.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
+      this.mesh.rotation.z = THREE.MathUtils.degToRad(this.angleOldRamp);
 
       // https://github.com/chandlerprall/Physijs/wiki/Updating-an-object's-position-&-rotation
       // Permite a mudança de posição
