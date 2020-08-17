@@ -355,13 +355,14 @@ function init() {
   }
 
   updateInstructionPanel(gravity, controls);
+  controls.animation = false;                   //animação parada
 
   // Criando atributos do menu lateral
-  var objectMenu = gui.addFolder("object Menu");
+  var objectMenu = gui.addFolder("Menu");
   objectMenu.open();
-  objectMenu.add(controls, "animation");
-  objectMenu.add(controls, "frictionBox", 0, 1, 0.01);
-  objectMenu.add(controls, "angleRamp", 0, 60, 2);
+  objectMenu.add(controls, "animation").name("Animation");
+  objectMenu.add(controls, "frictionBox", 0, 1, 0.01).name("Friction");
+  objectMenu.add(controls, "angleRamp", 0, 60, 2).name("Angle");
   objectMenu.add(controls.panels, "informations").onChange(function(e){
     if(controls.panels.informations){
       controls.informations.style.display = "flex";
@@ -370,11 +371,11 @@ function init() {
     else{
       controls.informations.style.display = "none";
     }
-  });
+  }).name("Informations");
   objectMenu.add(controls, "testeBotao");
   objectMenu.add(controls, "testeBotao2");
-  objectMenu.add(controls, "startSimulation");
-  objectMenu.add(controls, "resetSimulation");
+  objectMenu.add(controls, "startSimulation").name("Start Simulation");
+  objectMenu.add(controls, "resetSimulation").name("Reset Simulation");     // Attribute a different name to the button
 
   // Update GUI Elements
   function updateDisplay(gui) {
