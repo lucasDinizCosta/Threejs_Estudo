@@ -74,8 +74,9 @@ function init() {
 
     // Paineis
     informations: document.getElementById("informations"),
+    canvasForces: document.getElementById("forces-canvas-box"),
     panels: {
-      informations: true,
+      informations: false,
     },
 
     createRamp: function(){
@@ -305,6 +306,30 @@ function init() {
       this.frictionOldBox = this.frictionBox;
       updateInstructionPanel(gravity, this);
     },
+
+    testeBotao: function(){
+      this.mesh.mass = 0;
+      // You may also want to cancel the object's velocity
+      this.mesh.setLinearVelocity(new THREE.Vector3(0, 0, 0));
+      this.mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));
+
+      this.mesh.__dirtyPosition = true;
+      this.mesh.__dirtyRotation = true;
+      
+      //scene.simulate();
+      //console.log();
+    },
+
+    testeBotao2: function(){
+      this.mesh.mass = 1;
+      this.mesh.setLinearVelocity(new THREE.Vector3(0, 0, 0));
+      this.mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));
+
+      this.mesh.__dirtyPosition = true;
+      this.mesh.__dirtyRotation = true;
+
+      scene.simulate();
+    }
   };
   
   controls.startSimulation();
@@ -334,19 +359,22 @@ function init() {
   // Criando atributos do menu lateral
   var objectMenu = gui.addFolder("object Menu");
   objectMenu.open();
-  objectMenu.add(controls, "resetSimulation");
   objectMenu.add(controls, "animation");
   objectMenu.add(controls, "frictionBox", 0, 1, 0.01);
   objectMenu.add(controls, "angleRamp", 0, 60, 2);
   objectMenu.add(controls.panels, "informations").onChange(function(e){
     if(controls.panels.informations){
       controls.informations.style.display = "flex";
+      onResizePanels();                     // redraw the canvas forces
     }
     else{
       controls.informations.style.display = "none";
     }
   });
+  objectMenu.add(controls, "testeBotao");
+  objectMenu.add(controls, "testeBotao2");
   objectMenu.add(controls, "startSimulation");
+  objectMenu.add(controls, "resetSimulation");
 
   // Update GUI Elements
   function updateDisplay(gui) {
@@ -357,7 +385,6 @@ function init() {
         updateDisplay(gui.__folders[f]);
     }
 }
-  
 
   window.addEventListener('resize', function(){
     onResize(camera, renderer);
@@ -371,13 +398,13 @@ function init() {
     orbitControls.update(delta);                 // Atualiza o controle da câmera
 
     // Diagrama de forças
-    /*if(controls.animation){
+    if(controls.animation){
       controls.updateForces();
       scene.simulate(undefined, 2);
       //scene.simulate();
-    }*/
-    controls.updateForces();
-    scene.simulate();
+    }
+    //controls.updateForces();
+    // scene.simulate();
     //scene.simulate(undefined, 2); //scene.simulate();
     renderer.render(scene, camera);
     requestAnimationFrame(render);
