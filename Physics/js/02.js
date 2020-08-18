@@ -348,12 +348,17 @@ function init() {
       this.frictionBox = this.frictionOldBox;
       updateDisplay(gui);           // Update GUI
 
+      document.getElementById("alertPanel").style.display = "none";
+      this.animation = true;
     },
 
     startSimulation: function(){
       this.createRamp();           // Recria o objeto pois a fisica é mudada
       this.createBox();           // Recria o objeto pois a fisica é mudada
       this.updateDates();
+
+      document.getElementById("alertPanel").style.display = "none";
+      this.animation = true;
     },
 
     updateForces: function(){
@@ -372,6 +377,9 @@ function init() {
   };
   
   controls.startSimulation();
+  // Don't active the first simulation
+  document.getElementById("alertPanel").style.display = "block";
+  this.animation = false;
 
   function updateInstructionPanel(gravity, controls){
     // Adjust values of the Instructions Panel
@@ -399,9 +407,15 @@ function init() {
   // Criando atributos do menu lateral
   var objectMenu = gui.addFolder("Menu");
   objectMenu.open();
-  objectMenu.add(controls, "animation").name("Animation");
-  objectMenu.add(controls, "frictionBox", 0, 1, 0.01).name("Friction");
-  objectMenu.add(controls, "angleRamp", 10, 50, 2).name("Angle (°)");
+  //objectMenu.add(controls, "animation").name("Animation");
+  objectMenu.add(controls, "frictionBox", 0, 1, 0.01).name("Friction").onChange(function(e){
+    document.getElementById("alertPanel").style.display = "block";
+    controls.animation = false;
+  });
+  objectMenu.add(controls, "angleRamp", 10, 50, 2).name("Angle (°)").onChange(function(e){
+    document.getElementById("alertPanel").style.display = "block";
+    controls.animation = false;
+  });
   objectMenu.add(controls.panels, "informations").onChange(function(e){
     if(controls.panels.informations){
       controls.informations.style.display = "flex";
@@ -411,8 +425,8 @@ function init() {
       controls.informations.style.display = "none";
     }
   }).name("Informations");
-  objectMenu.add(controls, "startSimulation").name("Start Simulation");
   objectMenu.add(controls, "resetSimulation").name("Reset Simulation");     // Attribute a different name to the button
+  objectMenu.add(controls, "startSimulation").name("Start Simulation");
 
   // Update GUI Elements
   function updateDisplay(gui) {
