@@ -37,8 +37,8 @@ function init() {
   scene.add(new THREE.AmbientLight(0x0393939));
 
   // Axis
-  //var axis = new THREE.AxisHelper(300);
-  //scene.add(axis);
+  var axis = new THREE.AxisHelper(300);
+  scene.add(axis);
 
   var textureLoader = new THREE.TextureLoader();
   var sideBound = 5;            // BoxSize
@@ -58,6 +58,7 @@ function init() {
     massBox: 1, 
     mesh: null,
     ramp: [],
+    widthRamp: 30,
     restitutionRamp: 0.3,
     startPosition: {
       x: 0,
@@ -97,20 +98,18 @@ function init() {
       ramp_material.map.wrapS = THREE.RepeatWrapping;
       ramp_material.map.wrapT = THREE.RepeatWrapping;
     
-      var ramp = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 0.1, 20), ramp_material, 0);
+      var ramp = new Physijs.BoxMesh(new THREE.BoxGeometry(this.widthRamp, 0.1, 20), ramp_material, 0);
       ramp.castShadow = true;
       ramp.receiveShadow = true;
 
-      let altura = Math.sin(this.angleRamp * (Math.PI/180)) * 30;
-      this.startPosition.y = altura;
-
+      let altura = Math.sin(this.angleRamp * (Math.PI/180)) * this.widthRamp;
       let fixDistRamp = 0.5;
       ramp.position.y = altura/2 + fixDistRamp;    //  8
+
       ramp.rotation.y = THREE.MathUtils.degToRad(90);
       ramp.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
       this.ramp.push(ramp);
       scene.add(ramp);
-
 
       var wall_material = Physijs.createMaterial(
         new THREE.MeshStandardMaterial(
@@ -140,7 +139,73 @@ function init() {
 
       // Posicao inicial
       this.startPosition.x = 0;
-      this.startPosition.z = backWall.position.z;
+      this.startPosition.y = /*- fixDistRamp*2 + 0.2 +*/  backWall.position.y * 2 + Math.sqrt(sideBound);
+      this.startPosition.z = backWall.position.z + sideBound/2;
+
+      // Calculando posicao inicial do bloco
+      let centerPointRamp = new THREE.Vector3(ramp.position.x, ramp.position.y, ramp.position.z);
+      let heightPointRamp = new THREE.Vector3(backWall.position.x, altura, backWall.position.z);
+      let mediumPointRamp = new THREE.Vector3(backWall.position.x, ramp.position.y, backWall.position.z);
+      let mediumPointGroundRamp = new THREE.Vector3(backWall.position.x, 0, backWall.position.z);
+
+      // Calculate the unit vector of direction of the center ramp to the height point
+      let unitVector = {
+        component: new THREE.Vector3(0, 0, 0),
+        module: 0,
+      };
+      unitVector.component.x =  centerPointRamp.x - heightPointRamp.x;
+      unitVector.component.y =  centerPointRamp.y - heightPointRamp.y;
+      unitVector.component.z =  centerPointRamp.z - heightPointRamp.z;
+      unitVector.module = Math.sqrt(unitVector.component.x * unitVector.component.x + 
+      unitVector.component.y * unitVector.component.y + 
+      unitVector.component.z + unitVector.component.z);
+      
+      // Unitary Vector
+      unitVector.component.x = unitVector.component.x / unitVector.module;
+      unitVector.component.y = unitVector.component.y / unitVector.module;
+      unitVector.component.z = unitVector.component.z / unitVector.module;
+
+      let tempStartPosition = new THREE.Vector3(
+        heightPointRamp.x + unitVector.component.x * (unitVector.module/2),
+        heightPointRamp.y + unitVector.component.y * (unitVector.module/2), 
+        heightPointRamp.z + unitVector.component.z * (unitVector.module/2)
+      );
+
+      // Calculating the start position of the block
+      // Calculate the new unit vector of tempStartPosition to mediumPointRamp
+      let unitVector2 = {
+        component: new THREE.Vector3(0, 0, 0),
+        module: 0,
+      };
+      unitVector2.component.x = tempStartPosition.x - mediumPointGroundRamp.x;
+      unitVector2.component.y = tempStartPosition.y - mediumPointGroundRamp.y;
+      unitVector2.component.z = tempStartPosition.z - mediumPointGroundRamp.z;
+      unitVector2.module = Math.sqrt(unitVector2.component.x * unitVector2.component.x + 
+      unitVector2.component.y * unitVector2.component.y + 
+      unitVector2.component.z + unitVector2.component.z);
+      
+      // Unitary Vector
+      unitVector2.component.x = unitVector2.component.x / unitVector2.module;
+      unitVector2.component.y = unitVector2.component.y / unitVector2.module;
+      unitVector2.component.z = unitVector2.component.z / unitVector2.module;
+
+      // Set the start position of the box
+      if(this.angleRamp > 40){
+        this.startPosition.x = mediumPointGroundRamp.x + 
+        (unitVector2.component.x * ((sideBound * Math.sqrt(2))/2 + unitVector2.module));
+        this.startPosition.y = mediumPointGroundRamp.y + 
+        (unitVector2.component.y * Math.ceil((sideBound)/2 + 0.5 + unitVector2.module));
+        this.startPosition.z = mediumPointGroundRamp.z + 
+        (unitVector2.component.z * Math.ceil((sideBound)/2 + 0.5 + unitVector2.module));
+      }
+      else{
+        this.startPosition.x = mediumPointGroundRamp.x + 
+        (unitVector2.component.x * ((sideBound * Math.sqrt(2))/2 + unitVector2.module));
+        this.startPosition.y = mediumPointGroundRamp.y + 
+        (unitVector2.component.y * Math.ceil((sideBound)/2 + unitVector2.module));
+        this.startPosition.z = mediumPointGroundRamp.z + 
+        (unitVector2.component.z * Math.ceil((sideBound)/2 + unitVector2.module));
+      }
 
       var groundWall = new  Physijs.BoxMesh(new THREE.BoxGeometry(20, 0.1, (altura / Math.tan(controls.angleRamp * (Math.PI/180)))), wall_material, 0);
       groundWall.position.y = fixDistRamp;
@@ -173,8 +238,6 @@ function init() {
 
       this.ramp.push(leftWall);
       scene.add(leftWall);
-
-      //console.log("altura: " + altura, "angle: "+this.angleRamp, "backWall.position.z: "+ backWall.position.z);
 
       // Right Side
       points = [];
@@ -219,13 +282,13 @@ function init() {
       this.mesh.receiveShadow = true;
       if(this.ramp.length != 0){
         this.mesh.position.x = this.startPosition.x;
-        this.mesh.position.y = (this.startPosition.y * 16.47)/15;
-        this.mesh.position.z = (this.startPosition.z * -9.5)/-12.99; //-9.5;
+        this.mesh.position.y = this.startPosition.y;//(this.startPosition.y * 16.47)/15;
+        this.mesh.position.z = this.startPosition.z;//(this.startPosition.z * -9.5)/-12.99; //-9.5;
       }
       else{
         this.mesh.position.x = this.startPosition.x;
-        this.mesh.position.y = 16.47;
-        this.mesh.position.z = -9.5;
+        this.mesh.position.y = this.startPosition.y;//16.47;
+        this.mesh.position.z = this.startPosition.z;//-9.5;
       }
       this.mesh.rotation.set(0, 0, 0);
       this.mesh.rotation.y = THREE.MathUtils.degToRad(90);
@@ -237,13 +300,13 @@ function init() {
           controls.groupForces.children[0].visible = false;
           controls.groupForces.children[1].visible = true;
           controls.groupForces.children[2].visible = false;
-          console.log("Chao");
+          //console.log("Chao");
         }
         else{
           controls.groupForces.children[0].visible = true;
           controls.groupForces.children[1].visible = false;
           controls.groupForces.children[2].visible = false;
-          console.log("Rampa");
+          //console.log("Rampa");
         }
         this.collisions++;
       }
@@ -260,17 +323,17 @@ function init() {
       //this.createRamp();           // Recria o objeto pois a fisica é mudada
       //this.createBox();           // Recria o objeto pois a fisica é mudada
       
-      /*this.mesh.position.x = this.startPosition.x;
-      this.mesh.position.y = this.startPosition.y;
-      this.mesh.position.z = this.startPosition.z;*/
-
       // You may also want to cancel the object's velocity
       this.mesh.setLinearVelocity(new THREE.Vector3(0, 0, 0));
       this.mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));
 
-      this.mesh.position.x = this.startPosition.x;
+      /*this.mesh.position.x = this.startPosition.x;
       this.mesh.position.y = (this.startPosition.y * 16.47)/15;
       this.mesh.position.z = (this.startPosition.z * -9.5)/-12.99; //-9.5;
+      */
+      this.mesh.position.x = this.startPosition.x;
+      this.mesh.position.y = this.startPosition.y;
+      this.mesh.position.z = this.startPosition.z;
 
       this.mesh.rotation.set(0, 0, 0);
       this.mesh.rotation.y = THREE.MathUtils.degToRad(90);
@@ -306,30 +369,6 @@ function init() {
       this.frictionOldBox = this.frictionBox;
       updateInstructionPanel(gravity, this);
     },
-
-    testeBotao: function(){
-      this.mesh.mass = 0;
-      // You may also want to cancel the object's velocity
-      this.mesh.setLinearVelocity(new THREE.Vector3(0, 0, 0));
-      this.mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));
-
-      this.mesh.__dirtyPosition = true;
-      this.mesh.__dirtyRotation = true;
-      
-      //scene.simulate();
-      //console.log();
-    },
-
-    testeBotao2: function(){
-      this.mesh.mass = 1;
-      this.mesh.setLinearVelocity(new THREE.Vector3(0, 0, 0));
-      this.mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));
-
-      this.mesh.__dirtyPosition = true;
-      this.mesh.__dirtyRotation = true;
-
-      scene.simulate();
-    }
   };
   
   controls.startSimulation();
@@ -362,7 +401,7 @@ function init() {
   objectMenu.open();
   objectMenu.add(controls, "animation").name("Animation");
   objectMenu.add(controls, "frictionBox", 0, 1, 0.01).name("Friction");
-  objectMenu.add(controls, "angleRamp", 0, 60, 2).name("Angle");
+  objectMenu.add(controls, "angleRamp", 10, 50, 2).name("Angle (°)");
   objectMenu.add(controls.panels, "informations").onChange(function(e){
     if(controls.panels.informations){
       controls.informations.style.display = "flex";
@@ -372,8 +411,6 @@ function init() {
       controls.informations.style.display = "none";
     }
   }).name("Informations");
-  objectMenu.add(controls, "testeBotao");
-  objectMenu.add(controls, "testeBotao2");
   objectMenu.add(controls, "startSimulation").name("Start Simulation");
   objectMenu.add(controls, "resetSimulation").name("Reset Simulation");     // Attribute a different name to the button
 
@@ -399,10 +436,11 @@ function init() {
     orbitControls.update(delta);                 // Atualiza o controle da câmera
 
     // Diagrama de forças
+    controls.updateForces();
+    
     if(controls.animation){
-      controls.updateForces();
-      scene.simulate(undefined, 2);
-      //scene.simulate();
+      
+      scene.simulate(undefined, 2);      //scene.simulate();
     }
     //controls.updateForces();
     // scene.simulate();
