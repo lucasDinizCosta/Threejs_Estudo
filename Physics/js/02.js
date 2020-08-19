@@ -46,11 +46,9 @@ function init() {
   // setup controls
   var controls = {
     angleRamp: 30,                              // Degrees of inclination of the ramp
-    angleOldRamp: 30,
     animation: true,
     frictionRamp: 0.9,
     frictionBox: 0.5,
-    frictionOldBox: 0.5,
     gravityX: 0,
     gravityY: -9.8,
     gravityZ: 0,
@@ -337,15 +335,13 @@ function init() {
 
       this.mesh.rotation.set(0, 0, 0);
       this.mesh.rotation.y = THREE.MathUtils.degToRad(90);
-      this.mesh.rotation.z = THREE.MathUtils.degToRad(this.angleOldRamp);
+      this.mesh.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
 
       // https://github.com/chandlerprall/Physijs/wiki/Updating-an-object's-position-&-rotation
       // Permite a mudança de posição
       this.mesh.__dirtyPosition = true;
       this.mesh.__dirtyRotation = true;
 
-      this.angleRamp = this.angleOldRamp;
-      this.frictionBox = this.frictionOldBox;
       updateDisplay(gui);           // Update GUI
 
       document.getElementById("alertPanel").style.display = "none";
@@ -370,8 +366,8 @@ function init() {
     },
 
     updateDates: function(){
-      this.angleOldRamp = this.angleRamp;
-      this.frictionOldBox = this.frictionBox;
+      //this.angleOldRamp = this.angleRamp;
+      //this.frictionOldBox = this.frictionBox;
       updateInstructionPanel(gravity, this);
     },
   };
@@ -384,21 +380,21 @@ function init() {
   function updateInstructionPanel(gravity, controls){
     // Adjust values of the Instructions Panel
     document.getElementById("gravityCoefficient").innerHTML = gravity * -1;
-    document.getElementById("frictionCoefficient").innerHTML = controls.frictionOldBox;
+    document.getElementById("frictionCoefficient").innerHTML = controls.frictionBox;
     document.getElementById("thetaAngleDegree").innerHTML = controls.angleOldRamp;
-    document.getElementById("thetaAngleRadians").innerHTML = THREE.MathUtils.degToRad(controls.angleOldRamp).toFixed(3);
-    document.getElementById("thetaAngleSin").innerHTML = Math.sin(THREE.MathUtils.degToRad(controls.angleOldRamp)).toFixed(3);
-    document.getElementById("thetaAngleCos").innerHTML = Math.cos(THREE.MathUtils.degToRad(controls.angleOldRamp)).toFixed(3);
-    document.getElementById("thetaAngleTan").innerHTML = Math.tan(THREE.MathUtils.degToRad(controls.angleOldRamp)).toFixed(3);
+    document.getElementById("thetaAngleRadians").innerHTML = THREE.MathUtils.degToRad(controls.angleRamp).toFixed(3);
+    document.getElementById("thetaAngleSin").innerHTML = Math.sin(THREE.MathUtils.degToRad(controls.angleRamp)).toFixed(3);
+    document.getElementById("thetaAngleCos").innerHTML = Math.cos(THREE.MathUtils.degToRad(controls.angleRamp)).toFixed(3);
+    document.getElementById("thetaAngleTan").innerHTML = Math.tan(THREE.MathUtils.degToRad(controls.angleRamp)).toFixed(3);
     document.getElementById("weightForce").innerHTML = (controls.massBox * Math.abs(gravity)).toFixed(2);
     document.getElementById("weightXForce").innerHTML = ((controls.massBox * Math.abs(gravity)) 
-    * Math.sin(THREE.MathUtils.degToRad(controls.angleOldRamp))).toFixed(2);
+    * Math.sin(THREE.MathUtils.degToRad(controls.angleRamp))).toFixed(2);
     document.getElementById("weightYForce").innerHTML = ((controls.massBox * Math.abs(gravity)) 
-    * Math.cos(THREE.MathUtils.degToRad(controls.angleOldRamp))).toFixed(2);
+    * Math.cos(THREE.MathUtils.degToRad(controls.angleRamp))).toFixed(2);
     document.getElementById("normalForce").innerHTML = ((controls.massBox * Math.abs(gravity)) 
-    * Math.cos(THREE.MathUtils.degToRad(controls.angleOldRamp))).toFixed(2);
+    * Math.cos(THREE.MathUtils.degToRad(controls.angleRamp))).toFixed(2);
     document.getElementById("frictionForce").innerHTML = (controls.frictionBox * (controls.massBox * Math.abs(gravity)) 
-    * Math.cos(THREE.MathUtils.degToRad(controls.angleOldRamp))).toFixed(2);
+    * Math.cos(THREE.MathUtils.degToRad(controls.angleRamp))).toFixed(2);
   }
 
   updateInstructionPanel(gravity, controls);
@@ -409,10 +405,18 @@ function init() {
   objectMenu.open();
   //objectMenu.add(controls, "animation").name("Animation");
   objectMenu.add(controls, "frictionBox", 0, 1, 0.01).name("Friction").onChange(function(e){
+    controls.createRamp();           // Recria o objeto pois a fisica é mudada
+    controls.createBox();           // Recria o objeto pois a fisica é mudada
+    controls.updateDates();
+
     document.getElementById("alertPanel").style.display = "block";
     controls.animation = false;
   });
   objectMenu.add(controls, "angleRamp", 10, 50, 2).name("Angle (°)").onChange(function(e){
+    controls.createRamp();           // Recria o objeto pois a fisica é mudada
+    controls.createBox();           // Recria o objeto pois a fisica é mudada
+    controls.updateDates();
+
     document.getElementById("alertPanel").style.display = "block";
     controls.animation = false;
   });
