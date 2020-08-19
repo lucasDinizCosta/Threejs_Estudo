@@ -70,10 +70,10 @@
 </head>
 
 <body>
-    <div id="informations" style="position: absolute; width: 60%; height: 45%;
+    <div id="informations" style="position: absolute; width: 90%; height: 80%;
     background-color: rgba(7, 7, 9, 0.6); display: none; z-index: 1000; border: 2px solid #000 ">
         <div id="content" style="color: #ffffff; 
-        z-index: 1001; width: 100%; overflow: auto;">
+        z-index: 1001; width: 100%; ">
             <span id='close2'>X</span>
             <canvas id="forces-canvas-box" style="display: flex; overflow: auto;" width="130px" height="150px">
                 Seu browser não suporta canvas!
@@ -135,10 +135,8 @@
         </div>
     </div>
 
-    
     <script type="text/javascript"> 
-        var controller = {};
-        init(controller);
+        init();
 
         var forcesCanvas = document.getElementById("forces-canvas-box");
         forcesCanvas.style.border = "2px solid #000";                       //Colocando borda no canvas
@@ -150,14 +148,11 @@
         //tela.width = 100%;
 
         var informations = document.getElementById("informations");
-        informations.style.left = "5%";
-        informations.style.bottom = "50px";
+        //informations.style.left = "50%";
+        //informations.style.bottom = "50px";
 
         var ctx = forcesCanvas.getContext("2d");
-        //adjustForcesPanel();
         onResizePanels();
-        //drawForcesPanel(ctx);
-        
 
         function escreveTexto (ctx, texto, x, y) {
             ctx.strokeText(texto, x, y);
@@ -166,7 +161,7 @@
 
         function onResizePanels() {
             informations.style.left = "5%";//(window.innerWidth/) + "px";
-            informations.style.bottom = '50px';
+            informations.style.top = "5%";
             adjustForcesPanel();
             if(window.width < 450){
                 forcesCanvas.width = "500px";

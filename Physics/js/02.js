@@ -1,4 +1,6 @@
-function init(controller) {
+function init() {
+
+  // Physijs configuration
   Physijs.scripts.worker = 'libs/other/physijs/physijs_worker.js';
   Physijs.scripts.ammo = 'ammo.js';
 
@@ -454,10 +456,7 @@ function init(controller) {
         return false;
     };
     document.getElementById('close2').onclick = function(){
-        /*this.parentNode.parentNode.parentNode
-        .removeChild(this.parentNode.parentNode);*/
         this.parentNode.parentNode.style.display = "none";
-        //controls.panels.informations = false;
         controls.panels.informations = false;
         updateDisplay(gui);
         return false;
