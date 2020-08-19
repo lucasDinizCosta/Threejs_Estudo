@@ -1,4 +1,4 @@
-function init() {
+function init(controller) {
   Physijs.scripts.worker = 'libs/other/physijs/physijs_worker.js';
   Physijs.scripts.ammo = 'ammo.js';
 
@@ -371,7 +371,7 @@ function init() {
       updateInstructionPanel(gravity, this);
     },
   };
-  
+  controller = controls;            //Reference to out of the init function
   controls.startSimulation();
   // Don't active the first simulation
   document.getElementById("alertPanel").style.display = "block";
@@ -445,6 +445,25 @@ function init() {
   window.addEventListener('resize', function(){
     onResize(camera, renderer);
   });  // Ajuste de tela
+
+  window.onload = function(){
+    document.getElementById('close').onclick = function(){
+        /*this.parentNode.parentNode.parentNode
+        .removeChild(this.parentNode.parentNode);*/
+        this.parentNode.style.display = "none";
+        return false;
+    };
+    document.getElementById('close2').onclick = function(){
+        /*this.parentNode.parentNode.parentNode
+        .removeChild(this.parentNode.parentNode);*/
+        this.parentNode.parentNode.style.display = "none";
+        //controls.panels.informations = false;
+        controls.panels.informations = false;
+        updateDisplay(gui);
+        return false;
+    };
+  };
+
 
   createGroundAndWalls(scene);
   render();

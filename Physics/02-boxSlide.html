@@ -52,6 +52,20 @@
             background:#ccc;
             color:#fff;
         }
+        #close2 {
+            float:right;
+            display:inline-block;
+            padding:2px 5px;
+            background:#ccc;
+        }
+
+        #close2:hover {
+            float:right;
+            display:inline-block;
+            padding:2px 5px;
+            background:#ccc;
+            color:#fff;
+        }
     </style>
 </head>
 
@@ -60,6 +74,7 @@
     background-color: rgba(7, 7, 9, 0.6); display: none; z-index: 1000; border: 2px solid #000 ">
         <div id="content" style="color: #ffffff; 
         z-index: 1001; width: 100%; overflow: auto;">
+            <span id='close2'>X</span>
             <canvas id="forces-canvas-box" style="display: flex; overflow: auto;" width="130px" height="150px">
                 Seu browser não suporta canvas!
             </canvas>
@@ -122,7 +137,8 @@
 
     
     <script type="text/javascript"> 
-        init();
+        var controller = {};
+        init(controller);
 
         var forcesCanvas = document.getElementById("forces-canvas-box");
         forcesCanvas.style.border = "2px solid #000";                       //Colocando borda no canvas
@@ -231,15 +247,7 @@
             onResizePanels();
         });  // Ajuste de tela
 
-        window.onload = function(){
-            document.getElementById('close').onclick = function(){
-                /*this.parentNode.parentNode.parentNode
-                .removeChild(this.parentNode.parentNode);*/
-                this.parentNode.style.display = "none";
-                return false;
-            };
-        };
-
+        
     </script>
 </body>
 </html>
