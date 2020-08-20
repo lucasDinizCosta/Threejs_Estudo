@@ -70,8 +70,8 @@
 </head>
 
 <body>
-    <div id="informations" style="position: absolute; width: 90%; height: 80%;
-    background-color: rgba(7, 7, 9, 0.6); display: none; z-index: 1000; border: 2px solid #000 ">
+    <div id="informations" style="position: absolute; width: 70%; height: 50%;
+    background-color: rgba(7, 7, 9, 0.8); display: none; z-index: 1000; border: 2px solid #000 ">
         <div id="content" style="color: #ffffff; 
         z-index: 1001; width: 100%; ">
             <span id='close2'>X</span>
@@ -80,44 +80,42 @@
             </canvas>
             <table>
                 <tr>
-                    <th colspan="5" style="font-size: 1.3em; text-align: center;">Informations</th>
+                    <th colspan="3" style="font-size: 1.3em; text-align: center;">Informations</th>
                 </tr>
                 <tr>
-                  <th colspan="2">Equations</th>
-                  <th colspan="3">Data</th>
+                  <th colspan="1">Equations</th>
+                  <th colspan="2">Data</th>
                 </tr>
                 <tr>
-                    <td style="width:25%">Weight: \(\overrightarrow{W}\) = \(m * \overrightarrow{G} \)</td>
-                    <td style="width:25%">Friction: \(\overrightarrow{Fr}\) = \(\mu * \overrightarrow{N} \)</td>
+                    <td style="width:25%">
+                        <b style="color:yellow">Weight:</b> \(\overrightarrow{W}\) = \(m * \overrightarrow{G} \); 
+                        \(\overrightarrow{W_x}\) = \(\overrightarrow{W} * sin(\theta) \);
+                        \(\overrightarrow{W_y}\) = \(\overrightarrow{W} * cos(\theta) \) 
+                    </td>
 
-                    <td style="width:16%">Mass: m = 1.0 Kg</td>
-                    <td style="width:16%">Gravity: \(\overrightarrow{G}\) = <span id="gravityCoefficient"></span> m/\(s^2\)</td>
-                    <td style="width:16%">\(\mu\) = <span id="frictionCoefficient"></span></td>
+                    <td style="width:25%"><b style="color:yellow">Angle:</b> \(\theta\) = <span id="thetaAngleDegree"></span>° 
+                        = <span id="thetaAngleRadians"></span> rad;
+                        \(\sin(\theta)\) = <span id="thetaAngleSin"></span>;
+                        \(\cos(\theta)\) = <span id="thetaAngleCos"></span>;
+                        \(\tan(\theta)\) = <span id="thetaAngleTan"></span>
+                    </td>
+                    <td style="width:25%"><b style="color:yellow">Mass:</b> m = 1.0 Kg; 
+                        <b style="color:yellow">Gravity:</b> \(\overrightarrow{G}\) = <span id="gravityCoefficient"></span> m/\(s^2\);
+                        <b style="color:yellow">Friction Coefficient:</b> \(\mu\) = <span id="frictionCoefficient"></span>
+                    </td>
                 </tr>
                 <tr>
-                    <td style="width:25%">\(\overrightarrow{W_x}\) = \(\overrightarrow{W} * sin(\theta) \)</td>
-                    <td style="width:25%">\(\overrightarrow{W_y}\) = \(\overrightarrow{W} * cos(\theta) \)</td>
-
-                    <td style="width:16%">Angle: \(\theta\) = <span id="thetaAngleDegree"></span>° 
-                        = <span id="thetaAngleRadians"></span> rad</td>
-                    <td style="width:16%">\(\sin(\theta)\) = <span id="thetaAngleSin"></span></td>
-                    <td style="width:16%">\(\cos(\theta)\) = <span id="thetaAngleCos"></span></td>
-                </tr>
-                <tr>
-                    <td style="width:25%">Normal: \(\overrightarrow{N}\) = \(\overrightarrow{W_y}\)</td>
-                    <td style="width:25%"></td>
-
-                    <td style="width:16%">\(\tan(\theta)\) = <span id="thetaAngleTan"></span></td>
-                    <td style="width:16%">\(\overrightarrow{W}\) = <span id="weightForce"></span> N</td>
-                    <td style="width:16%">\(\overrightarrow{W_x}\) = <span id="weightXForce"></span> N</td>
-                </tr>
-                <tr>
-                    <td style="width:25%"></td>
-                    <td style="width:25%"></td>
-
-                    <td style="width:16%">\(\overrightarrow{W_y}\) = <span id="weightYForce"></span> N</td>
-                    <td style="width:16%">\(\overrightarrow{N}\) = <span id="normalForce"></span> N</td>
-                    <td style="width:16%">\(\overrightarrow{Fr}\) = <span id="frictionForce"></span> N</td>
+                    <td style="width:25%"><b style="color:yellow">Friction:</b> \(\overrightarrow{Fr}\) = \(\mu * \overrightarrow{N} \) ; 
+                        <b style="color:yellow">Normal:</b> \(\overrightarrow{N}\) = \(\overrightarrow{W_y}\)
+                    </td>
+                    
+                    <td style="width:25%"><b style="color:yellow">Weight:</b> \(\overrightarrow{W}\) = <span id="weightForce"></span> N;
+                        \(\overrightarrow{W_x}\) = <span id="weightXForce"></span> N;
+                        \(\overrightarrow{W_y}\) = <span id="weightYForce"></span> N
+                    </td>
+                    <td style="width:25%"><b style="color:yellow">Friction:</b> \(\overrightarrow{Fr}\) = <span id="frictionForce"></span> N;
+                        <b style="color:yellow">Normal:</b> \(\overrightarrow{N}\) = <span id="normalForce"></span> N
+                    </td>
                 </tr>
             </table>
             
@@ -161,7 +159,7 @@
 
         function onResizePanels() {
             informations.style.left = "5%";//(window.innerWidth/) + "px";
-            informations.style.top = "5%";
+            informations.style.top = "10%";
             adjustForcesPanel();
             if(window.width < 450){
                 forcesCanvas.width = "500px";

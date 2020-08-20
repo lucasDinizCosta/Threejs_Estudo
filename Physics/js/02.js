@@ -373,8 +373,8 @@ function init() {
       updateInstructionPanel(gravity, this);
     },
   };
-  controller = controls;            //Reference to out of the init function
   controls.startSimulation();
+
   // Don't active the first simulation
   document.getElementById("alertPanel").style.display = "block";
   this.animation = false;
@@ -383,7 +383,7 @@ function init() {
     // Adjust values of the Instructions Panel
     document.getElementById("gravityCoefficient").innerHTML = gravity * -1;
     document.getElementById("frictionCoefficient").innerHTML = controls.frictionBox;
-    document.getElementById("thetaAngleDegree").innerHTML = controls.angleOldRamp;
+    document.getElementById("thetaAngleDegree").innerHTML = controls.angleRamp;
     document.getElementById("thetaAngleRadians").innerHTML = THREE.MathUtils.degToRad(controls.angleRamp).toFixed(3);
     document.getElementById("thetaAngleSin").innerHTML = Math.sin(THREE.MathUtils.degToRad(controls.angleRamp)).toFixed(3);
     document.getElementById("thetaAngleCos").innerHTML = Math.cos(THREE.MathUtils.degToRad(controls.angleRamp)).toFixed(3);
