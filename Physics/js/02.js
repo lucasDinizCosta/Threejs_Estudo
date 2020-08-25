@@ -39,8 +39,8 @@ function init() {
   scene.add(new THREE.AmbientLight(0x0393939));
 
   // Axis
-  var axis = new THREE.AxisHelper(300);
-  scene.add(axis);
+  /*var axis = new THREE.AxisHelper(300);
+  scene.add(axis);*/
 
   var textureLoader = new THREE.TextureLoader();
   var sideBound = 5;            // BoxSize
@@ -280,16 +280,9 @@ function init() {
       block_material, this.massBox);     //geometry, material and mass
       this.mesh.castShadow = true;
       this.mesh.receiveShadow = true;
-      if(this.ramp.length != 0){
-        this.mesh.position.x = this.startPosition.x;
-        this.mesh.position.y = this.startPosition.y;//(this.startPosition.y * 16.47)/15;
-        this.mesh.position.z = this.startPosition.z;//(this.startPosition.z * -9.5)/-12.99; //-9.5;
-      }
-      else{
-        this.mesh.position.x = this.startPosition.x;
-        this.mesh.position.y = this.startPosition.y;//16.47;
-        this.mesh.position.z = this.startPosition.z;//-9.5;
-      }
+      this.mesh.position.x = this.startPosition.x;
+      this.mesh.position.y = this.startPosition.y;//16.47;
+      this.mesh.position.z = this.startPosition.z;//-9.5;
       this.mesh.rotation.set(0, 0, 0);
       this.mesh.rotation.y = THREE.MathUtils.degToRad(90);
       this.mesh.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
@@ -319,18 +312,11 @@ function init() {
       scene.add(this.groupForces);
     },
 
-    resetSimulation: function(){
-      //this.createRamp();           // Recria o objeto pois a fisica é mudada
-      //this.createBox();           // Recria o objeto pois a fisica é mudada
-      
+    startSimulation: function(){
       // You may also want to cancel the object's velocity
       this.mesh.setLinearVelocity(new THREE.Vector3(0, 0, 0));
       this.mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));
 
-      /*this.mesh.position.x = this.startPosition.x;
-      this.mesh.position.y = (this.startPosition.y * 16.47)/15;
-      this.mesh.position.z = (this.startPosition.z * -9.5)/-12.99; //-9.5;
-      */
       this.mesh.position.x = this.startPosition.x;
       this.mesh.position.y = this.startPosition.y;
       this.mesh.position.z = this.startPosition.z;
@@ -350,15 +336,6 @@ function init() {
       this.animation = true;
     },
 
-    startSimulation: function(){
-      this.createRamp();           // Recria o objeto pois a fisica é mudada
-      this.createBox();           // Recria o objeto pois a fisica é mudada
-      this.updateDates();
-
-      document.getElementById("alertPanel").style.display = "none";
-      this.animation = true;
-    },
-
     updateForces: function(){
       if(this.mesh != null){
         this.groupForces.position.x = this.mesh.position.x; 
@@ -368,16 +345,16 @@ function init() {
     },
 
     updateDates: function(){
-      //this.angleOldRamp = this.angleRamp;
-      //this.frictionOldBox = this.frictionBox;
       updateInstructionPanel(gravity, this);
     },
   };
+  controls.createRamp();
+  controls.createBox();
+  controls.updateDates();
   controls.startSimulation();
 
   // Don't active the first simulation
   document.getElementById("alertPanel").style.display = "block";
-  this.animation = false;
 
   function updateInstructionPanel(gravity, controls){
     // Adjust values of the Instructions Panel
@@ -407,20 +384,18 @@ function init() {
   objectMenu.open();
   //objectMenu.add(controls, "animation").name("Animation");
   objectMenu.add(controls, "frictionBox", 0, 1, 0.01).name("Friction").onChange(function(e){
+    controls.animation = false;
+    //document.getElementById("alertPanel").style.display = "block";
     controls.createRamp();           // Recria o objeto pois a fisica é mudada
     controls.createBox();           // Recria o objeto pois a fisica é mudada
     controls.updateDates();
-
-    document.getElementById("alertPanel").style.display = "block";
-    controls.animation = false;
   });
   objectMenu.add(controls, "angleRamp", 10, 50, 2).name("Angle (°)").onChange(function(e){
+    controls.animation = false;
+    //document.getElementById("alertPanel").style.display = "block";
     controls.createRamp();           // Recria o objeto pois a fisica é mudada
     controls.createBox();           // Recria o objeto pois a fisica é mudada
     controls.updateDates();
-
-    document.getElementById("alertPanel").style.display = "block";
-    controls.animation = false;
   });
   objectMenu.add(controls.panels, "informations").onChange(function(e){
     if(controls.panels.informations){
@@ -431,8 +406,7 @@ function init() {
       controls.informations.style.display = "none";
     }
   }).name("Informations");
-  objectMenu.add(controls, "resetSimulation").name("Reset Simulation");     // Attribute a different name to the button
-  objectMenu.add(controls, "startSimulation").name("Start Simulation");
+  objectMenu.add(controls, "startSimulation").name("Start");
 
   // Update GUI Elements
   function updateDisplay(gui) {
@@ -450,8 +424,6 @@ function init() {
 
   window.onload = function(){
     document.getElementById('close').onclick = function(){
-        /*this.parentNode.parentNode.parentNode
-        .removeChild(this.parentNode.parentNode);*/
         this.parentNode.style.display = "none";
         return false;
     };
@@ -475,12 +447,9 @@ function init() {
     controls.updateForces();
     
     if(controls.animation){
-      
-      scene.simulate(undefined, 2);      //scene.simulate();
+      scene.simulate(undefined, 2);     // Fix the error that occurrent when change parameter the block
+                                        // start with an initial speed 
     }
-    //controls.updateForces();
-    // scene.simulate();
-    //scene.simulate(undefined, 2); //scene.simulate();
     renderer.render(scene, camera);
     requestAnimationFrame(render);
   }
@@ -493,6 +462,9 @@ function init() {
 function setRenderer(){
   var renderer = new THREE.WebGLRenderer({antialias: true});
   renderer.setClearColor(0x000);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMapSoft = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setPixelRatio(devicePixelRatio);
   renderer.setSize(innerWidth, innerHeight);
   document.body.appendChild(renderer.domElement);
