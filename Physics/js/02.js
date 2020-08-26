@@ -75,7 +75,6 @@ function init() {
 
     // Paineis
     informations: document.getElementById("informations"),
-    canvasForces: document.getElementById("forces-canvas-box"),
     panels: {
       informations: false,
     },
@@ -330,7 +329,7 @@ function init() {
       this.mesh.__dirtyPosition = true;
       this.mesh.__dirtyRotation = true;
 
-      updateDisplay(gui);           // Update GUI
+      //updateDisplay(gui);           // Update GUI
 
       document.getElementById("alertPanel").style.display = "none";
       this.animation = true;
@@ -354,7 +353,7 @@ function init() {
   controls.startSimulation();
 
   // Don't active the first simulation
-  document.getElementById("alertPanel").style.display = "block";
+  //document.getElementById("alertPanel").style.display = "block";
 
   function updateInstructionPanel(gravity, controls){
     // Adjust values of the Instructions Panel
@@ -382,7 +381,6 @@ function init() {
   // Criando atributos do menu lateral
   var objectMenu = gui.addFolder("Menu");
   objectMenu.open();
-  //objectMenu.add(controls, "animation").name("Animation");
   objectMenu.add(controls, "frictionBox", 0, 1, 0.01).name("Friction").onChange(function(e){
     controls.animation = false;
     //document.getElementById("alertPanel").style.display = "block";
