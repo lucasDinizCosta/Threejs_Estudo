@@ -121,7 +121,7 @@
                 <tr>
                     <th colspan="1">Data</th>
                 </tr>
-                <tr style="">
+                <tr>
                     <td rowspan= "3" style="text-align: justify"><b style="color:yellow">Angle:</b> \(\theta\) = <span id="thetaAngleDegree"></span>° 
                         = <span id="thetaAngleRadians"></span> rad;
                         \(\sin(\theta)\) = <span id="thetaAngleSin"></span>;
@@ -143,12 +143,15 @@
     </div>
 
     <div id="alertPanel" style="position: absolute; left: 10%; bottom: 10%; width: 80%; height: 15%;
-    background-color: rgba(7, 7, 9, 0.8); display: block; z-index: 1002; border: 2px solid #000 ">
+    background-color: rgba(7, 7, 9, 0.8); display: flex; z-index: 1002; border: 2px solid #000 ">
         <span id='close'>X</span>
+        <div style = "margin-top: 20px">
         <p id="alertPanelContent" style="font-size: 1.3em; text-align: center; color: #ffffff; 
-        z-index: 1003; width: 100%; display: inline-block; word-wrap: break-word;">
+        z-index: 1003; width: 95%; height: 90%;
+        word-wrap: break-word;">
             Press the "Start" button to run the model 
         </p>
+        </div>
     </div>
 
     <script type="text/javascript"> 
@@ -177,7 +180,7 @@
                 informations.style.width = "90%";
                 informations.style.height = "90%";
                 alertPanelContent.style.fontSize = "6vh";
-                alertPanel.style.height = "20%";
+                alertPanel.style.height = "15%";
             }
             else{
                 if(window.innerWidth < 1000){
@@ -187,7 +190,7 @@
                         if(window.innerWidth < 500){
                             informations.style.height = "80%";
                             alertPanel.style.height = "15%";
-                            alertPanelContent.style.fontSize = "4.5vw";
+                            alertPanelContent.style.fontSize = "6vw";
                         }
                         else{
                             informations.style.height = "50%";
