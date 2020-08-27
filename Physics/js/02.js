@@ -426,7 +426,8 @@ function init() {
         return false;
     };
     document.getElementById('close2').onclick = function(){
-        this.parentNode.parentNode.style.display = "none";
+        //this.parentNode.parentNode.parentNode.parentNode.style.display = "none";
+        controls.informations.style.display = "none";
         controls.panels.informations = false;
         updateDisplay(gui);
         return false;

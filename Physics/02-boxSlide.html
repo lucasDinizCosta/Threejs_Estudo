@@ -84,21 +84,23 @@
 </head>
 
 <body>
-    <div id="informations" style="position: absolute; width: 70%; height: 50%;
-    background-color: rgba(7, 7, 9, 0.8); display: flex; z-index: 1000; border: 2px solid #000 ">
+    <div id="informations" style="position: absolute; width: 65%; height: 50%;
+    background-color: rgba(7, 7, 9, 0.8); display: flex; z-index: 1000; border: 2px solid #000 
+    ">
         <div id="content" style="color: #ffffff; 
-        z-index: 1001; width: 100%; ">
-            <span id='close2'>X</span>
-            <table>
+        z-index: 1001; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden;">
+            
+            <table >
                 <tr>
-                    <th colspan="3" style="font-size: 1.3em; text-align: center;">Informations</th>
+                    <th colspan="1" style="font-size: 1.3em; text-align: center;">
+                        Informations <span id='close2'>X</span>
+                    </th>
                 </tr>
                 <tr>
                   <th colspan="1">Equations</th>
-                  <th colspan="2">Data</th>
                 </tr>
                 <tr>
-                    <td style="width:40%">
+                    <td style="width:100%; text-align: justify">
                         <b style="color:yellow">Weight:</b> \(\overrightarrow{W}\) = \(m * \overrightarrow{G} \); 
                         \(\overrightarrow{W_x}\) = \(\overrightarrow{W} * sin(\theta) \);
                         \(\overrightarrow{W_y}\) = \(\overrightarrow{W} * cos(\theta) \);
@@ -117,8 +119,12 @@
                         display: inline-block;"></div>
                         <p style="display: inline-block;"><b>Friction</b></p>
                     </td>
-
-                    <td style="width:60%"><b style="color:yellow">Angle:</b> \(\theta\) = <span id="thetaAngleDegree"></span>° 
+                </tr>
+                <tr>
+                    <th colspan="1">Data</th>
+                </tr>
+                <tr style="">
+                    <td rowspan= "3" style="text-align: justify"><b style="color:yellow">Angle:</b> \(\theta\) = <span id="thetaAngleDegree"></span>° 
                         = <span id="thetaAngleRadians"></span> rad;
                         \(\sin(\theta)\) = <span id="thetaAngleSin"></span>;
                         \(\cos(\theta)\) = <span id="thetaAngleCos"></span>;
@@ -166,6 +172,26 @@
         function onResizePanels() {
             informations.style.left = "5%";//(window.innerWidth/) + "px";
             informations.style.top = "10%";
+
+            if(window.innerHeight < 500){           // Horizontal screen mobile
+                informations.style.width = "90%";
+                informations.style.height = "80%";
+            }
+            else{
+                if(window.innerWidth < 1000){
+                    informations.style.width = "90%";
+                    if(window.innerWidth < 500){
+                        informations.style.height = "80%";
+                    }
+                    else{
+                        informations.style.height = "50%";
+                    }
+                }
+                else{
+                    informations.style.width = "65%";
+                    informations.style.height = "50%";
+                }
+            } 
         }
 
         /*function adjustForcesPanel(){
