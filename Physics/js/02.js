@@ -353,7 +353,7 @@ function init() {
   controls.startSimulation();
 
   // Don't active the first simulation
-  //document.getElementById("alertPanel").style.display = "block";
+  document.getElementById("alertPanel").style.display = "block";
 
   function updateInstructionPanel(gravity, controls){
     // Adjust values of the Instructions Panel

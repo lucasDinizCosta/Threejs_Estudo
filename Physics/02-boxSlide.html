@@ -85,7 +85,7 @@
 
 <body>
     <div id="informations" style="position: absolute; width: 65%; height: 50%;
-    background-color: rgba(7, 7, 9, 0.8); display: flex; z-index: 1000; border: 2px solid #000 
+    background-color: rgba(7, 7, 9, 0.8); display: none; z-index: 1000; border: 2px solid #000 
     ">
         <div id="content" style="color: #ffffff; 
         z-index: 1001; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden;">
@@ -142,11 +142,11 @@
         </div>
     </div>
 
-    <div id="alertPanel" style="position: absolute; left: 10%; bottom: 40%; width: 80%; height: 15%;
+    <div id="alertPanel" style="position: absolute; left: 10%; bottom: 10%; width: 80%; height: 15%;
     background-color: rgba(7, 7, 9, 0.8); display: block; z-index: 1002; border: 2px solid #000 ">
         <span id='close'>X</span>
-        <p style="font-size: 3vw; text-align: center; color: #ffffff; 
-        z-index: 1003; width: 100%; overflow: none;">
+        <p id="alertPanelContent" style="font-size: 1.3em; text-align: center; color: #ffffff; 
+        z-index: 1003; width: 100%; display: inline-block; word-wrap: break-word;">
             Press the "Start" button to run the model 
         </p>
     </div>
@@ -164,6 +164,8 @@
         //tela.width = 100%;
 
         var informations = document.getElementById("informations");
+        var alertPanelContent =  document.getElementById("alertPanelContent");
+        var alertPanel =  document.getElementById("alertPanel");
 
         onResizePanels();
 
@@ -174,20 +176,33 @@
             if(window.innerHeight < 500){           // Horizontal screen mobile
                 informations.style.width = "90%";
                 informations.style.height = "90%";
+                alertPanelContent.style.fontSize = "6vh";
+                alertPanel.style.height = "20%";
             }
             else{
                 if(window.innerWidth < 1000){
                     informations.style.width = "90%";
-                    if(window.innerWidth < 500){
-                        informations.style.height = "80%";
+                    if(window.innerWidth < 770){
+                        alertPanelContent.style.fontSize = "1.3em";
+                        if(window.innerWidth < 500){
+                            informations.style.height = "80%";
+                            alertPanel.style.height = "15%";
+                            alertPanelContent.style.fontSize = "4.5vw";
+                        }
+                        else{
+                            informations.style.height = "50%";
+                            alertPanelContent.style.fontSize = "4.5vw";
+                        }
                     }
                     else{
+                        alertPanelContent.style.fontSize = "3.3vw";
                         informations.style.height = "50%";
                     }
                 }
                 else{
                     informations.style.width = "65%";
                     informations.style.height = "50%";
+                    alertPanelContent.style.fontSize = "40px";
                 }
             } 
         }
