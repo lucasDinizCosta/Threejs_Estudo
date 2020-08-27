@@ -16,7 +16,7 @@ function init() {
   orbitControls.minDistance = 25;
   orbitControls.maxDistance = 100;
   var clock = new THREE.Clock();
-  var scene = new Physijs.Scene();//({reportSize: 5, fixedTimeStep: 1 / 60});
+  var scene = new Physijs.Scene({reportSize: 4, fixedTimeStep: 1 / 60});
   var gravity = -9.8;
   scene.setGravity(new THREE.Vector3(0, gravity, 0));
   
@@ -446,8 +446,9 @@ function init() {
     controls.updateForces();
     
     if(controls.animation){
-      scene.simulate(undefined, 2);     // Fix the error that occurrent when change parameter the block
+      //scene.simulate(undefined, 2);     // Fix the error that occurrent when change parameter the block
                                         // start with an initial speed 
+      scene.simulate(undefined, 2);
     }
     renderer.render(scene, camera);
     requestAnimationFrame(render);
