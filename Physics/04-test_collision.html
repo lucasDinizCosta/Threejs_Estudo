@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Oimo.js Collision</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=11" />
+
+<script type="text/javascript" charset="UTF-8" src="libs/three.js"></script>
+<script type="text/javascript" charset="UTF-8" src="libs/three/controls/OrbitControls.js"></script>
+<script type="text/javascript" charset="UTF-8" src="libs/other/oimojs/oimo.js"></script>
+
+<script type="text/javascript" charset="UTF-8" src="libs/three/geometries/ConvexGeometry.js"></script>    <!-- Biblioteca para trabalhar com Geometria convexa-->
+<script type="text/javascript" charset="UTF-8" src="libs/three/geometries/QuickHull.js"></script>
+
+<script type="text/javascript" src="libs/util/Stats.js"></script>
+<script type="text/javascript" src="libs/util/dat.gui.js"></script>
+
+<script type="text/javascript" src="libs/util.js"></script>
+
+<!-- Math Equations -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js"></script>
+
+<link rel="stylesheet" href="libs/css/default.css">
+
+<style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        table, th, td {
+            border: 2px solid white;
+            border-collapse: collapse;
+            padding: 2px;
+        }
+        table{
+            /**border-spacing: 5px;*/
+            width:100%;
+        }
+        #close {
+            float:right;
+            display:inline-block;
+            padding:2px 5px;
+            background:#ccc;
+        }
+
+        #close:hover {
+            float:right;
+            display:inline-block;
+            padding:2px 5px;
+            background:#ccc;
+            color:#fff;
+        }
+        #close2 {
+            float:right;
+            display:inline-block;
+            padding:2px 5px;
+            background:#ccc;
+        }
+
+        #close2:hover {
+            float:right;
+            display:inline-block;
+            padding:2px 5px;
+            background:#ccc;
+            color:#fff;
+        }
+        
+        .square {
+            height: 15px;
+            width: 15px;
+            vertical-align: middle;
+            background-color: #FFF;
+            border: 1px solid #555;
+            margin-top: 5px;
+            margin-left: 5px;
+            margin-bottom: 5px;
+            margin-right: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="webgl-output" ></div>
+    <div id="informations" style="position: absolute; width: 65%; height: 50%;
+    display: none; z-index: 1000; ">
+        <div id="content" style="color: #ffffff;
+        z-index: 1001; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden;">
+            <table style="background-color: rgba(7, 7, 9, 0.8); border: 2px solid #000 ">
+                <tr>
+                    <th colspan="1" style="font-size: 1.3em; text-align: center;">
+                        Informations <span id='close2'>X</span>
+                    </th>
+                </tr>
+                <tr>
+                  <th colspan="1">Equations</th>
+                </tr>
+                <tr>
+                    <td style="width:100%; text-align: justify">
+                        <b style="color:yellow">Weight:</b> \(\overrightarrow{W}\) = \(m * \overrightarrow{G} \); 
+                        \(\overrightarrow{W_x}\) = \(\overrightarrow{W} * sin(\theta) \);
+                        \(\overrightarrow{W_y}\) = \(\overrightarrow{W} * cos(\theta) \);
+                        <b style="color:yellow">Friction:</b> \(\overrightarrow{Fr}\) = \(\mu * \overrightarrow{N} \) ; 
+                        <b style="color:yellow">Normal:</b> \(\overrightarrow{N}\) = \(\overrightarrow{W_y}\) ;
+                        <b style="color:yellow">Forces:</b>
+                        <div class = "square" style="background-color:rgb(255,0,0); 
+                        border: 2px solid #000; display: inline-block;"></div>
+                        <p style="display: inline-block;"><b>Weight</b></p>
+                        <div class = "square" style="background-color:rgb(0,255,0);
+                        display: inline-block;"></div>
+                        <p style="display: inline-block;"><b>Normal</b></p>
+                        <div class = "square" style="background-color:rgb(0,0,255); 
+                        display: inline-block;"></div>
+                        <p style="display: inline-block;"><b>Friction</b></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="1">Data</th>
+                </tr>
+                <tr>
+                    <td rowspan= "3" style="text-align: justify"><b style="color:yellow">Angle:</b> \(\theta\) = <span id="thetaAngleDegree"></span>° 
+                        = <span id="thetaAngleRadians"></span> rad;
+                        \(\sin(\theta)\) = <span id="thetaAngleSin"></span>;
+                        \(\cos(\theta)\) = <span id="thetaAngleCos"></span>;
+                        \(\tan(\theta)\) = <span id="thetaAngleTan"></span>;
+                        <b style="color:yellow">Mass:</b> m = 1.0 Kg; 
+                        <b style="color:yellow">Gravity:</b> \(\overrightarrow{G}\) = <span id="gravityCoefficient"></span> m/\(s^2\);
+                        <b style="color:yellow">Friction Coefficient:</b> \(\mu\) = <span id="frictionCoefficient"></span>;
+                        <b style="color:yellow">Friction:</b> \(\overrightarrow{Fr}\) = <span id="frictionForce"></span> N;
+                        <b style="color:yellow">Weight:</b> \(\overrightarrow{W}\) = <span id="weightForce"></span> N;
+                        \(\overrightarrow{W_x}\) = <span id="weightXForce"></span> N;
+                        \(\overrightarrow{W_y}\) = <span id="weightYForce"></span> N;
+                        <b style="color:yellow">Normal:</b> \(\overrightarrow{N}\) = <span id="normalForce"></span> N
+                    </td>
+                </tr>
+            </table>
+            
+        </div>
+    </div>
+
+    <div id="alertPanel" style="position: absolute; left: 10%; bottom: 10%; width: 80%; height: 15%;
+    background-color: rgba(7, 7, 9, 0.8); display: flex; z-index: 1002; border: 2px solid #000 ">
+        <span id='close'>X</span>
+        <div style = "margin-top: 20px">
+            <p id="alertPanelContent" style="font-size: 1.3em; text-align: center; color: #ffffff; 
+            z-index: 1003; width: 95%; height: 90%;
+            word-wrap: break-word;">
+                Press the "Start" button to run the model 
+            </p>
+        </div>
+    </div>
+
+    <script>
+        var informations = document.getElementById("informations");
+        var alertPanelContent =  document.getElementById("alertPanelContent");
+        var alertPanel =  document.getElementById("alertPanel");
+
+        window.onload = function(){
+            document.getElementById('close').onclick = function(){
+                this.parentNode.style.display = "none";
+                return false;
+            };
+            document.getElementById('close2').onclick = function(){
+                //this.parentNode.parentNode.parentNode.parentNode.style.display = "none";
+                controls.informations.style.display = "none";
+                controls.panels.informations = false;
+                updateDisplay(gui);
+                return false;
+            };
+        };
+
+        function onResizePanels() {
+            informations.style.left = "5%";
+            informations.style.top = "50px";
+
+            if(window.innerHeight < 500){           // Horizontal screen mobile
+                informations.style.width = "90%";
+                informations.style.height = "90%";
+                alertPanelContent.style.fontSize = "6vh";
+                alertPanel.style.height = "15%";
+            }
+            else{
+                if(window.innerWidth < 1000){
+                    informations.style.width = "90%";
+                    if(window.innerWidth < 770){
+                        alertPanelContent.style.fontSize = "1.3em";
+                        if(window.innerWidth < 500){
+                            informations.style.height = "90%";
+                            alertPanel.style.height = "15%";
+                            alertPanelContent.style.fontSize = "6vw";
+                        }
+                        else{
+                            informations.style.height = "90%";
+                            alertPanelContent.style.fontSize = "4.5vw";
+                        }
+                    }
+                    else{
+                        alertPanelContent.style.fontSize = "3.3vw";
+                        informations.style.height = "90%";
+                    }
+                }
+                else{
+                    informations.style.width = "65%";
+                    informations.style.height = "50%";
+                    alertPanelContent.style.fontSize = "40px";
+                }
+            } 
+        }
+
+        onResizePanels();
+
+        var isMobile = false;
+        var antialias = true;
+
+        // use the defaults
+        var stats, gui;
+        var clock = new THREE.Clock();
+
+        // three var
+        var camera, scene, light, renderer, canvas, orbitControls, controls;
+        var meshs = [];
+        var textureLoader = new THREE.TextureLoader();
+
+        //oimo var
+        var world = null;
+        var collisionGroupes = {};
+        var bodys = null;
+        var infos;
+        var type=1;
+
+        init();
+        loop();
+
+        function init() {
+
+            var n = navigator.userAgent;
+            if (n.match(/Android/i) || n.match(/webOS/i) || n.match(/iPhone/i) || n.match(/iPad/i) || n.match(/iPod/i) || n.match(/BlackBerry/i) || n.match(/Windows Phone/i)){ isMobile = true;  antialias = false; document.getElementById("MaxNumber").value = 200; }
+
+            //infos = document.getElementById("info");
+            bodys = [];
+
+            // init renderer
+            renderer = new THREE.WebGLRenderer({
+                antialias: antialias,
+                alpha: true,
+                precision: "mediump",
+            });
+            renderer.setClearColor(0x000);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMapSoft = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.domElement.style.position = 'absolute';
+            renderer.domElement.style.top = '0px';
+            renderer.domElement.style.left = '0px';
+            renderer.setPixelRatio(window.devicePixelRatio); //Improve Ratio of pixel in function of the of device
+            renderer.setSize(window.innerWidth, window.innerHeight); //640, 480
+
+            // Adiciona a saída do renderizador para um elemento da página HTML
+            document.getElementById("webgl-output").appendChild(renderer.domElement);
+            
+            //camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
+            camera = initCamera(new THREE.Vector3(70, 20, 0));
+            //camera.position.set( 0, 160, 400 );
+
+            orbitControls = new THREE.OrbitControls( camera, renderer.domElement);
+            orbitControls.target.set(0, 0, 0);
+            //orbitControls.update();
+            orbitControls.minDistance = 25;
+            orbitControls.maxDistance = 100;
+
+            scene = new THREE.Scene();
+
+            // use the defaults
+            stats = initStats();
+            gui = new dat.GUI();
+
+            // Axis
+            var axis = new THREE.AxisHelper(300);
+            scene.add(axis);
+
+            var spotLight = new THREE.SpotLight(0xffffff);
+            spotLight.position.set(0, 40, 70);
+            spotLight.shadow.mapSize.width = 2048;
+            spotLight.shadow.mapSize.height = 2048;
+            spotLight.shadow.camera.fov = 20;
+            spotLight.castShadow = true;
+            spotLight.decay = 2;
+            spotLight.penumbra = 0.05;
+            spotLight.name = "spotLight";
+            scene.add(spotLight);
+
+            var ambientLight = new THREE.AmbientLight(0x343434);
+            ambientLight.name = "ambientLight";
+            scene.add(ambientLight);
+            scene.add(new THREE.AmbientLight(0x0393939));
+
+            var sideBound = 5;            // BoxSize
+
+            // setup controls
+            controls = {
+                angleRamp: 30,                              // Degrees of inclination of the ramp
+                animation: true,
+                frictionRamp: 0.9,
+                frictionBox: 0.5,
+                gravityX: 0,
+                gravityY: -9.8,
+                gravityZ: 0,
+                groupForces: null,
+                massBox: 1, 
+                mesh: null,
+                rampComponents: [],
+                widthRamp: 30,
+                restitutionRamp: 0.3,
+                startPosition: {
+                    x: 0,
+                    y: 0,
+                    z: 0,
+                },
+                startOldPosition: {
+                    x: 0,
+                    y: 0,
+                    z: 0,
+                },
+                visibleBox: true,
+                visibleAxis: false,
+
+                // Paineis
+                informations: document.getElementById("informations"),
+                panels: {
+                    informations: false,
+                },
+
+                createRamp: function(){
+                    for(let i = 0; i < this.rampComponents.length; i++){
+                        scene.remove(this.rampComponents[i]);         // Remove old version
+                    }
+                    this.rampComponents = [];
+
+                    var ramp_material = new THREE.MeshStandardMaterial({
+                        map: textureLoader.load('assets/textures/general/bathroom.jpg'),
+                        side: THREE.DoubleSide
+                    });
+
+                    var config = [
+                        1, // The density of the shape.
+                        this.frictionRamp, // The coefficient of friction of the shape.
+                        this.restitutionRamp, // The coefficient of restitution of the shape.
+                        //1, // The bits of the collision groups to which the shape belongs.
+                        //0xffffffff // The bits of the collision groups with which the shape collides.
+                    ];
+
+                    // Adjust the texture
+                    ramp_material.map.repeat.set(3, 3);
+                    ramp_material.map.wrapS = THREE.RepeatWrapping;
+                    ramp_material.map.wrapT = THREE.RepeatWrapping;
+                    
+                    var ramp = new THREE.Mesh(new THREE.BoxGeometry(this.widthRamp, 0.1, 20),  ramp_material);
+                    ramp.castShadow = true;
+                    ramp.receiveShadow = true;
+
+                    let altura = Math.sin(this.angleRamp * (Math.PI/180)) * this.widthRamp;
+                    let fixDistRamp = 0.5;
+                    ramp.position.y = altura/2 + fixDistRamp;    //  8
+
+                    //ramp.rotateY();
+                    ramp.rotation.set(0, THREE.MathUtils.degToRad(90), THREE.MathUtils.degToRad(this.angleRamp));
+                    //ramp.rotation.y = THREE.MathUtils.degToRad(90);
+                    //ramp.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
+                    this.rampComponents.push(ramp);
+                    ramp.body = world.add({
+                        size:[this.widthRamp, 0.1, 20],
+                        pos:[ramp.position.x, ramp.position.y, ramp.position.z],
+                        rot:[ramp.rotation.x, ramp.rotation.y, ramp.rotation.z],
+                        //move: false,
+                        //sleeping: true,
+                        config: config,
+                    });
+                    ramp.body.mesh = ramp;
+                    bodys.push(ramp.body);
+                    scene.add(ramp);
+
+                    var wall_material = new THREE.MeshStandardMaterial({
+                        map: textureLoader.load('assets/textures/general/bathroom.jpg'),
+                        side: THREE.DoubleSide
+                    });
+                    /*var wall_material = Physijs.createMaterial(
+                        new THREE.MeshStandardMaterial(
+                        {map: textureLoader.load('assets/textures/general/bathroom.jpg'),
+                        side: THREE.DoubleSide
+                        }
+                        ),
+                        this.frictionRamp, this.restitutionRamp
+                    ); //Friction and restitution
+                    */
+
+                    // Adjust the texture
+                    wall_material.map.repeat.set(3, 3);
+                    wall_material.map.wrapS = THREE.RepeatWrapping;
+                    wall_material.map.wrapT = THREE.RepeatWrapping;
+
+                    var wall_sides_material = new THREE.MeshBasicMaterial({
+                        transparent: true, opacity: 0.4, color: 0xcFFFFFF, side: THREE.DoubleSide
+                    });
+
+                    /*var wall_sides_material = Physijs.createMaterial(new THREE.MeshBasicMaterial({
+                        transparent: true, opacity: 0.4, color: 0xcFFFFFF, side: THREE.DoubleSide
+                        }),
+                        this.frictionRamp, this.restitutionRamp
+                    ); //Friction and restitution
+                    */
+                    var backWall = new THREE.Mesh(new THREE.BoxGeometry(20, altura, 0.1), wall_material);
+
+                    //var backWall = new Physijs.BoxMesh(new THREE.BoxGeometry(20, altura, 0.1), wall_material, 0);
+                    backWall.position.z = - ((altura - altura/2) / Math.tan(this.angleRamp * (Math.PI/180)));
+                    backWall.position.y = altura/2 + fixDistRamp;
+                    this.rampComponents.push(backWall);
+                    scene.add(backWall);
+
+                    backWall.body = world.add({size:[20, altura, 0.1],
+                        pos:[backWall.position.x, backWall.position.y, backWall.position.z],
+                        rot:[backWall.rotation.x, backWall.rotation.y, backWall.rotation.z],
+                        move: false,
+                        config:config,
+                    });
+
+                    backWall.body.mesh = backWall;
+                    bodys.push(backWall.body);
+
+                    // Posicao inicial
+                    this.startPosition.x = 0;
+                    this.startPosition.y = backWall.position.y * 2 + Math.sqrt(sideBound);
+                    this.startPosition.z = backWall.position.z + sideBound/2;
+
+                    // Calculando posicao inicial do bloco
+                    let centerPointRamp = new THREE.Vector3(ramp.position.x, ramp.position.y, ramp.position.z);
+                    let heightPointRamp = new THREE.Vector3(backWall.position.x, altura, backWall.position.z);
+                    let mediumPointRamp = new THREE.Vector3(backWall.position.x, ramp.position.y, backWall.position.z);
+                    let mediumPointGroundRamp = new THREE.Vector3(backWall.position.x, 0, backWall.position.z);
+
+                    // Calculate the unit vector of direction of the center ramp to the height point
+                    let unitVector = {
+                        component: new THREE.Vector3(0, 0, 0),
+                        module: 0,
+                    };
+                    unitVector.component.x =  centerPointRamp.x - heightPointRamp.x;
+                    unitVector.component.y =  centerPointRamp.y - heightPointRamp.y;
+                    unitVector.component.z =  centerPointRamp.z - heightPointRamp.z;
+                    unitVector.module = Math.sqrt(unitVector.component.x * unitVector.component.x + 
+                    unitVector.component.y * unitVector.component.y + 
+                    unitVector.component.z + unitVector.component.z);
+                    
+                    // Unitary Vector
+                    unitVector.component.x = unitVector.component.x / unitVector.module;
+                    unitVector.component.y = unitVector.component.y / unitVector.module;
+                    unitVector.component.z = unitVector.component.z / unitVector.module;
+
+                    let tempStartPosition = new THREE.Vector3(
+                        heightPointRamp.x + unitVector.component.x * (unitVector.module/2),
+                        heightPointRamp.y + unitVector.component.y * (unitVector.module/2), 
+                        heightPointRamp.z + unitVector.component.z * (unitVector.module/2)
+                    );
+
+                    // Calculating the start position of the block
+                    // Calculate the new unit vector of tempStartPosition to mediumPointRamp
+                    let unitVector2 = {
+                        component: new THREE.Vector3(0, 0, 0),
+                        module: 0,
+                    };
+                    unitVector2.component.x = tempStartPosition.x - mediumPointGroundRamp.x;
+                    unitVector2.component.y = tempStartPosition.y - mediumPointGroundRamp.y;
+                    unitVector2.component.z = tempStartPosition.z - mediumPointGroundRamp.z;
+                    unitVector2.module = Math.sqrt(unitVector2.component.x * unitVector2.component.x + 
+                    unitVector2.component.y * unitVector2.component.y + 
+                    unitVector2.component.z + unitVector2.component.z);
+                    
+                    // Unitary Vector
+                    unitVector2.component.x = unitVector2.component.x / unitVector2.module;
+                    unitVector2.component.y = unitVector2.component.y / unitVector2.module;
+                    unitVector2.component.z = unitVector2.component.z / unitVector2.module;
+
+                    // Set the start position of the box
+                    if(this.angleRamp > 40){
+                        this.startPosition.x = mediumPointGroundRamp.x + 
+                        (unitVector2.component.x * ((sideBound * Math.sqrt(2))/2 + unitVector2.module));
+                        this.startPosition.y = mediumPointGroundRamp.y + 
+                        (unitVector2.component.y * Math.ceil((sideBound)/2 + 0.5 + unitVector2.module));
+                        this.startPosition.z = mediumPointGroundRamp.z + 
+                        (unitVector2.component.z * Math.ceil((sideBound)/2 + 0.5 + unitVector2.module));
+                    }
+                    else{
+                        this.startPosition.x = mediumPointGroundRamp.x + 
+                        (unitVector2.component.x * ((sideBound * Math.sqrt(2))/2 + unitVector2.module));
+                        this.startPosition.y = mediumPointGroundRamp.y + 
+                        (unitVector2.component.y * Math.ceil((sideBound)/2 + unitVector2.module));
+                        this.startPosition.z = mediumPointGroundRamp.z + 
+                        (unitVector2.component.z * Math.ceil((sideBound)/2 + unitVector2.module));
+                    }
+
+                    var groundWall = new THREE.Mesh(new THREE.BoxGeometry(20, 0.1, (altura / Math.tan(controls.angleRamp * (Math.PI/180)))), wall_material);
+                    //var groundWall = new  Physijs.BoxMesh(new THREE.BoxGeometry(20, 0.1, (altura / Math.tan(controls.angleRamp * (Math.PI/180)))), wall_material, 0);
+                    groundWall.position.y = fixDistRamp;
+                    this.rampComponents.push(groundWall);
+                    scene.add(groundWall);
+
+                    groundWall.body = world.add({size:[20, 0.1, 
+                        (altura / Math.tan(controls.angleRamp * (Math.PI/180)))],
+                        pos:[groundWall.position.x, groundWall.position.y, groundWall.position.z],
+                        rot:[groundWall.rotation.x, groundWall.rotation.y, groundWall.rotation.z],
+                        move: false,
+                        config:config,
+                    });
+
+                    groundWall.body.mesh = groundWall;
+                    bodys.push(groundWall.body);
+
+                    // Adiciona os pontos da face lateral
+
+                    // Left Side
+                    var points = [];
+                    points.push(new THREE.Vector3(10, altura + fixDistRamp, backWall.position.z));
+                    points.push(new THREE.Vector3(10, fixDistRamp, 
+                        backWall.position.z + (Math.cos(this.angleRamp * Math.PI/180) * 30)
+                    ));
+                    points.push(new THREE.Vector3(10, fixDistRamp, backWall.position.z));
+                    points.push(new THREE.Vector3(10, altura + fixDistRamp, backWall.position.z));
+
+                    // Usa os mesmos pontos para criar o objeto geometrico convexo
+                    var geometry = new THREE.ConvexGeometry( points );
+                    geometry.computeVertexNormals();                        // Computa as normais
+                    geometry.computeFaceNormals();                          // Computa as normais de cada face
+                    geometry.normalsNeedUpdate = true;
+                    var leftWall = new THREE.Mesh(geometry, wall_sides_material);
+
+                    this.rampComponents.push(leftWall);
+                    scene.add(leftWall);
+
+                    // Right Side
+                    points = [];
+                    points.push(new THREE.Vector3(-10, altura + fixDistRamp, backWall.position.z));
+                    points.push(new THREE.Vector3(-10, fixDistRamp, 
+                        backWall.position.z + (Math.cos(this.angleRamp * Math.PI/180) * 30)
+                    ));
+                    points.push(new THREE.Vector3(-10, fixDistRamp, backWall.position.z));
+                    points.push(new THREE.Vector3(-10, altura + fixDistRamp, backWall.position.z));
+
+                    // Usa os mesmos pontos para criar o objeto geometrico convexo
+                    geometry = new THREE.ConvexGeometry( points );
+                    geometry.computeVertexNormals();                        // Computa as normais
+                    geometry.computeFaceNormals();                          // Computa as normais de cada face
+                    geometry.normalsNeedUpdate = true;
+                    var rightWall = new THREE.Mesh(geometry, wall_sides_material);
+                    this.rampComponents.push(rightWall);
+                    scene.add(rightWall);
+                },
+
+                createBox: function(){
+                    if(this.mesh != null){
+                        scene.remove(this.mesh);         // Remove old version       -- Box
+                        this.mesh = null;
+                    }
+                    if(this.groupForces != null){
+                        scene.remove(this.groupForces);         // Remove old version -- GroupForces
+                        this.groupForces = null;
+                    }
+
+                    var block_material = new THREE.MeshStandardMaterial(
+                        {map: textureLoader.load('assets/textures/general/stone.jpg')}
+                    );
+                    /*var block_material = Physijs.createMaterial(
+                        new THREE.MeshStandardMaterial(
+                        {map: textureLoader.load('assets/textures/general/stone.jpg')}
+                        ),
+                        this.frictionBox, .1
+                    ); //Friction and restitution
+                    */
+                    var config = [
+                        1, // The density of the shape.
+                        this.frictionBox, // The coefficient of friction of the shape.
+                        this.restitutionBox, // The coefficient of restitution of the shape.
+                        //1, // The bits of the collision groups to which the shape belongs.
+                        //0xffffffff // The bits of the collision groups with which the shape collides.
+                    ];
+
+                    this.mesh = new THREE.Mesh(new THREE.BoxBufferGeometry(sideBound, sideBound, sideBound), block_material);
+                    this.mesh.castShadow = true;
+                    this.mesh.receiveShadow = true;
+                    this.mesh.position.x = this.startPosition.x;
+                    this.mesh.position.y = this.startPosition.y;//16.47;
+                    this.mesh.position.z = this.startPosition.z;//-9.5;
+                    this.mesh.rotation.set(0, 0, 0);
+                    this.mesh.rotation.y = THREE.MathUtils.degToRad(90);
+                    this.mesh.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
+                    scene.add(this.mesh);
+                    this.mesh.body = world.add({size:[sideBound,sideBound,sideBound],
+                        pos:[this.mesh.position.x, this.mesh.position.y, this.mesh.position.z],
+                        rot:[this.mesh.rotation.x, this.mesh.rotation.y, this.mesh.rotation.z],
+                        move: true,
+                        config:config,
+                    });
+                    this.mesh.body.mesh = this.mesh;
+                    bodys.push(this.mesh.body);
+
+                    handleCollision = function( collided_with, linearVelocity, angularVelocity ) {
+                        if(collided_with.name === "ground"){
+                            controls.groupForces.children[0].visible = false;
+                            controls.groupForces.children[1].visible = true;
+                            controls.groupForces.children[2].visible = false;
+                            //console.log("Chao");
+                        }
+                        else{
+                            controls.groupForces.children[0].visible = true;
+                            controls.groupForces.children[1].visible = false;
+                            controls.groupForces.children[2].visible = false;
+                            //console.log("Rampa");
+                        }
+                        this.collisions++;
+                    }
+                    this.mesh.collisions = 0;
+                    this.mesh.addEventListener( 'collision', handleCollision );
+
+                    this.groupForces = createForcesDiagram(controls, sideBound);             // id to identify collision and plot the forces
+                    this.groupForces.rotation.y = THREE.MathUtils.degToRad(90);
+                    scene.add(this.groupForces);
+                },
+
+                startSimulation: function(){
+                    // You may also want to cancel the object's velocity
+                    //this.mesh.setLinearVelocity(new THREE.Vector3(0, 0, 0));
+                    //this.mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));
+                    console.log(this.mesh.body);
+                    //this.mesh.body.sleeping = true;
+
+                    this.mesh.position.x = this.startPosition.x;
+                    this.mesh.position.y = this.startPosition.y;
+                    this.mesh.position.z = this.startPosition.z;
+
+                    this.mesh.rotation.set(0, 0, 0);
+                    this.mesh.rotation.y = THREE.MathUtils.degToRad(90);
+                    this.mesh.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
+
+                    this.mesh.body.resetPosition(this.startPosition.x, this.startPosition.y, this.startPosition.z);
+                    this.mesh.body.resetRotation(this.mesh.rotation.x, this.mesh.rotation.y, this.mesh.rotation.z);
+
+                    this.mesh.body.position.copy(this.mesh.position);
+                    this.mesh.body.quaternion.copy(this.mesh.quaternion);
+
+                    this.mesh.body.rotation.set(0, 0, 0);
+                    this.mesh.body.rotation.y = THREE.MathUtils.degToRad(90);
+                    this.mesh.body.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
+                    this.mesh.body
+
+                    
+
+                    //this.mesh.body.pos = [this.mesh.position.x, this.mesh.position.y, this.mesh.position.z];
+                    //this.mesh.body.rot = [this.mesh.rotation.x, this.mesh.rotation.y, this.mesh.rotation.z];
+
+                    //this.mesh.body.sleeping = false;
+                    //updateDisplay(gui);           // Update GUI
+
+                    document.getElementById("alertPanel").style.display = "none";
+                    this.animation = true;
+                },
+
+                updateForces: function(){
+                    if(this.mesh != null){
+                        this.groupForces.position.x = this.mesh.position.x; 
+                        this.groupForces.position.y = this.mesh.position.y + sideBound * 1.75; 
+                        this.groupForces.position.z = this.mesh.position.z;
+                    }
+                },
+
+                updateDates: function(){
+                    updateInstructionPanel(this.gravityY, this);
+                },
+            };
+            // physics
+
+            initOimoPhysics();
+
+            controls.createRamp();
+            controls.createBox();
+            controls.updateDates();
+            //controls.startSimulation();
+            controls.animation = false;                   //animação parada
+            createGroundAndWalls(scene);
+
+            // Don't active the first simulation
+            document.getElementById("alertPanel").style.display = "block";
+
+            function updateInstructionPanel(gravity, controls){
+                // Adjust values of the Instructions Panel
+                document.getElementById("gravityCoefficient").innerHTML = gravity * -1;
+                document.getElementById("frictionCoefficient").innerHTML = controls.frictionBox;
+                document.getElementById("thetaAngleDegree").innerHTML = controls.angleRamp;
+                document.getElementById("thetaAngleRadians").innerHTML = THREE.MathUtils.degToRad(controls.angleRamp).toFixed(3);
+                document.getElementById("thetaAngleSin").innerHTML = Math.sin(THREE.MathUtils.degToRad(controls.angleRamp)).toFixed(3);
+                document.getElementById("thetaAngleCos").innerHTML = Math.cos(THREE.MathUtils.degToRad(controls.angleRamp)).toFixed(3);
+                document.getElementById("thetaAngleTan").innerHTML = Math.tan(THREE.MathUtils.degToRad(controls.angleRamp)).toFixed(3);
+                document.getElementById("weightForce").innerHTML = (controls.massBox * Math.abs(gravity)).toFixed(2);
+                document.getElementById("weightXForce").innerHTML = ((controls.massBox * Math.abs(gravity)) 
+                * Math.sin(THREE.MathUtils.degToRad(controls.angleRamp))).toFixed(2);
+                document.getElementById("weightYForce").innerHTML = ((controls.massBox * Math.abs(gravity)) 
+                * Math.cos(THREE.MathUtils.degToRad(controls.angleRamp))).toFixed(2);
+                document.getElementById("normalForce").innerHTML = ((controls.massBox * Math.abs(gravity)) 
+                * Math.cos(THREE.MathUtils.degToRad(controls.angleRamp))).toFixed(2);
+                document.getElementById("frictionForce").innerHTML = (controls.frictionBox * (controls.massBox * Math.abs(gravity)) 
+                * Math.cos(THREE.MathUtils.degToRad(controls.angleRamp))).toFixed(2);
+            }
+
+            // Criando atributos do menu lateral
+            var objectMenu = gui.addFolder("Menu");
+            objectMenu.open();
+            objectMenu.add(controls, "frictionBox", 0, 1, 0.01).name("Friction").onChange(function(e){
+                controls.animation = false;
+                world.clear();                 
+                controls.createRamp();           // Recria o objeto pois a fisica é mudada
+                controls.createBox();           // Recria o objeto pois a fisica é mudada
+                controls.updateDates();
+            });
+            objectMenu.add(controls, "angleRamp", 10, 50, 2).name("Angle (°)").onChange(function(e){
+                controls.animation = false;
+                world.clear();                 
+                controls.createRamp();           // Recria o objeto pois a fisica é mudada
+                controls.createBox();           // Recria o objeto pois a fisica é mudada
+                controls.updateDates();
+            });
+            objectMenu.add(controls.panels, "informations").onChange(function(e){
+                if(controls.panels.informations){
+                    controls.informations.style.display = "flex";
+                    onResizePanels();                     // redraw the canvas forces
+                }
+                else{
+                    controls.informations.style.display = "none";
+                }
+            }).name("Informations");
+            objectMenu.add(controls, "startSimulation").name("Start");
+
+            // Update GUI Elements
+            function updateDisplay(gui) {
+                for (var i in gui.__controllers) {
+                    gui.__controllers[i].updateDisplay();
+                }
+                for (var f in gui.__folders) {
+                    updateDisplay(gui.__folders[f]);
+                }
+            }
+
+            // events
+            window.addEventListener( 'resize', onWindowResize, false );
+        }
+
+        function loop() {
+            stats.update();
+            orbitControls.update(clock.getDelta());                 // Atualiza o controle da câmera
+
+            // Diagrama de forças
+            controls.updateForces();
+            if(controls.animation){
+                updateOimoPhysics();
+            }
+            renderer.render(scene, camera);
+            requestAnimationFrame( loop );
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            onResizePanels();
+        }
+
+        function clearMesh(){
+            var i=meshs.length;
+            while (i--) scene.remove(meshs[ i ]);
+            i = grounds.length;
+            while (i--) scene.remove(grounds[ i ]);
+            grounds = [];
+            meshs = [];
+        }
+
+        //----------------------------------
+        //  OIMO PHYSICS
+        //----------------------------------
+
+        function initOimoPhysics(){
+            
+            world = new OIMO.World({
+                timestep: 1/60,
+                info: true, 
+                worldscale: 1, 
+                gravity: [controls.gravityX, controls.gravityY, controls.gravityZ]}
+            );
+            //populate(2);
+            //setInterval(updateOimoPhysics, 1000/60);
+        }
+
+        /*function populate(n) {
+
+            // The Bit of a collision group
+            var group1 = 1 << 0;  // 00000000 00000000 00000000 00000001
+            var group2 = 1 << 1;  // 00000000 00000000 00000000 00000010
+            var group3 = 1 << 2;  // 00000000 00000000 00000000 00000100
+            var all = 0xffffffff; // 11111111 11111111 11111111 11111111
+
+            type = 3;
+
+            // reset old
+            clearMesh();
+            world.clear();
+            bodys = [];
+
+            // Is all the physics setting for rigidbody
+            var config = [
+                1, // The density of the shape.
+                0.4, // The coefficient of friction of the shape.
+                0.2, // The coefficient of restitution of the shape.
+                1, // The bits of the collision groups to which the shape belongs.
+                //0xffffffff // The bits of the collision groups with which the shape collides.
+            ];
+
+            //add ground
+            var ground = world.add({size:[400, 40, 400], pos:[0,-20,0], config:config});
+            addStaticBox([400, 40, 400], [0,-20,0], [0,0,0]);
+
+            var ground2 = world.add({size:[200, 30, 390], pos:[130,40,0], rot:[0,0,32], config:config});
+            addStaticBox([200, 30, 390], [130,40,0], [0,0,32]);
+
+            config[3] = group1;
+            config[4] = all & ~group2; // all exepte groupe2
+            var ground3 = world.add({size:[5, 100, 390], pos:[0,40,0], rot:[0,0,0], config:config});
+            addStaticBox([5, 100, 390], [0,40,0], [0,0,0], true);
+
+            // now add object
+            var x, y, z, w, h, d;
+            var i = max;
+
+            /*while (i--){
+                if(type===3) t = Math.floor(Math.random()*2)+1;
+                else t = type;
+                x = 150;
+                z = -100 + Math.random()*200;
+                y = 100 + Math.random()*1000;
+                w = 10 + Math.random()*10;
+                h = 10 + Math.random()*10;
+                d = 10 + Math.random()*10;
+
+                config[4] = all;
+
+                if(t===1){
+                    config[3] = group2;
+                    bodys[i] = world.add({type:'sphere', size:[w*0.5], pos:[x,y,z], move:true, config:config });
+                    meshs[i] = new THREE.Mesh( buffgeoSphere, matSphere );
+                    meshs[i].scale.set( w*0.5, w*0.5, w*0.5 );
+                } else if(t===2){
+                    config[3] = group3;
+                    bodys[i] = world.add({type:'box', size:[w,h,d], pos:[x,y,z], move:true, config:config });
+                    console.log(bodys[i]);
+                    meshs[i] = new THREE.Mesh( buffgeoBox, matBox );
+                    meshs[i].scale.set( w, h, d );
+                }
+
+                meshs[i].castShadow = true;
+                meshs[i].receiveShadow = true;
+
+                scene.add( meshs[i] );
+            }
+        }*/
+
+        function updateOimoPhysics() {
+
+            if(world == null) return;
+
+            world.step();
+
+            var body;
+            
+                
+            for(let i = 0; i < bodys.length; i++){
+                body = bodys[i];
+                //mesh = meshs[i];
+                
+                if(!body.sleeping){
+
+                    body.mesh.position.copy(body.getPosition());
+                    body.mesh.quaternion.copy(body.getQuaternion());
+
+                }
+            }
+            
+            //infos.innerHTML = world.getInfo();
+        }
+
+        // id to identify collision and plot the forces
+        function createForcesDiagram(controls, size){
+            //let heightCenter = 3/2 * size;
+            var block_material = new THREE.MeshBasicMaterial(
+                {color: 0xEEEEEE}
+            );
+            var centerDiagram = new THREE.Mesh(new THREE.SphereGeometry(0.5, 64, 64), block_material);
+            centerDiagram.position.y = 0;
+            centerDiagram.position.x = 0;
+            centerDiagram.position.z = 0;
+            centerDiagram.rotation.z = THREE.MathUtils.degToRad(controls.angleRamp);
+
+            size = size/3;
+
+            // Axes of origin of block
+            var groupForces = new THREE.Group;
+            groupForces.name = "Forces";
+            //object.add(groupForces);
+            groupForces.add(centerDiagram);
+
+                        /**************
+                         * Com atrito *
+                         **************/
+
+            /**********
+             *  Peso  *
+             *********/
+
+            var dir = new THREE.Vector3(0, 1, 0 );
+            dir.normalize();  //normalize the direction vector (convert to vector of length 1)
+            var origin = new THREE.Vector3(0, 0, 0);
+            var length = size + 2;
+            var hex = 0xff0000;
+            var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+            arrowHelper.rotation.z = THREE.MathUtils.degToRad(180 - controls.angleRamp);
+            centerDiagram.add(arrowHelper);
+
+            /************
+             *  Normal  *
+             ************/
+
+            dir = new THREE.Vector3(0, 1, 0 );
+            dir.normalize();  //normalize the direction vector (convert to vector of length 1)
+            origin = new THREE.Vector3(0, 0, 0);
+            length = size + 2;
+            hex = 0x00ff00;
+            arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+            centerDiagram.add(arrowHelper);
+
+            /************
+             *  Atrito  *
+             ***********/
+            dir = new THREE.Vector3(1, 0, 0);
+            dir.normalize(); //normalize the direction vector (convert to vector of length 1)
+            origin = new THREE.Vector3(0, 0, 0);
+            length = size + 2;
+            hex = 0x0000ff;
+            arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+            centerDiagram.add(arrowHelper);
+            groupForces.add(centerDiagram);
+
+                        /**
+                         * Sem atrito
+                         */
+
+            centerDiagram = new THREE.Mesh(new THREE.SphereGeometry(0.5, 64, 64), block_material);
+            centerDiagram.position.y = 0;
+            centerDiagram.position.x = 0;
+            centerDiagram.position.z = 0;
+            centerDiagram.visible = false;
+
+            /**********
+             *  Peso  *
+             *********/
+
+            var dir = new THREE.Vector3(0, 1, 0 );
+            dir.normalize();  //normalize the direction vector (convert to vector of length 1)
+            var origin = new THREE.Vector3(0, 0, 0);
+            var length = size + 2;
+            var hex = 0xff0000;
+            var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+            arrowHelper.rotation.z = THREE.MathUtils.degToRad(180);
+            centerDiagram.add(arrowHelper);
+
+            /************
+             *  Normal  *
+             ************/
+
+            dir = new THREE.Vector3(0, 1, 0 );
+            dir.normalize();  //normalize the direction vector (convert to vector of length 1)
+            origin = new THREE.Vector3(0, 0, 0);
+            length = size + 2;
+            hex = 0x00ff00;
+            arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+            centerDiagram.add(arrowHelper);
+            groupForces.add(centerDiagram);
+
+                    /**********************************
+                     * Colisão com o chão de madeira  *
+                     **********************************/
+            
+            centerDiagram = new THREE.Mesh(new THREE.SphereGeometry(0.5, 64, 64), block_material);
+            centerDiagram.position.y = 0;
+            centerDiagram.position.x = 0;
+            centerDiagram.position.z = 0;
+            centerDiagram.visible = false;
+
+            /**********
+             *  Peso  *
+             *********/
+
+            var dir = new THREE.Vector3(0, 1, 0 );
+            dir.normalize();  //normalize the direction vector (convert to vector of length 1)
+            var origin = new THREE.Vector3(0, 0, 0);
+            var length = size + 2;
+            var hex = 0xff0000;
+            var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+            centerDiagram.add(arrowHelper);
+
+            /************
+             *  Normal  *
+             ************/
+
+            dir = new THREE.Vector3(0, 1, 0 );
+            dir.normalize();  //normalize the direction vector (convert to vector of length 1)
+            origin = new THREE.Vector3(0, 0, 0);
+            length = size + 2;
+            hex = 0x00ff00;
+            arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+            centerDiagram.add(arrowHelper);
+
+            /************
+             *  Atrito  *
+             ***********/
+            dir = new THREE.Vector3(1, 0, 0);
+            dir.normalize(); //normalize the direction vector (convert to vector of length 1)
+            origin = new THREE.Vector3(0, 0, 0);
+            length = size + 2;
+            hex = 0x0000ff;
+            arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+            centerDiagram.add(arrowHelper);
+            groupForces.add(centerDiagram);
+            return groupForces;
+        }
+
+            /**********************************************
+             * Adiciona uma caixa de madeira na cena      *
+             * @param {*} scene                           *
+             *********************************************/
+
+        function createGroundAndWalls(scene) {
+            //var textureLoader = new THREE.TextureLoader();
+            var ground_material = new THREE.MeshStandardMaterial(
+                {map: textureLoader.load('assets/textures/general/wood-2.jpg')}
+            );
+            //.9, .3);
+
+            var config = [
+                1, // The density of the shape.
+                0.9, // The coefficient of friction of the shape.
+                0.3, // The coefficient of restitution of the shape.
+                1, // The bits of the collision groups to which the shape belongs.
+                0xffffffff // The bits of the collision groups with which the shape collides.
+            ];
+
+            var ground = new THREE.Mesh(new THREE.BoxGeometry(120, 1, 120), ground_material);
+            ground.castShadow = true;
+            ground.receiveShadow = true;
+            ground.name = "ground";
+            ground.body = world.add({size:[120, 1, 120],
+                pos:[ground.position.x, ground.position.y, ground.position.z],
+                rot:[ground.rotation.x, ground.rotation.y, ground.rotation.z],
+                move: false,
+                config:config,
+            });
+            ground.body.mesh = ground;
+            bodys.push(ground.body);
+
+            var borderLeft = new THREE.Mesh(new THREE.BoxGeometry(2, 3, 120), ground_material);
+            borderLeft.position.x = -59;
+            borderLeft.position.y = 2;
+            borderLeft.castShadow = true;
+            borderLeft.receiveShadow = true;
+            borderLeft.name = "ground";
+            borderLeft.body = world.add({size:[2, 3, 120],
+                pos:[borderLeft.position.x, borderLeft.position.y, borderLeft.position.z],
+                rot:[borderLeft.rotation.x, borderLeft.rotation.y, borderLeft.rotation.z],
+                move: false,
+                config:config,
+            });
+            borderLeft.body.mesh = borderLeft;
+            bodys.push(borderLeft.body);
+            ground.add(borderLeft);
+
+            var borderRight = new THREE.Mesh(new THREE.BoxGeometry(2, 3, 120), ground_material);
+            borderRight.position.x = 59;
+            borderRight.position.y = 2;
+            borderRight.castShadow = true;
+            borderRight.receiveShadow = true;
+            borderRight.name = "ground";
+            borderRight.body = world.add({size:[2, 3, 120],
+                pos:[borderRight.position.x, borderRight.position.y, borderRight.position.z],
+                rot:[borderRight.rotation.x, borderRight.rotation.y, borderRight.rotation.z],
+                move: false,
+                config:config,
+            });
+            borderRight.body.mesh = borderRight;
+            bodys.push(borderRight.body);
+            ground.add(borderRight);
+
+            var borderBottom = new THREE.Mesh(new THREE.BoxGeometry(116, 3, 2), ground_material);
+            borderBottom.position.z = 59;
+            borderBottom.position.y = 2;
+            borderBottom.castShadow = true;
+            borderBottom.receiveShadow = true;
+            borderBottom.name = "ground";
+            borderBottom.body = world.add({size:[116, 3, 2],
+                pos:[borderBottom.position.x, borderBottom.position.y, borderBottom.position.z],
+                rot:[borderBottom.rotation.x, borderBottom.rotation.y, borderBottom.rotation.z],
+                move: false,
+                config:config,
+            });
+            borderBottom.body.mesh = borderBottom;
+            bodys.push(borderBottom.body);
+            ground.add(borderBottom);
+
+            var borderTop = new THREE.Mesh(new THREE.BoxGeometry(116, 3, 2), ground_material);
+            borderTop.position.z = -59;
+            borderTop.position.y = 2;
+            borderTop.castShadow = true;
+            borderTop.receiveShadow = true;
+            borderTop.name = "ground";
+            borderTop.body = world.add({size:[116, 3, 2],
+                pos:[borderTop.position.x, borderTop.position.y, borderTop.position.z],
+                rot:[borderTop.rotation.x, borderTop.rotation.y, borderTop.rotation.z],
+                move: false,
+                config:config,
+            });
+            borderTop.body.mesh = borderTop;
+            bodys.push(borderTop.body);
+            ground.add(borderTop);
+            scene.add(ground);
+        }
+
+    </script>
+</body>
+</html>
