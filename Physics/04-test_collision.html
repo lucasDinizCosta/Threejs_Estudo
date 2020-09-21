@@ -240,6 +240,11 @@
             //infos = document.getElementById("info");
             bodys = [];
 
+            // physics
+
+            initOimoPhysics();
+            world.clear();
+
             // init renderer
             renderer = new THREE.WebGLRenderer({
                 antialias: antialias,
@@ -259,13 +264,10 @@
             // Adiciona a saída do renderizador para um elemento da página HTML
             document.getElementById("webgl-output").appendChild(renderer.domElement);
             
-            //camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
             camera = initCamera(new THREE.Vector3(70, 20, 0));
-            //camera.position.set( 0, 160, 400 );
 
             orbitControls = new THREE.OrbitControls( camera, renderer.domElement);
             orbitControls.target.set(0, 0, 0);
-            //orbitControls.update();
             orbitControls.minDistance = 25;
             orbitControls.maxDistance = 100;
 
@@ -363,36 +365,23 @@
                     let fixDistRamp = 0.5;
                     ramp.position.y = altura/2 + fixDistRamp;    //  8
 
-                    //ramp.rotateY();
                     ramp.rotation.set(0, THREE.MathUtils.degToRad(90), THREE.MathUtils.degToRad(this.angleRamp));
-                    //ramp.rotation.y = THREE.MathUtils.degToRad(90);
-                    //ramp.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
+                    scene.add(ramp);
                     this.rampComponents.push(ramp);
                     ramp.body = world.add({
                         size:[this.widthRamp, 0.1, 20],
                         pos:[ramp.position.x, ramp.position.y, ramp.position.z],
-                        rot:[ramp.rotation.x, ramp.rotation.y, ramp.rotation.z],
-                        //move: false,
-                        //sleeping: true,
+                        rot:[0, 90, this.angleRamp], // Angulos em graus, no THREE.js é radianos
                         config: config,
                     });
                     ramp.body.mesh = ramp;
                     bodys.push(ramp.body);
-                    scene.add(ramp);
+                    
 
                     var wall_material = new THREE.MeshStandardMaterial({
                         map: textureLoader.load('assets/textures/general/bathroom.jpg'),
                         side: THREE.DoubleSide
                     });
-                    /*var wall_material = Physijs.createMaterial(
-                        new THREE.MeshStandardMaterial(
-                        {map: textureLoader.load('assets/textures/general/bathroom.jpg'),
-                        side: THREE.DoubleSide
-                        }
-                        ),
-                        this.frictionRamp, this.restitutionRamp
-                    ); //Friction and restitution
-                    */
 
                     // Adjust the texture
                     wall_material.map.repeat.set(3, 3);
@@ -403,15 +392,7 @@
                         transparent: true, opacity: 0.4, color: 0xcFFFFFF, side: THREE.DoubleSide
                     });
 
-                    /*var wall_sides_material = Physijs.createMaterial(new THREE.MeshBasicMaterial({
-                        transparent: true, opacity: 0.4, color: 0xcFFFFFF, side: THREE.DoubleSide
-                        }),
-                        this.frictionRamp, this.restitutionRamp
-                    ); //Friction and restitution
-                    */
                     var backWall = new THREE.Mesh(new THREE.BoxGeometry(20, altura, 0.1), wall_material);
-
-                    //var backWall = new Physijs.BoxMesh(new THREE.BoxGeometry(20, altura, 0.1), wall_material, 0);
                     backWall.position.z = - ((altura - altura/2) / Math.tan(this.angleRamp * (Math.PI/180)));
                     backWall.position.y = altura/2 + fixDistRamp;
                     this.rampComponents.push(backWall);
@@ -498,7 +479,6 @@
                     }
 
                     var groundWall = new THREE.Mesh(new THREE.BoxGeometry(20, 0.1, (altura / Math.tan(controls.angleRamp * (Math.PI/180)))), wall_material);
-                    //var groundWall = new  Physijs.BoxMesh(new THREE.BoxGeometry(20, 0.1, (altura / Math.tan(controls.angleRamp * (Math.PI/180)))), wall_material, 0);
                     groundWall.position.y = fixDistRamp;
                     this.rampComponents.push(groundWall);
                     scene.add(groundWall);
@@ -506,7 +486,7 @@
                     groundWall.body = world.add({size:[20, 0.1, 
                         (altura / Math.tan(controls.angleRamp * (Math.PI/180)))],
                         pos:[groundWall.position.x, groundWall.position.y, groundWall.position.z],
-                        rot:[groundWall.rotation.x, groundWall.rotation.y, groundWall.rotation.z],
+                        rot:[groundWall.rotation.x, groundWall.rotation.y, groundWall.rotation.z],  // Em graus, no THREE.JS é radianos
                         move: false,
                         config:config,
                     });
@@ -567,13 +547,7 @@
                     var block_material = new THREE.MeshStandardMaterial(
                         {map: textureLoader.load('assets/textures/general/stone.jpg')}
                     );
-                    /*var block_material = Physijs.createMaterial(
-                        new THREE.MeshStandardMaterial(
-                        {map: textureLoader.load('assets/textures/general/stone.jpg')}
-                        ),
-                        this.frictionBox, .1
-                    ); //Friction and restitution
-                    */
+
                     var config = [
                         1, // The density of the shape.
                         this.frictionBox, // The coefficient of friction of the shape.
@@ -626,10 +600,8 @@
 
                 startSimulation: function(){
                     // You may also want to cancel the object's velocity
-                    //this.mesh.setLinearVelocity(new THREE.Vector3(0, 0, 0));
-                    //this.mesh.setAngularVelocity(new THREE.Vector3(0, 0, 0));
-                    console.log(this.mesh.body);
-                    //this.mesh.body.sleeping = true;
+                    this.mesh.body.linearVelocity.set(0,0,0);
+                    this.mesh.body.angularVelocity.set(0,0,0);
 
                     this.mesh.position.x = this.startPosition.x;
                     this.mesh.position.y = this.startPosition.y;
@@ -640,22 +612,7 @@
                     this.mesh.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
 
                     this.mesh.body.resetPosition(this.startPosition.x, this.startPosition.y, this.startPosition.z);
-                    this.mesh.body.resetRotation(this.mesh.rotation.x, this.mesh.rotation.y, this.mesh.rotation.z);
-
-                    this.mesh.body.position.copy(this.mesh.position);
-                    this.mesh.body.quaternion.copy(this.mesh.quaternion);
-
-                    this.mesh.body.rotation.set(0, 0, 0);
-                    this.mesh.body.rotation.y = THREE.MathUtils.degToRad(90);
-                    this.mesh.body.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
-                    this.mesh.body
-
-                    
-
-                    //this.mesh.body.pos = [this.mesh.position.x, this.mesh.position.y, this.mesh.position.z];
-                    //this.mesh.body.rot = [this.mesh.rotation.x, this.mesh.rotation.y, this.mesh.rotation.z];
-
-                    //this.mesh.body.sleeping = false;
+                    this.mesh.body.resetRotation(0, 90, this.angleRamp);                    // Angulos em graus
                     //updateDisplay(gui);           // Update GUI
 
                     document.getElementById("alertPanel").style.display = "none";
@@ -674,9 +631,6 @@
                     updateInstructionPanel(this.gravityY, this);
                 },
             };
-            // physics
-
-            initOimoPhysics();
 
             controls.createRamp();
             controls.createBox();
@@ -789,83 +743,10 @@
                 timestep: 1/60,
                 info: true, 
                 worldscale: 1, 
-                gravity: [controls.gravityX, controls.gravityY, controls.gravityZ]}
-            );
-            //populate(2);
-            //setInterval(updateOimoPhysics, 1000/60);
+                gravity:[0, -9.8, 0]
+             //[controls.gravityX, controls.gravityY, controls.gravityZ]
+            });
         }
-
-        /*function populate(n) {
-
-            // The Bit of a collision group
-            var group1 = 1 << 0;  // 00000000 00000000 00000000 00000001
-            var group2 = 1 << 1;  // 00000000 00000000 00000000 00000010
-            var group3 = 1 << 2;  // 00000000 00000000 00000000 00000100
-            var all = 0xffffffff; // 11111111 11111111 11111111 11111111
-
-            type = 3;
-
-            // reset old
-            clearMesh();
-            world.clear();
-            bodys = [];
-
-            // Is all the physics setting for rigidbody
-            var config = [
-                1, // The density of the shape.
-                0.4, // The coefficient of friction of the shape.
-                0.2, // The coefficient of restitution of the shape.
-                1, // The bits of the collision groups to which the shape belongs.
-                //0xffffffff // The bits of the collision groups with which the shape collides.
-            ];
-
-            //add ground
-            var ground = world.add({size:[400, 40, 400], pos:[0,-20,0], config:config});
-            addStaticBox([400, 40, 400], [0,-20,0], [0,0,0]);
-
-            var ground2 = world.add({size:[200, 30, 390], pos:[130,40,0], rot:[0,0,32], config:config});
-            addStaticBox([200, 30, 390], [130,40,0], [0,0,32]);
-
-            config[3] = group1;
-            config[4] = all & ~group2; // all exepte groupe2
-            var ground3 = world.add({size:[5, 100, 390], pos:[0,40,0], rot:[0,0,0], config:config});
-            addStaticBox([5, 100, 390], [0,40,0], [0,0,0], true);
-
-            // now add object
-            var x, y, z, w, h, d;
-            var i = max;
-
-            /*while (i--){
-                if(type===3) t = Math.floor(Math.random()*2)+1;
-                else t = type;
-                x = 150;
-                z = -100 + Math.random()*200;
-                y = 100 + Math.random()*1000;
-                w = 10 + Math.random()*10;
-                h = 10 + Math.random()*10;
-                d = 10 + Math.random()*10;
-
-                config[4] = all;
-
-                if(t===1){
-                    config[3] = group2;
-                    bodys[i] = world.add({type:'sphere', size:[w*0.5], pos:[x,y,z], move:true, config:config });
-                    meshs[i] = new THREE.Mesh( buffgeoSphere, matSphere );
-                    meshs[i].scale.set( w*0.5, w*0.5, w*0.5 );
-                } else if(t===2){
-                    config[3] = group3;
-                    bodys[i] = world.add({type:'box', size:[w,h,d], pos:[x,y,z], move:true, config:config });
-                    console.log(bodys[i]);
-                    meshs[i] = new THREE.Mesh( buffgeoBox, matBox );
-                    meshs[i].scale.set( w, h, d );
-                }
-
-                meshs[i].castShadow = true;
-                meshs[i].receiveShadow = true;
-
-                scene.add( meshs[i] );
-            }
-        }*/
 
         function updateOimoPhysics() {
 
@@ -874,7 +755,6 @@
             world.step();
 
             var body;
-            
                 
             for(let i = 0; i < bodys.length; i++){
                 body = bodys[i];
