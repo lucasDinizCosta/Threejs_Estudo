@@ -536,6 +536,13 @@
 
                 createBox: function(){
                     if(this.mesh != null){
+                        for(let i = 0; i < bodys.length; i++){
+                            if(bodys[i] == this.mesh.body){
+                                console.log("FFFF");
+                                bodys.splice(i, 1);
+                            }
+                        }
+                        world.remove(this.mesh.body);
                         scene.remove(this.mesh);         // Remove old version       -- Box
                         this.mesh = null;
                     }
@@ -552,8 +559,8 @@
                         1, // The density of the shape.
                         this.frictionBox, // The coefficient of friction of the shape.
                         this.restitutionBox, // The coefficient of restitution of the shape.
-                        //1, // The bits of the collision groups to which the shape belongs.
-                        //0xffffffff // The bits of the collision groups with which the shape collides.
+                        1, // The bits of the collision groups to which the shape belongs.
+                        0xffffffff // The bits of the collision groups with which the shape collides.
                     ];
 
                     this.mesh = new THREE.Mesh(new THREE.BoxBufferGeometry(sideBound, sideBound, sideBound), block_material);
@@ -566,36 +573,49 @@
                     this.mesh.rotation.y = THREE.MathUtils.degToRad(90);
                     this.mesh.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
                     scene.add(this.mesh);
-                    this.mesh.body = world.add({size:[sideBound,sideBound,sideBound],
+                    this.mesh.body = world.add({
+                        type: "box",
+                        size:[sideBound,sideBound,sideBound],
                         pos:[this.mesh.position.x, this.mesh.position.y, this.mesh.position.z],
                         rot:[this.mesh.rotation.x, this.mesh.rotation.y, this.mesh.rotation.z],
                         move: true,
-                        config:config,
+                        config: config,
+                        mass: this.massBox,
                     });
+
+                    //this.mesh.body.mass = 0.0001;//this.massBox;
                     this.mesh.body.mesh = this.mesh;
                     bodys.push(this.mesh.body);
 
-                    handleCollision = function( collided_with, linearVelocity, angularVelocity ) {
-                        if(collided_with.name === "ground"){
-                            controls.groupForces.children[0].visible = false;
-                            controls.groupForces.children[1].visible = true;
-                            controls.groupForces.children[2].visible = false;
-                            //console.log("Chao");
-                        }
-                        else{
-                            controls.groupForces.children[0].visible = true;
-                            controls.groupForces.children[1].visible = false;
-                            controls.groupForces.children[2].visible = false;
-                            //console.log("Rampa");
-                        }
-                        this.collisions++;
-                    }
-                    this.mesh.collisions = 0;
-                    this.mesh.addEventListener( 'collision', handleCollision );
+                    
+                    //this.mesh.collisions = 0;
+                    //addEventListener( 'collision', handleCollision );
 
                     this.groupForces = createForcesDiagram(controls, sideBound);             // id to identify collision and plot the forces
                     this.groupForces.rotation.y = THREE.MathUtils.degToRad(90);
                     scene.add(this.groupForces);
+                },
+
+                handleCollision: function() {
+                    let collisionRamp = controls.checkCollision({mode:1, el_01: controls.mesh.body, el_02: controls.rampComponents[0].body});
+                    //let collisionRamp = controls.checkCollision({mode:3, el_01: this.mesh.body, name: "ramp"});
+                    if(!collisionRamp){
+                        controls.groupForces.children[0].visible = false;
+                        controls.groupForces.children[1].visible = true;
+                        controls.groupForces.children[2].visible = false;
+                        console.log("Ground");
+                    }
+                    else{
+                        controls.groupForces.children[0].visible = true;
+                        controls.groupForces.children[1].visible = false;
+                        controls.groupForces.children[2].visible = false;
+                        console.log("Ramp");
+                    }
+
+                    /*for(let i = 0; i < bodys.length; i++){
+                        this.checkCollision()
+                    }*/
+                    //this.collisions++;
                 },
 
                 startSimulation: function(){
@@ -619,12 +639,35 @@
                     this.animation = true;
                 },
 
+                checkCollision: function(params){
+                    let collidedBodys = [];
+                    switch(params.mode){
+                        case 1: // Compara dois elementos e retorna se colidiu
+                            if(world.getContact(params.el_01, params.el_02)){
+                                return true;
+                            }
+                            break;
+                        case 2: // Compara um elemento com todos os outros e retorna uma lista de colisões
+                            break;
+                        case 3: // Compara todos e retorna se colidiu com o nome determinado
+                            for(let i = 0; i < bodys.length; i++){
+                                if(world.getContact(params.el_01, bodys[i]) && (bodys[i].mesh.name === params.name)){
+                                    return true;
+                                }
+                            }
+                            break;
+
+                    }
+                    return false;
+                },
+
                 updateForces: function(){
                     if(this.mesh != null){
                         this.groupForces.position.x = this.mesh.position.x; 
                         this.groupForces.position.y = this.mesh.position.y + sideBound * 1.75; 
                         this.groupForces.position.z = this.mesh.position.z;
                     }
+                    this.handleCollision();
                 },
 
                 updateDates: function(){
@@ -667,14 +710,12 @@
             objectMenu.open();
             objectMenu.add(controls, "frictionBox", 0, 1, 0.01).name("Friction").onChange(function(e){
                 controls.animation = false;
-                world.clear();                 
                 controls.createRamp();           // Recria o objeto pois a fisica é mudada
                 controls.createBox();           // Recria o objeto pois a fisica é mudada
                 controls.updateDates();
             });
             objectMenu.add(controls, "angleRamp", 10, 50, 2).name("Angle (°)").onChange(function(e){
-                controls.animation = false;
-                world.clear();                 
+                controls.animation = false;           
                 controls.createRamp();           // Recria o objeto pois a fisica é mudada
                 controls.createBox();           // Recria o objeto pois a fisica é mudada
                 controls.updateDates();
@@ -741,6 +782,8 @@
             
             world = new OIMO.World({
                 timestep: 1/60,
+                iterations: 30,
+                broadphase: 2,  // the simulation collision 1: brute force, 2: sweet & prune, 3: Volume tree
                 info: true, 
                 worldscale: 1, 
                 gravity:[0, -9.8, 0]
@@ -932,8 +975,8 @@
                 1, // The density of the shape.
                 0.9, // The coefficient of friction of the shape.
                 0.3, // The coefficient of restitution of the shape.
-                1, // The bits of the collision groups to which the shape belongs.
-                0xffffffff // The bits of the collision groups with which the shape collides.
+                //1, // The bits of the collision groups to which the shape belongs.
+                //0xffffffff // The bits of the collision groups with which the shape collides.
             ];
 
             var ground = new THREE.Mesh(new THREE.BoxGeometry(120, 1, 120), ground_material);
@@ -1003,7 +1046,8 @@
             borderTop.castShadow = true;
             borderTop.receiveShadow = true;
             borderTop.name = "ground";
-            borderTop.body = world.add({size:[116, 3, 2],
+            borderTop.body = world.add({
+                size:[116, 3, 2],
                 pos:[borderTop.position.x, borderTop.position.y, borderTop.position.z],
                 rot:[borderTop.rotation.x, borderTop.rotation.y, borderTop.rotation.z],
                 move: false,
