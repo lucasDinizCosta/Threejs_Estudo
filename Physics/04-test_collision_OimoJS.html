@@ -8,7 +8,7 @@
 
 <script type="text/javascript" charset="UTF-8" src="libs/three.js"></script>
 <script type="text/javascript" charset="UTF-8" src="libs/three/controls/OrbitControls.js"></script>
-<script type="text/javascript" charset="UTF-8" src="libs/other/cannonjs/cannon.js"></script>
+<script type="text/javascript" charset="UTF-8" src="libs/other/oimojs/oimo.js"></script>
 
 <script type="text/javascript" charset="UTF-8" src="libs/three/geometries/ConvexGeometry.js"></script>    <!-- Biblioteca para trabalhar com Geometria convexa-->
 <script type="text/javascript" charset="UTF-8" src="libs/three/geometries/QuickHull.js"></script>
@@ -242,7 +242,7 @@
 
             // physics
 
-            initCannonPhysics();
+            initOimoPhysics();
             world.clear();
 
             // init renderer
@@ -773,15 +773,20 @@
         }
 
         //----------------------------------
-        //  CANNONJS PHYSICS
+        //  OIMO PHYSICS
         //----------------------------------
 
-        function initCannonPhysics(){
+        function initOimoPhysics(){
             
-            world = new new CANNON.World();
-            world.gravity.set(0, 0, -9.82); // m/s²
-            world.broadphase = new CANNON.NaiveBroadphase();
-            world.solver.iterations = 10;
+            world = new OIMO.World({
+                timestep: 1/60,
+                iterations: 30,
+                broadphase: 2,  // the simulation collision 1: brute force, 2: sweet & prune, 3: Volume tree
+                info: true, 
+                worldscale: 1, 
+                gravity:[0, -9.8, 0]
+             //[controls.gravityX, controls.gravityY, controls.gravityZ]
+            });
         }
 
         function updateOimoPhysics() {
