@@ -8,7 +8,7 @@
 
 <script type="text/javascript" charset="UTF-8" src="libs/three.js"></script>
 <script type="text/javascript" charset="UTF-8" src="libs/three/controls/OrbitControls.js"></script>
-<script type="text/javascript" charset="UTF-8" src="libs/other/oimojs/oimo.js"></script>
+<script type="text/javascript" charset="UTF-8" src="libs/other/cannonjs/cannon.js"></script>
 
 <script type="text/javascript" charset="UTF-8" src="libs/three/geometries/ConvexGeometry.js"></script>    <!-- Biblioteca para trabalhar com Geometria convexa-->
 <script type="text/javascript" charset="UTF-8" src="libs/three/geometries/QuickHull.js"></script>
@@ -242,7 +242,7 @@
 
             // physics
 
-            initOimoPhysics();
+            initCannonPhysics();
             world.clear();
 
             // init renderer
@@ -583,13 +583,9 @@
                         mass: this.massBox,
                     });
 
-                    //this.mesh.body.mass = 0.0001;//this.massBox;
+                    this.mesh.body.mass = 1;//this.massBox;
                     this.mesh.body.mesh = this.mesh;
                     bodys.push(this.mesh.body);
-
-                    
-                    //this.mesh.collisions = 0;
-                    //addEventListener( 'collision', handleCollision );
 
                     this.groupForces = createForcesDiagram(controls, sideBound);             // id to identify collision and plot the forces
                     this.groupForces.rotation.y = THREE.MathUtils.degToRad(90);
@@ -598,30 +594,24 @@
 
                 handleCollision: function() {
                     let collisionRamp = controls.checkCollision({mode:1, el_01: controls.mesh.body, el_02: controls.rampComponents[0].body});
-                    //let collisionRamp = controls.checkCollision({mode:3, el_01: this.mesh.body, name: "ramp"});
                     if(!collisionRamp){
                         controls.groupForces.children[0].visible = false;
                         controls.groupForces.children[1].visible = true;
                         controls.groupForces.children[2].visible = false;
-                        console.log("Ground");
+                        //console.log("Ground");
                     }
                     else{
                         controls.groupForces.children[0].visible = true;
                         controls.groupForces.children[1].visible = false;
                         controls.groupForces.children[2].visible = false;
-                        console.log("Ramp");
+                        //console.log("Ramp");
                     }
-
-                    /*for(let i = 0; i < bodys.length; i++){
-                        this.checkCollision()
-                    }*/
-                    //this.collisions++;
                 },
 
                 startSimulation: function(){
                     // You may also want to cancel the object's velocity
-                    this.mesh.body.linearVelocity.set(0,0,0);
-                    this.mesh.body.angularVelocity.set(0,0,0);
+                    //this.mesh.body.linearVelocity.set(0,0,0);
+                    //this.mesh.body.angularVelocity.set(0,0,0);
 
                     this.mesh.position.x = this.startPosition.x;
                     this.mesh.position.y = this.startPosition.y;
@@ -631,9 +621,11 @@
                     this.mesh.rotation.y = THREE.MathUtils.degToRad(90);
                     this.mesh.rotation.z = THREE.MathUtils.degToRad(this.angleRamp);
 
+                    //this.mesh.body.position.copy(this.mesh.position);
+                    //this.mesh.body.quaternion.copy(this.mesh.quaternion);
+
                     this.mesh.body.resetPosition(this.startPosition.x, this.startPosition.y, this.startPosition.z);
                     this.mesh.body.resetRotation(0, 90, this.angleRamp);                    // Angulos em graus
-                    //updateDisplay(gui);           // Update GUI
 
                     document.getElementById("alertPanel").style.display = "none";
                     this.animation = true;
@@ -671,6 +663,10 @@
                 },
 
                 updateDates: function(){
+                    // You may also want to cancel the object's velocity
+                    //this.mesh.body.linearVelocity.set(0,0,0);
+                    //this.mesh.body.angularVelocity.set(0,0,0);
+
                     updateInstructionPanel(this.gravityY, this);
                 },
             };
@@ -678,7 +674,7 @@
             controls.createRamp();
             controls.createBox();
             controls.updateDates();
-            //controls.startSimulation();
+            controls.startSimulation();
             controls.animation = false;                   //animação parada
             createGroundAndWalls(scene);
 
@@ -709,16 +705,18 @@
             var objectMenu = gui.addFolder("Menu");
             objectMenu.open();
             objectMenu.add(controls, "frictionBox", 0, 1, 0.01).name("Friction").onChange(function(e){
-                controls.animation = false;
                 controls.createRamp();           // Recria o objeto pois a fisica é mudada
                 controls.createBox();           // Recria o objeto pois a fisica é mudada
                 controls.updateDates();
+                controls.startSimulation();
+                controls.animation = false;
             });
             objectMenu.add(controls, "angleRamp", 10, 50, 2).name("Angle (°)").onChange(function(e){
-                controls.animation = false;           
                 controls.createRamp();           // Recria o objeto pois a fisica é mudada
                 controls.createBox();           // Recria o objeto pois a fisica é mudada
                 controls.updateDates();
+                controls.startSimulation();
+                controls.animation = false;           
             });
             objectMenu.add(controls.panels, "informations").onChange(function(e){
                 if(controls.panels.informations){
@@ -731,18 +729,18 @@
             }).name("Informations");
             objectMenu.add(controls, "startSimulation").name("Start");
 
-            // Update GUI Elements
-            function updateDisplay(gui) {
-                for (var i in gui.__controllers) {
-                    gui.__controllers[i].updateDisplay();
-                }
-                for (var f in gui.__folders) {
-                    updateDisplay(gui.__folders[f]);
-                }
-            }
-
             // events
             window.addEventListener( 'resize', onWindowResize, false );
+        }
+
+        // Update GUI Elements
+        function updateDisplay(gui) {
+            for (var i in gui.__controllers) {
+                gui.__controllers[i].updateDisplay();
+            }
+            for (var f in gui.__folders) {
+                updateDisplay(gui.__folders[f]);
+            }
         }
 
         function loop() {
@@ -775,20 +773,15 @@
         }
 
         //----------------------------------
-        //  OIMO PHYSICS
+        //  CANNONJS PHYSICS
         //----------------------------------
 
-        function initOimoPhysics(){
+        function initCannonPhysics(){
             
-            world = new OIMO.World({
-                timestep: 1/60,
-                iterations: 30,
-                broadphase: 2,  // the simulation collision 1: brute force, 2: sweet & prune, 3: Volume tree
-                info: true, 
-                worldscale: 1, 
-                gravity:[0, -9.8, 0]
-             //[controls.gravityX, controls.gravityY, controls.gravityZ]
-            });
+            world = new new CANNON.World();
+            world.gravity.set(0, 0, -9.82); // m/s²
+            world.broadphase = new CANNON.NaiveBroadphase();
+            world.solver.iterations = 10;
         }
 
         function updateOimoPhysics() {
