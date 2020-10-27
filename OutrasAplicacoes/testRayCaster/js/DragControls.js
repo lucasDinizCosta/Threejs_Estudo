@@ -15,7 +15,6 @@ function main() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
     document.getElementById("webgl-output").appendChild(renderer.domElement);
-    //renderer.setClearColor("rgb(30, 30, 40)");
     var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
     camera.lookAt(0, 0, 0);
     camera.position.set(5, 15, 30);
@@ -54,6 +53,9 @@ function main() {
     orbitControls.target.set(0, 0, 0);
     orbitControls.minDistance = 25;
     orbitControls.maxDistance = 100;
+
+    // DragControls
+    var dragControls;// = new DragControls( objects, camera, renderer.domElement );
 
     // Object Material for all objects
     var objectMaterial = new THREE.MeshPhongMaterial({ color: "rgb(255, 0, 0)" });
@@ -131,6 +133,7 @@ function main() {
             }
             objectArray[this.meshNumber].visible = true;
             this.mesh = objectArray[this.meshNumber];
+            dragControls = new THREE.DragControls([this.mesh], camera, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
         }
 
         this.resizePoligon = function() {
@@ -175,6 +178,22 @@ function main() {
             }
         }
     }
+
+    dragControls = new THREE.DragControls([controls.mesh], camera, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
+
+    // add event listener to highlight dragged objects
+
+    dragControls.addEventListener( 'dragstart', function ( event ) {
+
+        event.object.material.emissive.set( 0xaaaaaa );
+
+    } );
+
+    dragControls.addEventListener( 'dragend', function ( event ) {
+
+        event.object.material.emissive.set( 0x000000 );
+
+    } );
 
     // GUI de controle e ajuste de valores especificos da geometria do objeto
     var gui = new dat.GUI();
@@ -313,11 +332,10 @@ function main() {
     window.addEventListener('mouseout', clearPickPosition); //Mouse sai da tela
     window.addEventListener('mouseleave', clearPickPosition);
 
-    function teste(){
-        console.log("teste");
-    }
-
     controls.mesh.selected = false;
+
+    document.addEventListener( 'click', onClick, false );
+    var enableSelection = false;
 
     function raycasterMoveObject(){
         mouse.oldX = mouse.x;
@@ -378,37 +396,61 @@ function main() {
         else{
             groundPlane.material.emissive.setHex(storedColor[0]);
         }
+    }
 
-        
-        if(mouse.click){
-            controls.mesh.position.x += (mouse.x - mouse.oldX)//*(1/30);
-        }
+    function onKeyDown( event ) {
+        enableSelection = ( event.keyCode === 16 ) ? true : false;
+    }
 
+    function onKeyUp() {
+        enableSelection = false;
+    }
 
-        /*if(intersects.length > 0){
-            groundPlane.material.color = "rgb(200,200,200)";
-        }
-        else{
-            for ( var i = 0; i < intersects.length; i++ ) {  
-                intersects[ i ].object.material.color.set( 0xff0000 );
-                //console.log(intersects[ i ].object);
+    function onClick( event ) {
+
+        event.preventDefault();
+
+        if ( enableSelection === true ) {
+
+            var draggableObjects = dragControls.getObjects();
+            draggableObjects.length = 0;
+
+            //mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+            //mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+            /*raycaster.setFromCamera( mouse, camera );
+
+            var intersections = raycaster.intersectObjects( objects, true );
+
+            if ( intersections.length > 0 ) {
+
+                var object = intersections[ 0 ].object;
+
+                if ( group.children.includes( object ) === true ) {
+
+                    object.material.emissive.set( 0x000000 );
+                    scene.attach( object );
+
+                } else {
+
+                    object.material.emissive.set( 0xaaaaaa );
+                    group.attach( object );
+
+                }
+
+                controls.transformGroup = true;
+                draggableObjects.push( group );
+
             }
-        }*/
 
-        /*if(intersects.length > 0){
-            groundPlane.material.color = "rgb(200,200,200)";
+            if ( group.children.length === 0 ) {
+
+                controls.transformGroup = false;
+                draggableObjects.push( ...objects );
+
+            }*/
+
         }
-        else{
-            
-        }*/
-
-        /*if(intersects.length > 0){
-
-        }*/
-        /*for (let i = 0; i < intersects.length; i++) {
-            intersects[ i ].object.material.color.set( 0x00ff00 );
-            console.log(intersects[ i ].object);
-        }*/
 
     }
 
