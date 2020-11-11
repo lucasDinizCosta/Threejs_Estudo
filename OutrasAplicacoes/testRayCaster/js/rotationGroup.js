@@ -190,7 +190,18 @@ function main() {
 
     window.addEventListener('mousedown', raycasterController);
     window.addEventListener('mouseup', function up(){
-        mouse.click = false; 
+        mouse.click = false;
+
+        if(objectLooked != null && dragAndDropImage[0] != null){
+            if(objectLooked.objectType == 0){
+                objectLooked.material.copy(dragAndDropImage[0].material);
+                dragAndDropImage[0] = null;
+                console.log("teste");
+            }
+        }
+        else{
+            dragAndDropImage[0] = null;
+        }
     });
 
     window.addEventListener('mouseout', clearPickPosition); //Mouse sai da tela
@@ -210,8 +221,8 @@ function main() {
                     objectLooked.group.state = 0;
                 }
             }
-            else{
-    
+            else if(objectLooked.objectType == 1){
+                dragAndDropImage[0] = objectLooked;
             }
         }
     }
@@ -225,7 +236,8 @@ function main() {
     //Adding the images
     objectRaycaster.push(panelPlane);
 
-    let objectLooked;
+    let objectLooked = null;
+    let dragAndDropImage = [null, null]   //Image, Page
 
     function checkRaycaster(){
 
@@ -252,6 +264,9 @@ function main() {
 
     render();
 
+    // Desativação temporaria da rotação
+    orbitControls.enableRotate = false;
+
     function render() {
         stats.update();
         orbitControls.update(clock.getDelta());
@@ -262,9 +277,8 @@ function main() {
     }
 
     function rotationCameraController(){
-        if(mouse.click){
+        if(mouse.click){    //if(objectLooked != null && mouse.click){
             orbitControls.enableRotate = false;
-            //console.log(mouse);
         }
         else{
             orbitControls.enableRotate = true;
