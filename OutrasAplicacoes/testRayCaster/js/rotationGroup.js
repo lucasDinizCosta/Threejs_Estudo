@@ -89,8 +89,9 @@ function main() {
         // bookAttributes
         this.angleBeginPage = 0,
 
-        // teste
-        this.mesh;
+        // imagePanel
+        this.imageList = [],
+        this.pasteImage = [],   //[image, page]
 
         // pageAttributes
         this.widthPage = 4,
@@ -104,12 +105,13 @@ function main() {
             var planeMaterial = new THREE.MeshStandardMaterial({
                 //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
                 transparent: true,// opacity: 0.4,
-                map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
+                map: textureLoader.load("../assets/parchment_alpha.png"), side: THREE.DoubleSide
             });
             var plane = new THREE.Mesh(planeGeometry, planeMaterial);
             plane.position.set(this.widthPage / 2, 0, 0);
             plane.rotateX(THREE.Math.degToRad(-90));
             plane.receiveShadow = true;
+
             group.add(plane);
             group.position.set(0, this.heightBook, 0);
             group.page = this.numberPage;
@@ -119,10 +121,8 @@ function main() {
             group.rotateZ(THREE.Math.degToRad(this.angleBeginPage));
             group.state = 0;            //0=> normal side, 1=> switch page
             plane.group = group;
+            plane.objectType = 0;          //Page type
             this.angleBeginPage += 0.8;
-            
-
-            this.mesh = plane;
         }
     }
 
@@ -136,32 +136,22 @@ function main() {
     // GUI de controle e ajuste de valores especificos da geometria do objeto
     var gui = new dat.GUI();
 
-    var guiFolder = gui.addFolder("Properties");
-    /*guiFolder.open(); // Open the folder
-    guiFolder.add(controls, "animation").listen().onChange(function(e) {
-        if (controls.animation) {
-            controls.rotation = 0.015;
-        } 
-        else{
-            controls.rotation = 0;
-        }
+    /**  
+     * Teste painel de imagens 
+     **/
+    //clone material
+    var panelGeometry = new THREE.PlaneGeometry(20, 10, 0.1, 0.1);
+    var panelMaterial = new THREE.MeshStandardMaterial({
+        //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
+        transparent: true,// opacity: 0.4,
+        map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
     });
-    guiFolder.addColor(controls, 'color').onChange(function(e) {
-        controls.updateColor();
-    });
+    var panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
+    panelPlane.position.set(0, 5, -10);
+    panelPlane.objectType = 1;          //Image type
 
-    guiFolder.add(controls, 'wireframe').listen().onChange(function(e) {
-        controls.wireframeController();
-    });
+    scene.add(panelPlane);
 
-    guiFolder.add(controls, 'type', ['Tetrahedron', 'Cube', 'Octahedron', 'Dodecahedron', 'Icosahedron']).onChange(function(e) {
-        controls.choosePoligon();
-        controls.resizePoligon()
-    });
-
-    gui.add(controls, 'size', 0.5, 2).listen().onChange(function(e) {
-        controls.resizePoligon()
-    })*/
 
     /**
      * Add a small and simple ground plane
@@ -198,58 +188,66 @@ function main() {
 
     mouse.click = false;
 
-    window.addEventListener('mousedown', raycasterMoveObject);
-    window.addEventListener('mouseup', function UP(){
+    window.addEventListener('mousedown', raycasterController);
+    window.addEventListener('mouseup', function up(){
         mouse.click = false; 
     });
 
     window.addEventListener('mouseout', clearPickPosition); //Mouse sai da tela
     window.addEventListener('mouseleave', clearPickPosition);
 
-    function raycasterMoveObject(){
+    function raycasterController(){
+        mouse.click = true;
+
+        if(objectLooked != null){
+            if(objectLooked.objectType == 0){
+                if(objectLooked.group.state == 0){
+                    objectLooked.group.rotateZ(THREE.Math.degToRad(180));
+                    objectLooked.group.state = 1;
+                }
+                else{
+                    objectLooked.group.rotateZ(THREE.Math.degToRad(0));
+                    objectLooked.group.state = 0;
+                }
+            }
+            else{
+    
+            }
+        }
+    }
+
+    let objectRaycaster = []
+    for (let i = 0; i < controls.book.children.length; i++) {
+        let pageGroupRotation = controls.book.children[i];
+        objectRaycaster.push(pageGroupRotation.children[0]);        //Put inside only page without the group rotation
+    }
+
+    //Adding the images
+    objectRaycaster.push(panelPlane);
+
+    let objectLooked;
+
+    function checkRaycaster(){
 
         // update the picking ray with the camera and mouse position
         raycaster.setFromCamera(mouse, camera);
-
-        console.log(controls.book);
-        let objects = []
-        for (let i = 0; i < controls.book.children.length; i++) {
-            let pageGroupRotation = controls.book.children[i];
-            objects.push(pageGroupRotation.children[0]);        //Put inside only page without the group rotation
-        }
-        console.log(objects);
-        // calculate objects intersecting the picking ray
-        //var intersects = raycaster.intersectObjects( scene.children );
-        //var intersects = raycaster.intersectObjects(scene.children);//raycaster.intersectObjects([controls.mesh, groundPlane]);//[groundPlane]
-        var intersects = raycaster.intersectObjects(objects);
+        
+        var intersects = raycaster.intersectObjects(objectRaycaster);
 
         if(intersects.length > 0){
             let objectCollided = intersects[0].object;
-            //objectCollided.material.emissive.setHex( 0x00ff00 );
-            console.log(objectCollided);
-            if(objectCollided.group.state == 0){
-                objectCollided.group.rotateZ(THREE.Math.degToRad(180));
-                objectCollided.group.state = 1;
+            if(objectCollided.objectType == 0){
+                //console.log("PAGE");
+                objectLooked = objectCollided;
             }
             else{
-                objectCollided.group.rotateZ(THREE.Math.degToRad(0));
-                objectCollided.group.state = 0;
+                //console.log("IMAGE");
+                objectLooked = objectCollided;
             }
-            //mouse.click = true;
-            
         }
         else{
-            /*controls.mesh.material.emissive.setHex(storedColor[1]);
-            controls.mesh.selected = false;*/
+            objectLooked = null;
         }
-
-        /*intersects = raycaster.intersectObject(groundPlane);
-        if(intersects.length > 0){
-            intersects[0].object.material.emissive.setHex( 0x0000ff );
-        }
-        else{
-            groundPlane.material.emissive.setHex(storedColor[0]);
-        }*/
     }
 
     render();
@@ -257,19 +255,19 @@ function main() {
     function render() {
         stats.update();
         orbitControls.update(clock.getDelta());
-
-        // Rotating the mesh selected
-        /*group.rotateZ(THREE.Math.degToRad(angleSpeed * 1/30));
-        if(group.rotation.z > THREE.Math.degToRad(180)){
-            angleSpeed *=- 1;
-        }
-        else{
-
-        }*/
-        /*controls.mesh.rotation.x += controls.rotation;
-        controls.mesh.rotation.y += controls.rotation;
-        controls.mesh.rotation.z += controls.rotation;*/
+        //rotationCameraController();
+        checkRaycaster();
         requestAnimationFrame(render);
         renderer.render(scene, camera);
+    }
+
+    function rotationCameraController(){
+        if(mouse.click){
+            orbitControls.enableRotate = false;
+            //console.log(mouse);
+        }
+        else{
+            orbitControls.enableRotate = true;
+        }
     }
 }
