@@ -136,26 +136,37 @@ function main() {
     // GUI de controle e ajuste de valores especificos da geometria do objeto
     var gui = new dat.GUI();
 
-    /**  
+    /*  
      * Teste painel de imagens 
-     **/
-    //clone material
-    var panelGeometry = new THREE.PlaneGeometry(20, 10, 0.1, 0.1);
+     */
+    var paintWall = [];
+    var painelGeometry = new THREE.BoxGeometry(30, 10, 5);//new THREE.PlaneGeometry(30, 10, 0.1, 0.1);
+    var painelMaterial = new THREE.MeshStandardMaterial({
+        //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
+        transparent: true,// opacity: 0.4,
+        map: textureLoader.load("../assets/general/wood-2.jpg"), side: THREE.DoubleSide
+    });
+    var panelPlane = new THREE.Mesh(painelGeometry, painelMaterial);
+    panelPlane.position.set(0, 5, -15.1);
+    panelPlane.objectType = 1;          //Image type
+    scene.add(panelPlane);
+
+    var panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
     var panelMaterial = new THREE.MeshStandardMaterial({
         //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
         transparent: true,// opacity: 0.4,
         map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
     });
     var panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
-    panelPlane.position.set(0, 5, -10);
+    panelPlane.position.set(-10, 7, -12);
     panelPlane.objectType = 1;          //Image type
 
     scene.add(panelPlane);
 
-
     /**
      * Add a small and simple ground plane
      */
+
     function createGroundPlane(width, height) {
         // create the ground plane
         var planeGeometry = new THREE.PlaneGeometry(width, height, 10, 10);
@@ -183,7 +194,6 @@ function main() {
         // unlikely to pick something
         mouse.x = -100000;
         mouse.y = -100000;
-    
     }
 
     mouse.click = false;
