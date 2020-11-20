@@ -58,9 +58,6 @@ function main() {
     orbitControls.minDistance = 10;
     orbitControls.maxDistance = 100;
 
-    // Object Material for all objects
-    var objectMaterial = new THREE.MeshPhongMaterial({ color: "rgb(255, 0, 0)" });
-
     // Creating raycaster objects
     var raycaster = new THREE.Raycaster();
     var mouse = new THREE.Vector2();
@@ -143,18 +140,18 @@ function main() {
     var painelGeometry = new THREE.BoxGeometry(30, 10, 5);//new THREE.PlaneGeometry(30, 10, 0.1, 0.1);
     var painelMaterial = new THREE.MeshStandardMaterial({
         //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
-        transparent: true,// opacity: 0.4,
+        //transparent: true,// opacity: 0.4,
         map: textureLoader.load("../assets/general/wood-2.jpg"), side: THREE.DoubleSide
     });
     var panelPlane = new THREE.Mesh(painelGeometry, painelMaterial);
     panelPlane.position.set(0, 5, -15.1);
-    panelPlane.objectType = 1;          //Image type
+    //panelPlane.objectType = 1;          //Image type
     scene.add(panelPlane);
 
     var panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
     var panelMaterial = new THREE.MeshStandardMaterial({
         //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
-        transparent: true,// opacity: 0.4,
+        //transparent: true,// opacity: 0.4,
         map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
     });
     var panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
@@ -162,6 +159,40 @@ function main() {
     panelPlane.objectType = 1;          //Image type
 
     scene.add(panelPlane);
+    paintWall.push(panelPlane);
+
+    var panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+    var panelMaterial = new THREE.MeshStandardMaterial({
+        //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
+        //transparent: true,// opacity: 0.4,
+        map: textureLoader.load("../assets/paintings/4.jpg"), side: THREE.DoubleSide
+    });
+    var panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
+    panelPlane.position.set(-0, 7, -12);
+    panelPlane.objectType = 1;          //Image type
+
+    scene.add(panelPlane);
+    paintWall.push(panelPlane);
+
+    var panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+    var panelMaterial = new THREE.MeshStandardMaterial({
+        //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
+        //transparent: true,// opacity: 0.4,
+        map: textureLoader.load("../assets/paintings/1.jpg"), side: THREE.DoubleSide
+    });
+    var panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
+    panelPlane.position.set(10, 7, -12);
+    panelPlane.objectType = 1;          //Image type
+
+    scene.add(panelPlane);
+    paintWall.push(panelPlane);
+
+    var skyboxGeometry = new THREE.SphereGeometry(100, 64, 64);
+    var skyboxMaterial = new THREE.MeshBasicMaterial({
+        map: textureLoader.load("../assets/museum.jpg"), side: THREE.DoubleSide   
+    });
+    var skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
+    scene.add(skybox);
 
     /**
      * Add a small and simple ground plane
