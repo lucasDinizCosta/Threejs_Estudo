@@ -140,7 +140,8 @@ function main() {
     var painelGeometry = new THREE.BoxGeometry(30, 10, 5);//new THREE.PlaneGeometry(30, 10, 0.1, 0.1);
     var painelMaterial = new THREE.MeshStandardMaterial({
         //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
-        //transparent: true,// opacity: 0.4,
+        transparent: true,
+        opacity: 0.5,
         map: textureLoader.load("../assets/general/wood-2.jpg"), side: THREE.DoubleSide
     });
     var panelPlane = new THREE.Mesh(painelGeometry, painelMaterial);
@@ -205,7 +206,7 @@ function main() {
             color:"rgb(200,200,200)",
             side:THREE.DoubleSide, 
             transparent: true,
-            opacity: 0.4
+            opacity: 0.5
         });
         var plane = new THREE.Mesh(planeGeometry, planeMaterial);
         plane.receiveShadow = true;
