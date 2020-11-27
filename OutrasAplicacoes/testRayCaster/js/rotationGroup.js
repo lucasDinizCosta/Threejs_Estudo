@@ -91,8 +91,8 @@ function main() {
         this.pasteImage = [],   //[image, page]
 
         // pageAttributes
-        this.widthPage = 8,
-        this.lengthPage = 10,
+        this.widthPage = 12,         //Padrao antigo: 4
+        this.lengthPage = 14,       //Padrao antigo: 6
         this.heightBook = 0.5,
         this.numberPage = 1,
         this.counterPages = 0,
@@ -201,7 +201,12 @@ function main() {
     function createGroundPlane(width, height) {
         // create the ground plane
         var planeGeometry = new THREE.PlaneGeometry(width, height, 10, 10);
-        var planeMaterial = new THREE.MeshPhongMaterial({color:"rgb(200,200,200)", side:THREE.DoubleSide});
+        var planeMaterial = new THREE.MeshStandardMaterial({
+            color:"rgb(200,200,200)",
+            side:THREE.DoubleSide, 
+            transparent: true,
+            opacity: 0.4
+        });
         var plane = new THREE.Mesh(planeGeometry, planeMaterial);
         plane.receiveShadow = true;
         return plane;
