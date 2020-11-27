@@ -91,8 +91,8 @@ function main() {
         this.pasteImage = [],   //[image, page]
 
         // pageAttributes
-        this.widthPage = 4,
-        this.lengthPage = 6,
+        this.widthPage = 8,
+        this.lengthPage = 10,
         this.heightBook = 0.5,
         this.numberPage = 1,
         this.counterPages = 0,
