@@ -21,7 +21,7 @@ function main() {
     document.getElementById("webgl-output").appendChild(renderer.domElement);
     var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
     camera.lookAt(0, 0, 0);
-    camera.position.set(5, 15, 30);
+    camera.position.set(0, 15, 30);
     camera.up.set(0, 1, 0);
 
     var clock = new THREE.Clock();
@@ -317,14 +317,14 @@ function main() {
     function render() {
         stats.update();
         orbitControls.update(clock.getDelta());
-        //rotationCameraController();
+        rotationCameraController();
         checkRaycaster();
         requestAnimationFrame(render);
         renderer.render(scene, camera);
     }
 
     function rotationCameraController(){
-        if(mouse.click){    //if(objectLooked != null && mouse.click){
+        if(mouse.click && objectLooked != null){    //if(objectLooked != null && mouse.click){
             orbitControls.enableRotate = false;
         }
         else{
