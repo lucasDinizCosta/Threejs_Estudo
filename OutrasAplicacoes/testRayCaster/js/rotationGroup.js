@@ -101,8 +101,8 @@ function main() {
             var planeGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
             var planeMaterial = new THREE.MeshStandardMaterial({
                 //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
-                transparent: true,// opacity: 0.4,
-                map: textureLoader.load("../assets/parchment_alpha.png"), side: THREE.DoubleSide
+                transparent: false,// opacity: 0.4,
+                map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
             });
             var plane = new THREE.Mesh(planeGeometry, planeMaterial);
             plane.position.set(this.widthPage / 2, 0, 0);
@@ -235,29 +235,26 @@ function main() {
 
     mouse.click = false;
 
-    window.addEventListener('mousedown', raycasterController);
     window.addEventListener('mouseup', function up(){
-        mouse.click = false;
-
         if(objectLooked != null && dragAndDropImage[0] != null){
             if(objectLooked.objectType == 0){
                 objectLooked.material.copy(dragAndDropImage[0].material);
                 dragAndDropImage[0] = null;
-                console.log("teste");
+                //console.log("teste");
             }
         }
         else{
             dragAndDropImage[0] = null;
         }
+        mouse.click = false;
+        orbitControls.enableRotate = true;      // Enable rotation on camera
     });
-
     window.addEventListener('mouseout', clearPickPosition); //Mouse sai da tela
     window.addEventListener('mouseleave', clearPickPosition);
-
+    window.addEventListener('mousedown', raycasterController);
     function raycasterController(){
-        mouse.click = true;
-
         if(objectLooked != null){
+            orbitControls.enableRotate = false;         //Disable rotation on camera when raycasting detect an object
             if(objectLooked.objectType == 0){
                 if(objectLooked.group.state == 0){
                     objectLooked.group.rotateZ(THREE.Math.degToRad(180));
@@ -272,6 +269,8 @@ function main() {
                 dragAndDropImage[0] = objectLooked;
             }
         }
+
+        mouse.click = true;
     }
 
     let objectRaycaster = []
@@ -311,24 +310,11 @@ function main() {
 
     render();
 
-    // Desativação temporaria da rotação
-    orbitControls.enableRotate = false;
-
     function render() {
         stats.update();
         orbitControls.update(clock.getDelta());
-        rotationCameraController();
         checkRaycaster();
         requestAnimationFrame(render);
         renderer.render(scene, camera);
-    }
-
-    function rotationCameraController(){
-        if(mouse.click && objectLooked != null){    //if(objectLooked != null && mouse.click){
-            orbitControls.enableRotate = false;
-        }
-        else{
-            orbitControls.enableRotate = true;
-        }
     }
 }
