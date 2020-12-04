@@ -92,34 +92,51 @@ function main() {
 
         // pageAttributes
         this.widthPage = 12,         //Padrao antigo: 4
-        this.lengthPage = 14,       //Padrao antigo: 6
+        this.lengthPage = 14,        //Padrao antigo: 6
         this.heightBook = 0.5,
         this.numberPage = 1,
         this.counterPages = 0,
         this.createPage = function (){
-            var group = new THREE.Group();
-            var planeGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
-            var planeMaterial = new THREE.MeshStandardMaterial({
+            var group = new THREE.Group();          // Support the elements -- Center of rotation page
+
+            // Page Background
+            var pageGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
+            var pageMaterial = new THREE.MeshStandardMaterial({
                 //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
-                transparent: false,// opacity: 0.4,
+                transparent: true, //opacity: 0.5,
                 map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
             });
-            var plane = new THREE.Mesh(planeGeometry, planeMaterial);
-            plane.position.set(this.widthPage / 2, 0, 0);
-            plane.rotateX(THREE.Math.degToRad(-90));
-            plane.receiveShadow = true;
-
-            group.add(plane);
+            var page = new THREE.Mesh(pageGeometry, pageMaterial);
+            page.position.set(this.widthPage / 2, 0, 0);
+            page.rotateX(THREE.Math.degToRad(-90));
+            page.receiveShadow = true;
+            group.add(page);
             group.position.set(0, this.heightBook, 0);
             group.page = this.numberPage;
+            group.state = 0;              //0=> normal side, 1=> switch page
+            page.group = group;
+            page.objectType = 0;          //Page type
+
+            // Image plane
+
+            let imageGeometry = new THREE.PlaneGeometry(this.widthPage/1.5, this.lengthPage/3, 0.1, 0.1);
+            let imageMaterial = new THREE.MeshStandardMaterial({
+                color:"rgb(255, 255, 255)", side:THREE.DoubleSide
+                //transparent: true, //opacity: 0.5,
+                //map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
+            });
+            let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
+            imagePlane.receiveShadow = true;
+            imagePlane.position.set(0, this.lengthPage/4.5, 0.01);
+            page.add(imagePlane);
+            //page.rotateX(THREE.Math.degToRad(-90));
+            //page.receiveShadow = true;
+
+            group.rotateZ(THREE.Math.degToRad(this.angleBeginPage));  // rotation default of page
+            this.angleBeginPage += 0.8;
             this.numberPage++;
             this.counterPages++;
-            this.book.add(group);
-            group.rotateZ(THREE.Math.degToRad(this.angleBeginPage));
-            group.state = 0;            //0=> normal side, 1=> switch page
-            plane.group = group;
-            plane.objectType = 0;          //Page type
-            this.angleBeginPage += 0.8;
+            this.book.add(group);       // Added group page on the book
         }
     }
 
@@ -317,4 +334,11 @@ function main() {
         requestAnimationFrame(render);
         renderer.render(scene, camera);
     }
+
+    function testRotationCamera(){
+        //camera.quaternion.setFromEuler(new THREE.vec3(0,90,30));
+        console.log(camera);
+    }
+    testRotationCamera();
 }
+
