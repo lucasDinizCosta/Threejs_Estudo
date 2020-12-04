@@ -99,47 +99,104 @@ function main() {
         this.createPage = function (){
             var group = new THREE.Group();          // Support the elements -- Center of rotation page
 
-            // Page Background
-            var pageGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
-            var pageMaterial = new THREE.MeshStandardMaterial({
-                //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
-                transparent: true, //opacity: 0.5,
-                map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
-            });
-            var page = new THREE.Mesh(pageGeometry, pageMaterial);
-            page.position.set(this.widthPage / 2, 0, 0);
-            page.rotateX(THREE.Math.degToRad(-90));
-            page.receiveShadow = true;
-            group.add(page);
-            group.position.set(0, this.heightBook, 0);
-            group.page = this.numberPage;
-            group.state = 0;              //0=> normal side, 1=> switch page
-            page.group = group;
-            page.objectType = 0;          //Page type
+            if(this.counterPages % 2 == 0){   //Pair pages on the book
+                // Page Background
+                var pageGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
+                var pageMaterial = new THREE.MeshStandardMaterial({
+                    transparent: true, //opacity: 0.5,
+                    map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
+                });
+                var page = new THREE.Mesh(pageGeometry, pageMaterial);
+                page.position.set(this.widthPage / 2, 0, 0);
+                page.rotateX(THREE.Math.degToRad(-90));
+                page.receiveShadow = true;
+                group.add(page);
+                group.position.set(0, this.heightBook, 0);
+                group.page = this.numberPage;
+                group.state = 0;              //0=> normal side, 1=> switch page
+                page.group = group;
+                page.objectType = 0;          //Page type
 
-            // Image plane
+                // Image plane
 
-            let imageGeometry = new THREE.PlaneGeometry(this.widthPage/1.5, this.lengthPage/3, 0.1, 0.1);
-            let imageMaterial = new THREE.MeshStandardMaterial({
-                color:"rgb(255, 255, 255)", side:THREE.DoubleSide
-                //transparent: true, //opacity: 0.5,
-                //map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
-            });
-            let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
-            imagePlane.receiveShadow = true;
-            imagePlane.position.set(0, this.lengthPage/4.5, 0.01);
-            page.add(imagePlane);
-            //page.rotateX(THREE.Math.degToRad(-90));
-            //page.receiveShadow = true;
+                let imageGeometry = new THREE.PlaneGeometry(this.widthPage/1.5, this.lengthPage/3, 0.1, 0.1);
+                let imageMaterial = new THREE.MeshStandardMaterial({
+                    color:"rgb(255, 255, 255)", side:THREE.DoubleSide
+                });
+                let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
+                imagePlane.receiveShadow = true;
+                imagePlane.position.set(0, this.lengthPage/4.5, 0.01);
+                page.add(imagePlane);
 
-            group.rotateZ(THREE.Math.degToRad(this.angleBeginPage));  // rotation default of page
-            this.angleBeginPage += 0.8;
-            this.numberPage++;
-            this.counterPages++;
-            this.book.add(group);       // Added group page on the book
+                // Informations block
+
+                let informationGeometry = new THREE.PlaneGeometry(this.widthPage/1.25, this.lengthPage/2.75, 0.1, 0.1);
+                let informationMaterial = new THREE.MeshStandardMaterial({
+                    color:"rgb(170, 0, 0)", side:THREE.DoubleSide
+                });
+                let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
+                //imagePlane.receiveShadow = true;
+                informationPlane.position.set(0, -this.lengthPage/4.5, 0.01);
+                page.add(informationPlane);
+
+                group.rotateZ(THREE.Math.degToRad(this.angleBeginPage));  // rotation default of page
+                this.angleBeginPage += 0.8;
+                this.numberPage++;
+                this.counterPages++;
+                this.book.add(group);       // Added group page on the book
+            }
+            else{
+                // Page Background
+                let pageGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
+                let pageMaterial = new THREE.MeshStandardMaterial({
+                    transparent: true, //opacity: 0.5,
+                    map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
+                });
+                let page = new THREE.Mesh(pageGeometry, pageMaterial);
+                page.position.set(this.widthPage / 2, 0, 0);
+                page.rotateX(THREE.Math.degToRad(-90));
+                page.receiveShadow = true;
+                group.add(page);
+                group.position.set(0, this.heightBook, 0);
+                group.page = this.numberPage;
+                group.state = 0;              //0=> normal side, 1=> switch page
+                page.group = group;
+                page.objectType = 0;          //Page type
+
+                // Image plane
+
+                let imageGeometry = new THREE.PlaneGeometry(this.widthPage/1.5, this.lengthPage/3, 0.1, 0.1);
+                let imageMaterial = new THREE.MeshStandardMaterial({
+                    color:"rgb(255, 255, 255)", side:THREE.DoubleSide
+                });
+                let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
+                imagePlane.receiveShadow = true;
+                imagePlane.position.set(0, this.lengthPage/4.5, -0.01);
+                page.add(imagePlane);
+
+                // Informations block
+
+                let informationGeometry = new THREE.PlaneGeometry(this.widthPage/1.25, this.lengthPage/2.75, 0.1, 0.1);
+                let informationMaterial = new THREE.MeshStandardMaterial({
+                    color:"rgb(170, 0, 0)", side:THREE.DoubleSide
+                });
+                let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
+                //imagePlane.receiveShadow = true;
+                informationPlane.position.set(0, -this.lengthPage/4.5, -0.01);
+                page.add(informationPlane);
+
+                group.rotateZ(THREE.Math.degToRad(this.book.children[this.book.children.length - 1].rotation.z));  // rotation default of page
+                console.log(this.book.children[this.book.children.length - 1]);
+                //this.book.children[this.book.children.length - 1].add(page);
+                //group.rotateZ(THREE.Math.degToRad(90));  // rotation default of page
+                //console.log(this.book.children[this.book.children.length - 1].rotation.z);
+                this.numberPage++;
+                this.counterPages++;
+                this.book.add(group);       // Added group page on the book
+                
+            }
         }
     }
-
     /*for (let index = 0; index < 100; index++) {
         controls.createPage();  
     }*/
