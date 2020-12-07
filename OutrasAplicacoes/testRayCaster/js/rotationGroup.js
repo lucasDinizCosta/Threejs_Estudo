@@ -12,6 +12,7 @@ function main() {
         antialias: true,
         alpha: true,
     });
+
     renderer.shadowMap.enabled = true;
     renderer.shadowMapSoft = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -84,7 +85,7 @@ function main() {
         this.book = new THREE.Group(),
 
         // bookAttributes
-        this.angleBeginPage = 0,
+        this.angleBeginPage = 0.8,        // 0
 
         // imagePanel
         this.imageList = [],
@@ -100,13 +101,21 @@ function main() {
             var group = new THREE.Group();          // Support the elements -- Center of rotation page
 
             if(this.counterPages % 2 == 0){   //Pair pages on the book
+                // Adjust of rotation of the sheets inside of book
+                for(let i = 0; i < this.book.children.length; i++){
+                    let sheet = this.book.children[i];
+                    sheet.rotateZ(THREE.Math.degToRad(this.angleBeginPage));  // rotation default of page
+                }
+
+
                 // Page Background
-                var pageGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
-                var pageMaterial = new THREE.MeshStandardMaterial({
+                let pageGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
+                let pageMaterial = new THREE.MeshStandardMaterial({
                     transparent: true, //opacity: 0.5,
                     map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
                 });
-                var page = new THREE.Mesh(pageGeometry, pageMaterial);
+                //pageMaterial.depthWrite = false;            // FIX the bug of transparency  --- https://github.com/mrdoob/three.js/issues/9977
+                let page = new THREE.Mesh(pageGeometry, pageMaterial);
                 page.position.set(this.widthPage / 2, 0, 0);
                 page.rotateX(THREE.Math.degToRad(-90));
                 page.receiveShadow = true;
@@ -139,13 +148,15 @@ function main() {
                 informationPlane.position.set(0, -this.lengthPage/4.5, 0.01);
                 page.add(informationPlane);
 
-                group.rotateZ(THREE.Math.degToRad(this.angleBeginPage));  // rotation default of page
-                this.angleBeginPage += 0.8;
+                //group.rotateZ(THREE.Math.degToRad(this.angleBeginPage));  // rotation default of page
+                //this.angleBeginPage += 0.8;
+                
                 this.numberPage++;
                 this.counterPages++;
                 this.book.add(group);       // Added group page on the book
             }
             else{
+                group = this.book.children[this.book.children.length - 1]; // Take a sheet to insert a page on the book
                 // Page Background
                 let pageGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
                 let pageMaterial = new THREE.MeshStandardMaterial({
@@ -181,15 +192,11 @@ function main() {
                     color:"rgb(170, 0, 0)", side:THREE.DoubleSide
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
-                //imagePlane.receiveShadow = true;
                 informationPlane.position.set(0, -this.lengthPage/4.5, -0.01);
                 page.add(informationPlane);
 
-                group.rotateZ(THREE.Math.degToRad(this.book.children[this.book.children.length - 1].rotation.z));  // rotation default of page
-                console.log(this.book.children[this.book.children.length - 1]);
-                //this.book.children[this.book.children.length - 1].add(page);
-                //group.rotateZ(THREE.Math.degToRad(90));  // rotation default of page
-                //console.log(this.book.children[this.book.children.length - 1].rotation.z);
+                //group.rotateZ(THREE.Math.degToRad(this.book.children[this.book.children.length - 1].rotation.z));  // rotation default of page
+                //console.log(this.book.children[this.book.children.length - 1]);
                 this.numberPage++;
                 this.counterPages++;
                 this.book.add(group);       // Added group page on the book
@@ -197,11 +204,13 @@ function main() {
             }
         }
     }
-    /*for (let index = 0; index < 100; index++) {
+    for (let index = 0; index < 10; index++) {
         controls.createPage();  
-    }*/
+    }
+    /*controls.createPage();
     controls.createPage();
     controls.createPage();
+    controls.createPage();*/
     scene.add(controls.book);
     
     // GUI de controle e ajuste de valores especificos da geometria do objeto
@@ -314,7 +323,6 @@ function main() {
             if(objectLooked.objectType == 0){
                 objectLooked.material.copy(dragAndDropImage[0].material);
                 dragAndDropImage[0] = null;
-                //console.log("teste");
             }
         }
         else{
