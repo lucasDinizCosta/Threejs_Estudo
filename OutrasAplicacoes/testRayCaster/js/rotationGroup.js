@@ -85,28 +85,27 @@ function main() {
         this.book = new THREE.Group(),
 
         // bookAttributes
-        this.angleBeginPage = 0.8,        // 0
+        this.angleBeginPage = 0.15,        // 0
 
         // imagePanel
         this.imageList = [],
         this.pasteImage = [],   //[image, page]
 
-        // pageAttributes
+        // page and sheet attributes
         this.widthPage = 12,         //Padrao antigo: 4
         this.lengthPage = 14,        //Padrao antigo: 6
         this.heightBook = 0.5,
-        this.numberPage = 1,
-        this.counterPages = 0,
+        this.amountSheets = 0,
+        this.amountPages = 0,
         this.createPage = function (){
-            var group = new THREE.Group();          // Support the elements -- Center of rotation page
-
-            if(this.counterPages % 2 == 0){   //Pair pages on the book
+            if(this.amountPages % 2 == 0){   //Pair pages on the book
                 // Adjust of rotation of the sheets inside of book
                 for(let i = 0; i < this.book.children.length; i++){
                     let sheet = this.book.children[i];
                     sheet.rotateZ(THREE.Math.degToRad(this.angleBeginPage));  // rotation default of page
                 }
 
+                let sheet = new THREE.Group();          // Support the elements -- Center of rotation page
 
                 // Page Background
                 let pageGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
@@ -119,11 +118,11 @@ function main() {
                 page.position.set(this.widthPage / 2, 0, 0);
                 page.rotateX(THREE.Math.degToRad(-90));
                 page.receiveShadow = true;
-                group.add(page);
-                group.position.set(0, this.heightBook, 0);
-                group.page = this.numberPage;
-                group.state = 0;              //0=> normal side, 1=> switch page
-                page.group = group;
+                sheet.add(page);
+                sheet.position.set(0, this.heightBook, 0);
+                sheet.page = this.numberPage;
+                sheet.sideOption = 0;              //0=> Right, 1=> Left
+                page.sheet = sheet;
                 page.objectType = 0;          //Page type
 
                 // Image plane
@@ -147,16 +146,12 @@ function main() {
                 //imagePlane.receiveShadow = true;
                 informationPlane.position.set(0, -this.lengthPage/4.5, 0.01);
                 page.add(informationPlane);
-
-                //group.rotateZ(THREE.Math.degToRad(this.angleBeginPage));  // rotation default of page
-                //this.angleBeginPage += 0.8;
-                
-                this.numberPage++;
-                this.counterPages++;
-                this.book.add(group);       // Added group page on the book
+                this.amountSheets++;
+                this.book.add(sheet);       // Added sheet with page on the book
             }
             else{
-                group = this.book.children[this.book.children.length - 1]; // Take a sheet to insert a page on the book
+                let sheet = this.book.children[this.book.children.length - 1]; // Take a sheet to insert a page on the book
+                
                 // Page Background
                 let pageGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
                 let pageMaterial = new THREE.MeshStandardMaterial({
@@ -167,11 +162,11 @@ function main() {
                 page.position.set(this.widthPage / 2, 0, 0);
                 page.rotateX(THREE.Math.degToRad(-90));
                 page.receiveShadow = true;
-                group.add(page);
-                group.position.set(0, this.heightBook, 0);
-                group.page = this.numberPage;
-                group.state = 0;              //0=> normal side, 1=> switch page
-                page.group = group;
+                sheet.add(page);
+                sheet.position.set(0, this.heightBook, 0);
+                sheet.page = this.numberPage;
+                sheet.sideOption = 0;              //0=> Right, 1=> Left
+                page.sheet = sheet;
                 page.objectType = 0;          //Page type
 
                 // Image plane
@@ -194,27 +189,23 @@ function main() {
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.position.set(0, -this.lengthPage/4.5, -0.01);
                 page.add(informationPlane);
-
-                //group.rotateZ(THREE.Math.degToRad(this.book.children[this.book.children.length - 1].rotation.z));  // rotation default of page
-                //console.log(this.book.children[this.book.children.length - 1]);
-                this.numberPage++;
-                this.counterPages++;
-                this.book.add(group);       // Added group page on the book
-                
+                this.amountPages++;
+                this.book.add(sheet);       // Added sheet with page on the book
             }
+            this.amountPages++;
         }
     }
-    for (let index = 0; index < 10; index++) {
+
+    /*for (let index = 0; index < 10; index++) {
         controls.createPage();  
-    }
-    /*controls.createPage();
+    }*/
     controls.createPage();
     controls.createPage();
-    controls.createPage();*/
+    controls.createPage();
     scene.add(controls.book);
     
     // GUI de controle e ajuste de valores especificos da geometria do objeto
-    var gui = new dat.GUI();
+    //var gui = new dat.GUI();
 
     /*  
      * Teste painel de imagens 
@@ -234,8 +225,6 @@ function main() {
 
     var panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
     var panelMaterial = new THREE.MeshStandardMaterial({
-        //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
-        //transparent: true,// opacity: 0.4,
         map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
     });
     var panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
@@ -247,8 +236,6 @@ function main() {
 
     var panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
     var panelMaterial = new THREE.MeshStandardMaterial({
-        //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
-        //transparent: true,// opacity: 0.4,
         map: textureLoader.load("../assets/paintings/4.jpg"), side: THREE.DoubleSide
     });
     var panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
@@ -260,8 +247,6 @@ function main() {
 
     var panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
     var panelMaterial = new THREE.MeshStandardMaterial({
-        //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
-        //transparent: true,// opacity: 0.4,
         map: textureLoader.load("../assets/paintings/1.jpg"), side: THREE.DoubleSide
     });
     var panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
@@ -338,13 +323,13 @@ function main() {
         if(objectLooked != null){
             orbitControls.enableRotate = false;         //Disable rotation on camera when raycasting detect an object
             if(objectLooked.objectType == 0){
-                if(objectLooked.group.state == 0){
-                    objectLooked.group.rotateZ(THREE.Math.degToRad(180));
-                    objectLooked.group.state = 1;
+                if(objectLooked.sheet.sideOption == 0){
+                    objectLooked.sheet.rotateZ(THREE.Math.degToRad(180));
+                    objectLooked.sheet.sideOption = 1;
                 }
                 else{
-                    objectLooked.group.rotateZ(THREE.Math.degToRad(0));
-                    objectLooked.group.state = 0;
+                    objectLooked.sheet.rotateZ(THREE.Math.degToRad(0));
+                    objectLooked.sheet.sideOption = 0;
                 }
             }
             else if(objectLooked.objectType == 1){
@@ -364,16 +349,14 @@ function main() {
     //Adding the images
     objectRaycaster.push(panelPlane);
 
+    // Raycaster and mouse Controllers 
     let objectLooked = null;
     let dragAndDropImage = [null, null]   //Image, Page
 
     function checkRaycaster(){
-
         // update the picking ray with the camera and mouse position
         raycaster.setFromCamera(mouse, camera);
-        
         var intersects = raycaster.intersectObjects(objectRaycaster);
-
         if(intersects.length > 0){
             let objectCollided = intersects[0].object;
             if(objectCollided.objectType == 0){
@@ -400,10 +383,5 @@ function main() {
         renderer.render(scene, camera);
     }
 
-    function testRotationCamera(){
-        //camera.quaternion.setFromEuler(new THREE.vec3(0,90,30));
-        console.log(camera);
-    }
-    testRotationCamera();
 }
 
