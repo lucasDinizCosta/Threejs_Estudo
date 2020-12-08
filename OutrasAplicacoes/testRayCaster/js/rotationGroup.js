@@ -159,12 +159,7 @@ function main() {
                 for(let i = 0; i < this.book.children.length; i++){
                     let sheetAux = this.book.children[i];
                     sheetAux.angleFinish = 180 - i * this.angleRatePage - sheetAux.angleBegin;     //this.angleBeginPage;
-                    //sheetAux.angleBegin = sheetAux.angleBegin + this.angleRatePage;
-                    //sheetAux.rotateZ(THREE.Math.degToRad(this.angleRatePage));  // rotation default of page
                 }
-
-                //sheet.angleBegin = sheetAux.angleBegin + this.angleRatePage;
-                //sheet.angleFinish = 180 - i * this.angleRatePage //- sheetAux.angleBegin;     //this.angleBeginPage;
             }
             else{
                 let sheet = this.book.children[this.book.children.length - 1]; // Take a sheet to insert a page on the book
@@ -226,7 +221,7 @@ function main() {
         }
     }
 
-    for (let index = 0; index < 5; index++) {
+    for (let index = 0; index < 9; index++) {
         controls.createPage();  
     }
     //controls.createPage();
@@ -241,59 +236,10 @@ function main() {
     /*  
      * Teste painel de imagens 
      */
-    var paintWall = [];
-    var painelGeometry = new THREE.BoxGeometry(30, 10, 5);//new THREE.PlaneGeometry(30, 10, 0.1, 0.1);
-    var painelMaterial = new THREE.MeshStandardMaterial({
-        //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
-        transparent: true,
-        opacity: 0.5,
-        map: textureLoader.load("../assets/general/wood-2.jpg"), side: THREE.DoubleSide
-    });
-    var panelPlane = new THREE.Mesh(painelGeometry, painelMaterial);
-    panelPlane.position.set(0, 5, -15.1);
-    //panelPlane.objectType = 1;          //Image type
-    scene.add(panelPlane);
+    let paintWall = [];
 
-    var panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
-    var panelMaterial = new THREE.MeshStandardMaterial({
-        map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
-    });
-    var panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
-    panelPlane.position.set(-10, 7, -12);
-    panelPlane.objectType = 1;          //Image type
-
-    scene.add(panelPlane);
-    paintWall.push(panelPlane);
-
-    var panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
-    var panelMaterial = new THREE.MeshStandardMaterial({
-        map: textureLoader.load("../assets/paintings/4.jpg"), side: THREE.DoubleSide
-    });
-    var panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
-    panelPlane.position.set(-0, 7, -12);
-    panelPlane.objectType = 1;          //Image type
-
-    scene.add(panelPlane);
-    paintWall.push(panelPlane);
-
-    var panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
-    var panelMaterial = new THREE.MeshStandardMaterial({
-        map: textureLoader.load("../assets/paintings/1.jpg"), side: THREE.DoubleSide
-    });
-    var panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
-    panelPlane.position.set(10, 7, -12);
-    panelPlane.objectType = 1;          //Image type
-
-    scene.add(panelPlane);
-    paintWall.push(panelPlane);
-
-    var skyboxGeometry = new THREE.SphereGeometry(100, 64, 64);
-    var skyboxMaterial = new THREE.MeshBasicMaterial({
-        map: textureLoader.load("../assets/museum.jpg"), side: THREE.DoubleSide   
-    });
-    var skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
-    scene.add(skybox);
-
+    paintWall = createPicturesPanel(scene);
+    
     /**
      * Add a small and simple ground plane
      */
@@ -376,13 +322,17 @@ function main() {
     }
 
     let objectRaycaster = []
+
+    // Sheets of book
     for (let i = 0; i < controls.book.children.length; i++) {
         let pageGroupRotation = controls.book.children[i];
         objectRaycaster.push(pageGroupRotation.children[0]);        //Put inside only page without the group rotation
     }
 
-    //Adding the images
-    objectRaycaster.push(panelPlane);
+    // Adding the images
+    for(let i = 0; i < paintWall.length; i++){
+        objectRaycaster.push(paintWall[i]);//objectRaycaster.push(panelPlane);
+    }
 
     // Raycaster and mouse Controllers 
     let objectLooked = null;
@@ -418,5 +368,61 @@ function main() {
         renderer.render(scene, camera);
     }
 
+    function createPicturesPanel(scene){
+        let paintList = [];
+
+        let painelGeometry = new THREE.BoxGeometry(30, 10, 5);//new THREE.PlaneGeometry(30, 10, 0.1, 0.1);
+        let painelMaterial = new THREE.MeshStandardMaterial({
+            //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
+            transparent: true,
+            opacity: 0.5,
+            map: textureLoader.load("../assets/general/wood-2.jpg"), side: THREE.DoubleSide
+        });
+        let panelPlane = new THREE.Mesh(painelGeometry, painelMaterial);
+        panelPlane.position.set(0, 5, -15.1);
+        scene.add(panelPlane);
+
+        panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+        panelMaterial = new THREE.MeshStandardMaterial({
+            map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
+        });
+        panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
+        panelPlane.position.set(-10, 7, -12);
+        panelPlane.objectType = 1;          //Image type
+
+        scene.add(panelPlane);
+        paintList.push(panelPlane);
+
+        panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+        panelMaterial = new THREE.MeshStandardMaterial({
+            map: textureLoader.load("../assets/paintings/4.jpg"), side: THREE.DoubleSide
+        });
+        panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
+        panelPlane.position.set(-0, 7, -12);
+        panelPlane.objectType = 1;          //Image type
+
+        scene.add(panelPlane);
+        paintList.push(panelPlane);
+
+        panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+        panelMaterial = new THREE.MeshStandardMaterial({
+            map: textureLoader.load("../assets/paintings/1.jpg"), side: THREE.DoubleSide
+        });
+        panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
+        panelPlane.position.set(10, 7, -12);
+        panelPlane.objectType = 1;          //Image type
+
+        scene.add(panelPlane);
+        paintList.push(panelPlane);
+
+        let skyboxGeometry = new THREE.SphereGeometry(100, 64, 64);
+        let skyboxMaterial = new THREE.MeshBasicMaterial({
+            map: textureLoader.load("../assets/museum.jpg"), side: THREE.DoubleSide   
+        });
+        let skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
+        scene.add(skybox);
+
+        return paintList;
+    }
 }
 
