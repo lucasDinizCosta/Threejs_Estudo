@@ -85,7 +85,9 @@ function main() {
         this.book = new THREE.Group(),
 
         // bookAttributes
-        this.angleBeginPage = 0.15,        // 0
+        this.angleBeginPage = 0,        
+        this.angleFinishPage = 180,        
+        this.angleRatePage = 1,      //0.15  
 
         // imagePanel
         this.imageList = [],
@@ -101,8 +103,10 @@ function main() {
             if(this.amountPages % 2 == 0){   //Pair pages on the book
                 // Adjust of rotation of the sheets inside of book
                 for(let i = 0; i < this.book.children.length; i++){
-                    let sheet = this.book.children[i];
-                    sheet.rotateZ(THREE.Math.degToRad(this.angleBeginPage));  // rotation default of page
+                    let sheetAux = this.book.children[i];
+                    sheetAux.angleBegin = sheetAux.angleBegin + this.angleRatePage;
+                    sheetAux.angleFinish = 180 - i * this.angleRatePage; //- sheetAux.angleBegin;     //this.angleBeginPage;
+                    sheetAux.rotateZ(THREE.Math.degToRad(this.angleRatePage));  // rotation default of page
                 }
 
                 let sheet = new THREE.Group();          // Support the elements -- Center of rotation page
@@ -121,9 +125,9 @@ function main() {
                 sheet.add(page);
                 sheet.position.set(0, this.heightBook, 0);
                 sheet.page = this.numberPage;
-                sheet.sideOption = 0;              //0=> Right, 1=> Left
+                sheet.sideOption = 0;              //0 => Right, 1 => Left
                 page.sheet = sheet;
-                page.objectType = 0;          //Page type
+                page.objectType = 0;               //Page type
 
                 // Image plane
 
@@ -148,6 +152,19 @@ function main() {
                 page.add(informationPlane);
                 this.amountSheets++;
                 this.book.add(sheet);       // Added sheet with page on the book
+                sheet.angleBegin = this.angleBeginPage;
+                sheet.angleFinish = this.angleFinishPage;
+
+                // Adjust finish angle
+                for(let i = 0; i < this.book.children.length; i++){
+                    let sheetAux = this.book.children[i];
+                    sheetAux.angleFinish = 180 - i * this.angleRatePage - sheetAux.angleBegin;     //this.angleBeginPage;
+                    //sheetAux.angleBegin = sheetAux.angleBegin + this.angleRatePage;
+                    //sheetAux.rotateZ(THREE.Math.degToRad(this.angleRatePage));  // rotation default of page
+                }
+
+                //sheet.angleBegin = sheetAux.angleBegin + this.angleRatePage;
+                //sheet.angleFinish = 180 - i * this.angleRatePage //- sheetAux.angleBegin;     //this.angleBeginPage;
             }
             else{
                 let sheet = this.book.children[this.book.children.length - 1]; // Take a sheet to insert a page on the book
@@ -159,7 +176,7 @@ function main() {
                     map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
                 });
                 let page = new THREE.Mesh(pageGeometry, pageMaterial);
-                page.position.set(this.widthPage / 2, 0, 0);
+                page.position.set(this.widthPage / 2, -0.001, 0);
                 page.rotateX(THREE.Math.degToRad(-90));
                 page.receiveShadow = true;
                 sheet.add(page);
@@ -189,21 +206,35 @@ function main() {
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.position.set(0, -this.lengthPage/4.5, -0.01);
                 page.add(informationPlane);
-                this.amountPages++;
                 this.book.add(sheet);       // Added sheet with page on the book
             }
             this.amountPages++;
         }
     }
+    
+    function test(){
+        //console.log(controls.book.children[0]);
+        console.log("AngleBegin      --      AngleFinish:");
+        for (let i = 0; i < controls.book.children.length; i++) {
+            let element = controls.book.children[i];
+            console.log("element.angleBegin: " + element.angleBegin, "element.angleFinish: " + element.angleFinish);
+            /*for (let j = 0; j < element.children.length; j++) {
+                let element2 = element.children[j];
+                console.log(element2);
+                console.log("element2.angleBegin: " + element2.angleBegin, "element2.angleFinish: " + element2.angleFinish);
+            }*/
+        }
+    }
 
-    /*for (let index = 0; index < 10; index++) {
+    for (let index = 0; index < 5; index++) {
         controls.createPage();  
-    }*/
-    controls.createPage();
-    controls.createPage();
-    controls.createPage();
+    }
+    //controls.createPage();
+    //controls.createPage();
+    //controls.createPage();
     scene.add(controls.book);
     
+    test();
     // GUI de controle e ajuste de valores especificos da geometria do objeto
     //var gui = new dat.GUI();
 
@@ -316,19 +347,23 @@ function main() {
         mouse.click = false;
         orbitControls.enableRotate = true;      // Enable rotation on camera
     });
-    window.addEventListener('mouseout', clearPickPosition); //Mouse sai da tela
+    window.addEventListener('mouseout', clearPickPosition);       // Mouse sai da tela
     window.addEventListener('mouseleave', clearPickPosition);
     window.addEventListener('mousedown', raycasterController);
     function raycasterController(){
         if(objectLooked != null){
-            orbitControls.enableRotate = false;         //Disable rotation on camera when raycasting detect an object
+            orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
             if(objectLooked.objectType == 0){
                 if(objectLooked.sheet.sideOption == 0){
-                    objectLooked.sheet.rotateZ(THREE.Math.degToRad(180));
+                    //objectLooked.sheet.rotateZ(THREE.Math.degToRad(180));
+                    objectLooked.sheet.rotateZ(THREE.Math.degToRad(objectLooked.sheet.angleFinish));
                     objectLooked.sheet.sideOption = 1;
                 }
                 else{
-                    objectLooked.sheet.rotateZ(THREE.Math.degToRad(0));
+                    objectLooked.sheet.rotateZ(
+                    THREE.Math.degToRad(
+                        -objectLooked.sheet.angleFinish 
+                    ));
                     objectLooked.sheet.sideOption = 0;
                 }
             }
