@@ -177,9 +177,9 @@ function main() {
                 sheet.add(page);
                 sheet.position.set(0, this.heightBook, 0);
                 sheet.page = this.numberPage;
-                sheet.sideOption = 0;              //0=> Right, 1=> Left
+                sheet.sideOption = 0;              // 0 => Right, 1 => Left
                 page.sheet = sheet;
-                page.objectType = 0;          //Page type
+                page.objectType = 0;               // Page type
 
                 // Image plane
 
@@ -221,7 +221,7 @@ function main() {
         }
     }
 
-    for (let index = 0; index < 9; index++) {
+    for (let index = 0; index < 19; index++) {
         controls.createPage();  
     }
     //controls.createPage();
@@ -283,7 +283,14 @@ function main() {
     window.addEventListener('mouseup', function up(){
         if(objectLooked != null && dragAndDropImage != null){
             if(objectLooked.objectType == 0){
-                objectLooked.material.copy(dragAndDropImage.material);
+                objectLooked.children[0].material = dragAndDropImage.material.clone(); // Generate a clone of material and replace on image plane
+                /*objectLooked.children[0].material = new THREE.MeshStandardMaterial({
+                    map: dragAndDropImage.material.map, side:dragAndDropImage.side
+                });
+                objectLooked.children[1].material = new THREE.MeshStandardMaterial({
+                    transparent: true, //opacity: 0.5,
+                    map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
+                });*/
                 dragAndDropImage = null;
             }
         }
@@ -306,42 +313,46 @@ function main() {
                     objectLooked.sheet.sideOption = 1;
                 }
                 else{
-                    objectLooked.sheet.rotateZ(
-                    THREE.Math.degToRad(
-                        -objectLooked.sheet.angleFinish 
-                    ));
+                    objectLooked.sheet.rotateZ( THREE.Math.degToRad( - objectLooked.sheet.angleFinish));
                     objectLooked.sheet.sideOption = 0;
                 }
             }
-            else if(objectLooked.objectType == 1){
+            else if(objectLooked.objectType == 1){      // Collide with image
                 dragAndDropImage = objectLooked;
             }
         }
-
         mouse.click = true;
     }
 
     let objectRaycaster = []
 
     // Sheets of book
-    for (let i = 0; i < controls.book.children.length; i++) {
+    /*for (let i = 0; i < controls.book.children.length; i++) {
         let pageGroupRotation = controls.book.children[i];
         objectRaycaster.push(pageGroupRotation.children[0]);        //Put inside only page without the group rotation
+    }*/
+
+    // Pages of book
+    for (let i = 0; i < controls.book.children.length; i++) {
+        let pageGroupRotation = controls.book.children[i];
+        for(let j = 0; j < pageGroupRotation.children.length; j++){
+            objectRaycaster.push(pageGroupRotation.children[j]);        //Put inside only page without the group rotation
+        }
     }
 
-    // Adding the images
+    // Adding the images of paintwall
     for(let i = 0; i < paintWall.length; i++){
         objectRaycaster.push(paintWall[i]);//objectRaycaster.push(panelPlane);
     }
 
     // Raycaster and mouse Controllers 
     let objectLooked = null;
-    let dragAndDropImage = null;
+    let dragAndDropImage = null;        
 
     function checkRaycaster(){
         // update the picking ray with the camera and mouse position
         raycaster.setFromCamera(mouse, camera);
-        var intersects = raycaster.intersectObjects(objectRaycaster);
+        let intersects = raycaster.intersectObjects(objectRaycaster);
         if(intersects.length > 0){
             let objectCollided = intersects[0].object;
             if(objectCollided.objectType == 0){
