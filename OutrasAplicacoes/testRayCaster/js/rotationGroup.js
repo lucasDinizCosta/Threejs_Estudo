@@ -171,7 +171,7 @@ function main() {
                     map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
                 });
                 let page = new THREE.Mesh(pageGeometry, pageMaterial);
-                page.position.set(this.widthPage / 2, -0.001, 0);
+                page.position.set(this.widthPage / 2, -0.005, 0);
                 page.rotateX(THREE.Math.degToRad(-90));
                 page.receiveShadow = true;
                 sheet.add(page);
