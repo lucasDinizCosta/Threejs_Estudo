@@ -207,42 +207,21 @@ function main() {
         }
     }
     
-    function test(){
-        //console.log(controls.book.children[0]);
-        console.log("AngleBegin      --      AngleFinish:");
-        for (let i = 0; i < controls.book.children.length; i++) {
-            let element = controls.book.children[i];
-            console.log("element.angleBegin: " + element.angleBegin, "element.angleFinish: " + element.angleFinish);
-            /*for (let j = 0; j < element.children.length; j++) {
-                let element2 = element.children[j];
-                console.log(element2);
-                console.log("element2.angleBegin: " + element2.angleBegin, "element2.angleFinish: " + element2.angleFinish);
-            }*/
-        }
-    }
-
     for (let index = 0; index < 19; index++) {
         controls.createPage();  
     }
     //controls.createPage();
-    //controls.createPage();
-    //controls.createPage();
     scene.add(controls.book);
     
-    test();
     // GUI de controle e ajuste de valores especificos da geometria do objeto
     //var gui = new dat.GUI();
 
-    /*  
-     * Teste painel de imagens 
-     */
+    let animationList = [];
+    let speedAnimation = 1.5;
     let paintWall = [];
-
     paintWall = createPicturesPanel(scene);
     
-    /**
-     * Add a small and simple ground plane
-     */
+    // Add a small and simple ground plane
 
     function createGroundPlane(width, height) {
         // create the ground plane
@@ -284,13 +263,6 @@ function main() {
         if(objectLooked != null && dragAndDropImage != null){
             if(objectLooked.objectType == 0){
                 objectLooked.children[0].material = dragAndDropImage.material.clone(); // Generate a clone of material and replace on image plane
-                /*objectLooked.children[0].material = new THREE.MeshStandardMaterial({
-                    map: dragAndDropImage.material.map, side:dragAndDropImage.side
-                });
-                objectLooked.children[1].material = new THREE.MeshStandardMaterial({
-                    transparent: true, //opacity: 0.5,
-                    map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
-                });*/
                 dragAndDropImage = null;
             }
         }
@@ -308,14 +280,16 @@ function main() {
             orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
             if(objectLooked.objectType == 0){
                 if(objectLooked.sheet.sideOption == 0){
-                    //objectLooked.sheet.rotateZ(THREE.Math.degToRad(180));
-                    objectLooked.sheet.rotateZ(THREE.Math.degToRad(objectLooked.sheet.angleFinish));
+                    //objectLooked.sheet.rotateZ(THREE.Math.degToRad(objectLooked.sheet.angleFinish));
                     objectLooked.sheet.sideOption = 1;
+                    animationList.push(objectLooked.sheet);
                 }
                 else{
-                    objectLooked.sheet.rotateZ( THREE.Math.degToRad( - objectLooked.sheet.angleFinish));
+                    //objectLooked.sheet.rotateZ( THREE.Math.degToRad(- objectLooked.sheet.angleFinish));
                     objectLooked.sheet.sideOption = 0;
+                    animationList.push(objectLooked.sheet);
                 }
+                objectLooked.sheet.animationAngle = 0;
             }
             else if(objectLooked.objectType == 1){      // Collide with image
                 dragAndDropImage = objectLooked;
@@ -324,13 +298,7 @@ function main() {
         mouse.click = true;
     }
 
-    let objectRaycaster = []
-
-    // Sheets of book
-    /*for (let i = 0; i < controls.book.children.length; i++) {
-        let pageGroupRotation = controls.book.children[i];
-        objectRaycaster.push(pageGroupRotation.children[0]);        //Put inside only page without the group rotation
-    }*/
+    let objectRaycaster = [];
 
     // Pages of book
     for (let i = 0; i < controls.book.children.length; i++) {
@@ -342,7 +310,7 @@ function main() {
 
     // Adding the images of paintwall
     for(let i = 0; i < paintWall.length; i++){
-        objectRaycaster.push(paintWall[i]);//objectRaycaster.push(panelPlane);
+        objectRaycaster.push(paintWall[i]);
     }
 
     // Raycaster and mouse Controllers 
@@ -375,16 +343,39 @@ function main() {
         stats.update();
         orbitControls.update(clock.getDelta());
         checkRaycaster();
+        animationBook();
         requestAnimationFrame(render);
         renderer.render(scene, camera);
     }
 
+    function animationBook(){
+        for (let i = 0; i < animationList.length; i++) {
+            if(animationList[i].sideOption == 1){
+                if(animationList[i].animationAngle > animationList[i].angleFinish){
+                    animationList[i].animationAngle = 0;
+                    animationList.splice(i, 1);
+                    continue;
+                }
+                animationList[i].animationAngle = animationList[i].animationAngle + speedAnimation;
+                animationList[i].rotateZ(THREE.Math.degToRad(speedAnimation));
+            }
+            else{
+                if(animationList[i].animationAngle < (-animationList[i].angleFinish)){
+                    animationList[i].animationAngle = 0;
+                    animationList.splice(i, 1);
+                    continue;
+                }
+                animationList[i].animationAngle = animationList[i].animationAngle - speedAnimation;
+                animationList[i].rotateZ(THREE.Math.degToRad(- speedAnimation));
+            }
+            
+        }
+    }
+
     function createPicturesPanel(scene){
         let paintList = [];
-
         let painelGeometry = new THREE.BoxGeometry(30, 10, 5);//new THREE.PlaneGeometry(30, 10, 0.1, 0.1);
         let painelMaterial = new THREE.MeshStandardMaterial({
-            //color:"rgb(255, 255, 255)", side:THREE.DoubleSide
             transparent: true,
             opacity: 0.5,
             map: textureLoader.load("../assets/general/wood-2.jpg"), side: THREE.DoubleSide
