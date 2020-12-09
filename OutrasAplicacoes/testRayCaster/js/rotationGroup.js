@@ -281,14 +281,14 @@ function main() {
     mouse.click = false;
 
     window.addEventListener('mouseup', function up(){
-        if(objectLooked != null && dragAndDropImage[0] != null){
+        if(objectLooked != null && dragAndDropImage != null){
             if(objectLooked.objectType == 0){
-                objectLooked.material.copy(dragAndDropImage[0].material);
-                dragAndDropImage[0] = null;
+                objectLooked.material.copy(dragAndDropImage.material);
+                dragAndDropImage = null;
             }
         }
         else{
-            dragAndDropImage[0] = null;
+            dragAndDropImage = null;
         }
         mouse.click = false;
         orbitControls.enableRotate = true;      // Enable rotation on camera
@@ -314,7 +314,7 @@ function main() {
                 }
             }
             else if(objectLooked.objectType == 1){
-                dragAndDropImage[0] = objectLooked;
+                dragAndDropImage = objectLooked;
             }
         }
 
@@ -336,7 +336,7 @@ function main() {
 
     // Raycaster and mouse Controllers 
     let objectLooked = null;
-    let dragAndDropImage = [null, null]   //Image, Page
+    let dragAndDropImage = null;
 
     function checkRaycaster(){
         // update the picking ray with the camera and mouse position
