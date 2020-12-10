@@ -154,6 +154,7 @@ function main() {
                 this.book.add(sheet);       // Added sheet with page on the book
                 sheet.angleBegin = this.angleBeginPage;
                 sheet.angleFinish = this.angleFinishPage;
+                sheet.animationAngle = 0;
 
                 // Adjust finish angle
                 for(let i = 0; i < this.book.children.length; i++){
@@ -279,17 +280,17 @@ function main() {
         if(objectLooked != null){
             orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
             if(objectLooked.objectType == 0){
-                if(objectLooked.sheet.sideOption == 0){
-                    //objectLooked.sheet.rotateZ(THREE.Math.degToRad(objectLooked.sheet.angleFinish));
-                    objectLooked.sheet.sideOption = 1;
-                    animationList.push(objectLooked.sheet);
+                if(objectLooked.sheet.animationAngle == 0){     //Don't rotate if the page is moving
+                    if(objectLooked.sheet.sideOption == 0){
+                        objectLooked.sheet.sideOption = 1;
+                        animationList.push(objectLooked.sheet);
+                    }
+                    else{
+                        objectLooked.sheet.sideOption = 0;
+                        animationList.push(objectLooked.sheet);
+                    }
+                    objectLooked.sheet.animationAngle = 0;
                 }
-                else{
-                    //objectLooked.sheet.rotateZ( THREE.Math.degToRad(- objectLooked.sheet.angleFinish));
-                    objectLooked.sheet.sideOption = 0;
-                    animationList.push(objectLooked.sheet);
-                }
-                objectLooked.sheet.animationAngle = 0;
             }
             else if(objectLooked.objectType == 1){      // Collide with image
                 dragAndDropImage = objectLooked;
