@@ -190,30 +190,40 @@ function main() {
         }
 
         // Button Read / Exit
-        this.buttonsBook = [null, null],    // Read, Exit
+        this.buttonsBook = [null, null, null],    // Read(Left sheet, Right sheet), Exit
+        this.sizeButton = 1.5,
         this.cameraOption = 0,              // 0 => rotationCamera, 1 => UpperCamera
 
         this.createButtonsBook = function(){
-            let readButtonGeometry = new THREE.PlaneGeometry(1.5, 1.5, 0.1, 0.1);
+            let readButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
             let readButtonMaterial = new THREE.MeshStandardMaterial({
                 color:"rgb(100, 100, 0)", side:THREE.DoubleSide
             });
             let readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
-            readButton.position.set(0, this.book.position.y + 5, 0);
+            readButton.position.set(-this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + 8); //readButton.position.set(0, this.book.position.y + 5, 0); 
             this.buttonsBook[0] = readButton;
             this.buttonsBook[0].objectType = 2;
+            this.buttonsBook[0].visible = false;
             this.buttonsBook[0].rotateX(THREE.Math.degToRad(-90));
             scene.add(this.buttonsBook[0]);
-            let exitButtonGeometry = new THREE.PlaneGeometry(1.5, 1.5, 0.1, 0.1);
+            readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
+            readButton.position.set(this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + 8); //readButton.position.set(0, this.book.position.y + 5, 0); 
+            this.buttonsBook[1] = readButton;
+            this.buttonsBook[1].visible = false;
+            this.buttonsBook[1].objectType = 3;
+            this.buttonsBook[1].rotateX(THREE.Math.degToRad(-90));
+            scene.add(this.buttonsBook[1]);
+            let exitButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
             let exitButtonMaterial = new THREE.MeshStandardMaterial({
                 color:"rgb(0, 100, 100)", side:THREE.DoubleSide
             });
             let exitButton = new THREE.Mesh(exitButtonGeometry, exitButtonMaterial);
             exitButton.position.set(0, this.book.position.y + 0.5, this.book.position.z + 8);
             exitButton.rotateX(THREE.Math.degToRad(-90));
-            this.buttonsBook[1] = exitButton;
-            this.buttonsBook[1].objectType = 3;
-            scene.add(this.buttonsBook[1]);
+            this.buttonsBook[2] = exitButton;
+            this.buttonsBook[2].visible = false;
+            this.buttonsBook[2].objectType = 4;
+            scene.add(this.buttonsBook[2]);
         }
     }
 
@@ -223,19 +233,6 @@ function main() {
     scene.add(controls.book);
 
     controls.createButtonsBook();
-
-    function changeCamera(){
-        if(controls.cameraOption == 1){
-            defaultCamera = upperCamera;
-            controls.buttonsBook[0].visible = false;
-            controls.buttonsBook[1].visible = true;
-        }
-        else{
-            defaultCamera = camera;
-            controls.buttonsBook[0].visible = true;
-            controls.buttonsBook[1].visible = false;
-        }
-    }
 
     let animationList = [];
     let speedAnimation = 1.8;   //1.5
@@ -303,20 +300,34 @@ function main() {
                             controls.currentSheet--;
                         }
                         animationList.push(objectLooked.sheet);
-                        console.log(controls.currentSheet);
-                        objectLooked.sheet.animationAngle = 0;
+                        //console.log(controls.currentSheet);
                     }
                     break;
                 case 1:     // Collide with image
                     dragAndDropImage = objectLooked;
                     break;
-                case 2:     // Read Button
+                case 2:     // Read Left page Button
                     controls.cameraOption = 1;      // Turn camera option
-                    changeCamera();
+                    defaultCamera = upperCamera;
+                    controls.buttonsBook[0].visible = false;
+                    controls.buttonsBook[1].visible = false;
+                    controls.buttonsBook[2].visible = true;
+                    //changeCamera();
                     break;
-                case 3:     // Exit Button
+                case 3:     // Read Right page Button
+                    controls.cameraOption = 1;      // Turn camera option
+                    defaultCamera = upperCamera;
+                    controls.buttonsBook[0].visible = false;
+                    controls.buttonsBook[1].visible = false;
+                    controls.buttonsBook[2].visible = true;
+                    break;
+                case 4:     // Exit Button
                     controls.cameraOption = 0;
-                    changeCamera();
+                    //changeCamera();
+                    defaultCamera = camera;
+                    controls.buttonsBook[0].visible = true;
+                    controls.buttonsBook[1].visible = true;
+                    controls.buttonsBook[2].visible = false;
                     break;
             }
         }
@@ -341,6 +352,7 @@ function main() {
     // Buttons
     objectRaycaster.push(controls.buttonsBook[0]);
     objectRaycaster.push(controls.buttonsBook[1]);
+    objectRaycaster.push(controls.buttonsBook[2]);
 
     // Raycaster and mouse Controllers 
     let objectLooked = null;
@@ -352,6 +364,9 @@ function main() {
         let intersects = raycaster.intersectObjects(objectRaycaster);
         if(intersects.length > 0){
             objectLooked = intersects[0].object;
+            if(!intersects[0].object.visible){ // Object is not visible
+                objectLooked = null;
+            }
             //console.log(objectLooked.objectType);
         }
         else{
