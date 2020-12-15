@@ -170,6 +170,7 @@ function main() {
                 let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
                 imagePlane.receiveShadow = true;
                 imagePlane.position.set(0, this.lengthPage/4.5, -0.01);
+                imagePlane.rotateY(THREE.Math.degToRad(180));
                 page.add(imagePlane);
 
                 // Informations block
@@ -180,6 +181,7 @@ function main() {
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.position.set(0, -this.lengthPage/4.5, -0.01);
+                informationPlane.rotateY(THREE.Math.degToRad(180));
                 page.add(informationPlane);
                 this.book.add(sheet);       // Added sheet with page on the book
             }
