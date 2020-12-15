@@ -77,6 +77,7 @@ function main() {
         this.lengthPage = 14,        //Padrao antigo: 6
         this.heightBook = 0.5,
         this.amountSheets = 0,
+        this.currentSheet = 0,
         this.amountPages = 0,
         this.createPage = function (){
             if(this.amountPages % 2 == 0){   //Pair pages on the book
@@ -295,12 +296,14 @@ function main() {
                     if(objectLooked.sheet.animationAngle == 0){     //Don't rotate if the page is moving
                         if(objectLooked.sheet.sideOption == 0){
                             objectLooked.sheet.sideOption = 1;
-                            animationList.push(objectLooked.sheet);
+                            controls.currentSheet++;
                         }
                         else{
                             objectLooked.sheet.sideOption = 0;
-                            animationList.push(objectLooked.sheet);
+                            controls.currentSheet--;
                         }
+                        animationList.push(objectLooked.sheet);
+                        console.log(controls.currentSheet);
                         objectLooked.sheet.animationAngle = 0;
                     }
                     break;
