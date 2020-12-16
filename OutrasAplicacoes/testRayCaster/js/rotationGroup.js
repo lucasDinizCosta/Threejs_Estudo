@@ -224,6 +224,9 @@ function main() {
             this.buttonsBook[2].visible = false;
             this.buttonsBook[2].objectType = 4;
             scene.add(this.buttonsBook[2]);
+            if(this.amountSheets > 0){
+                this.buttonsBook[1].visible = true;
+            }
         },
 
         this.createBook = function(){
@@ -232,6 +235,23 @@ function main() {
             }
             scene.add(this.book);
             this.createButtonsBook();
+        }
+
+        this.adjustButtonsBook = function(){
+            if(this.currentSheet < this.amountSheets){ 
+                if(this.currentSheet > 0){
+                    this.buttonsBook[0].visible = true;
+                    this.buttonsBook[1].visible = true;
+                }
+                else{
+                    this.buttonsBook[0].visible = false;
+                    this.buttonsBook[1].visible = true;
+                }
+            }
+            else{                                   // End of book
+                this.buttonsBook[0].visible = true;
+                this.buttonsBook[1].visible = false;
+            }
         }
     }
     controls.createBook();
@@ -301,6 +321,7 @@ function main() {
                             objectLooked.sheet.sideOption = 0;
                             controls.currentSheet--;
                         }
+                        controls.adjustButtonsBook();
                         animationList.push(objectLooked.sheet);
                         //console.log(controls.currentSheet);
                     }
