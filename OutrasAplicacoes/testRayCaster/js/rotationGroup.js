@@ -224,15 +224,17 @@ function main() {
             this.buttonsBook[2].visible = false;
             this.buttonsBook[2].objectType = 4;
             scene.add(this.buttonsBook[2]);
+        },
+
+        this.createBook = function(){
+            for (let index = 0; index < 9; index++) {
+                this.createPage();  
+            }
+            scene.add(this.book);
+            this.createButtonsBook();
         }
     }
-
-    for (let index = 0; index < 9; index++) {
-        controls.createPage();  
-    }
-    scene.add(controls.book);
-
-    controls.createButtonsBook();
+    controls.createBook();
 
     let animationList = [];
     let speedAnimation = 1.8;   //1.5
