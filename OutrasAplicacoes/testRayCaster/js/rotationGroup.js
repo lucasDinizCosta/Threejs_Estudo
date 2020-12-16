@@ -238,18 +238,24 @@ function main() {
         }
 
         this.adjustButtonsBook = function(){
-            if(this.currentSheet < this.amountSheets){ 
-                if(this.currentSheet > 0){
-                    this.buttonsBook[0].visible = true;
-                    this.buttonsBook[1].visible = true;
+            if(this.cameraOption != 1){
+                if(this.currentSheet < this.amountSheets){ 
+                    if(this.currentSheet > 0){
+                        this.buttonsBook[0].visible = true;
+                        this.buttonsBook[1].visible = true;
+                    }
+                    else{
+                        this.buttonsBook[0].visible = false;
+                        this.buttonsBook[1].visible = true;
+                    }
                 }
-                else{
-                    this.buttonsBook[0].visible = false;
-                    this.buttonsBook[1].visible = true;
+                else{                                   // End of book
+                    this.buttonsBook[0].visible = true;
+                    this.buttonsBook[1].visible = false;
                 }
             }
-            else{                                   // End of book
-                this.buttonsBook[0].visible = true;
+            else{
+                this.buttonsBook[0].visible = false;
                 this.buttonsBook[1].visible = false;
             }
         }
@@ -332,24 +338,27 @@ function main() {
                 case 2:     // Read Left page Button
                     controls.cameraOption = 1;      // Turn camera option
                     defaultCamera = upperCamera;
-                    controls.buttonsBook[0].visible = false;
-                    controls.buttonsBook[1].visible = false;
+                    //controls.buttonsBook[0].visible = false;
+                    //controls.buttonsBook[1].visible = false;
+                    controls.adjustButtonsBook();
                     controls.buttonsBook[2].visible = true;
                     //changeCamera();
                     break;
                 case 3:     // Read Right page Button
                     controls.cameraOption = 1;      // Turn camera option
                     defaultCamera = upperCamera;
-                    controls.buttonsBook[0].visible = false;
-                    controls.buttonsBook[1].visible = false;
+                    //controls.buttonsBook[0].visible = false;
+                    //controls.buttonsBook[1].visible = false;
+                    controls.adjustButtonsBook();
                     controls.buttonsBook[2].visible = true;
                     break;
                 case 4:     // Exit Button
                     controls.cameraOption = 0;
                     //changeCamera();
                     defaultCamera = camera;
-                    controls.buttonsBook[0].visible = true;
-                    controls.buttonsBook[1].visible = true;
+                    //controls.buttonsBook[0].visible = true;
+                    //controls.buttonsBook[1].visible = true;
+                    controls.adjustButtonsBook();
                     controls.buttonsBook[2].visible = false;
                     break;
             }
