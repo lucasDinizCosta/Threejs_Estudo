@@ -124,7 +124,8 @@ function main() {
 
                 let informationGeometry = new THREE.PlaneGeometry(this.widthPage/1.25, this.lengthPage/2.75, 0.1, 0.1);
                 let informationMaterial = new THREE.MeshStandardMaterial({
-                    color:"rgb(170, 0, 0)", side:THREE.DoubleSide
+                    color:"rgb(170, 0, 0)", side:THREE.DoubleSide,
+                    map: dynamicTexture.texture
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 //imagePlane.receiveShadow = true;
@@ -178,7 +179,7 @@ function main() {
 
                 let informationGeometry = new THREE.PlaneGeometry(this.widthPage/1.25, this.lengthPage/2.75, 0.1, 0.1);
                 let informationMaterial = new THREE.MeshStandardMaterial({
-                    color:"rgb(170, 0, 0)", side:THREE.DoubleSide
+                    color:"rgb(170, 0, 0)", side:THREE.DoubleSide,
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.position.set(0, -this.lengthPage/4.5, -0.01);
@@ -260,6 +261,17 @@ function main() {
             }
         }
     }
+    
+
+    var dynamicTexture = new THREEx.DynamicTexture(512,512);
+    console.log(dynamicTexture);
+    dynamicTexture.context.font	= "bolder 64px Times New Roman";
+    dynamicTexture.context.textAlign = "justify";
+    dynamicTexture.drawText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi libero justo, consequat sed dignissim a, mattis nec mauris."
+    + "Sed a arcu justo. Vivamus luctus diam est, ut ultricies magna ullamcorper eget. Vestibulum eget nisl ultrices, placerat metus ac, commodo tortor. In hac habitasse platea dictumst. Vestibulum iaculis elementum congue. Vivamus ultrices mollis lorem, a placerat arcu finibus sed. Aliquam pulvinar lectus et tempus rutrum. Nullam semper fermentum libero sed sollicitudin. Morbi dui nunc, tincidunt eu pharetra sit amet, facilisis vel nisl. In commodo nunc turpis, ac efficitur nisl fermentum bibendum. Nullam mauris nisi, maximus a ex vitae, efficitur congue risus. Pellentesque eget eleifend eros. Ut et nulla ut enim eleifend convallis et eu sapien."
+    , undefined, 256, 'black'); // clear('cyan')
+	//dynamicTexture.texture.anisotropy = renderer.getMaxAnisotropy();
+
     controls.createBook();
 
     let animationList = [];
@@ -338,26 +350,22 @@ function main() {
                 case 2:     // Read Left page Button
                     controls.cameraOption = 1;      // Turn camera option
                     defaultCamera = upperCamera;
-                    //controls.buttonsBook[0].visible = false;
-                    //controls.buttonsBook[1].visible = false;
                     controls.adjustButtonsBook();
                     controls.buttonsBook[2].visible = true;
-                    //changeCamera();
+                    defaultCamera.position.set(-controls.widthPage/2, 17, 0);   // Y = 25
+                    controls.buttonsBook[2].position.set(-controls.widthPage - controls.sizeButton/2, controls.buttonsBook[2].position.y, 0);   
                     break;
                 case 3:     // Read Right page Button
                     controls.cameraOption = 1;      // Turn camera option
                     defaultCamera = upperCamera;
-                    //controls.buttonsBook[0].visible = false;
-                    //controls.buttonsBook[1].visible = false;
                     controls.adjustButtonsBook();
                     controls.buttonsBook[2].visible = true;
+                    defaultCamera.position.set(controls.widthPage/2, 17, 0);
+                    controls.buttonsBook[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttonsBook[2].position.y, 0);   
                     break;
                 case 4:     // Exit Button
                     controls.cameraOption = 0;
-                    //changeCamera();
                     defaultCamera = camera;
-                    //controls.buttonsBook[0].visible = true;
-                    //controls.buttonsBook[1].visible = true;
                     controls.adjustButtonsBook();
                     controls.buttonsBook[2].visible = false;
                     break;
