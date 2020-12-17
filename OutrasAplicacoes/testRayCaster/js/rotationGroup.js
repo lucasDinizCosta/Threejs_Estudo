@@ -124,7 +124,7 @@ function main() {
 
                 let informationGeometry = new THREE.PlaneGeometry(this.widthPage/1.25, this.lengthPage/2.75, 0.1, 0.1);
                 let informationMaterial = new THREE.MeshStandardMaterial({
-                    color:"rgb(170, 0, 0)", side:THREE.DoubleSide,
+                    /*color:"rgb(170, 0, 0)",*/ side:THREE.DoubleSide,
                     map: dynamicTexture.texture
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
@@ -220,15 +220,15 @@ function main() {
             this.buttonsBook[1].objectType = 3;
             this.buttonsBook[1].rotateX(THREE.Math.degToRad(-90));
             scene.add(this.buttonsBook[1]);
-            let exitButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
-            let exitButtonMaterial = new THREE.MeshBasicMaterial({
+            let backButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
+            let backButtonMaterial = new THREE.MeshBasicMaterial({
                 /*color:"rgb(0, 100, 100)", */side:THREE.DoubleSide,
                 map: textureLoader.load("../assets/icons/back.png")
             });
-            let exitButton = new THREE.Mesh(exitButtonGeometry, exitButtonMaterial);
-            exitButton.position.set(0, this.book.position.y + 0.5, this.book.position.z + 8);
-            exitButton.rotateX(THREE.Math.degToRad(-90));
-            this.buttonsBook[2] = exitButton;
+            let backButton = new THREE.Mesh(backButtonGeometry, backButtonMaterial);
+            backButton.position.set(0, this.book.position.y + 0.5, this.book.position.z + 8);
+            backButton.rotateX(THREE.Math.degToRad(-90));
+            this.buttonsBook[2] = backButton;
             this.buttonsBook[2].visible = false;
             this.buttonsBook[2].objectType = 4;
             scene.add(this.buttonsBook[2]);
@@ -270,14 +270,20 @@ function main() {
     }
 
     var dynamicTexture = new THREEx.DynamicTexture(512,512);
-    console.log(dynamicTexture);
-    dynamicTexture.context.font	= "bolder 64px Times New Roman";
+    //console.log(dynamicTexture);
+    dynamicTexture.context.font	= "bolder 32px Times New Roman";
+    //dynamicTexture.context.globalAlpha = 0.2;
     dynamicTexture.context.textAlign = "justify";
-    dynamicTexture.drawText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi libero justo, consequat sed dignissim a, mattis nec mauris."
+    
+    dynamicTexture.clear(); // clear('rgb(100,100,100)');
+    for(let i = 1; i < 15; i++){
+        dynamicTexture.drawText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi libero justo, consequat sed dignissim a, mattis nec mauris."
     + "Sed a arcu justo. Vivamus luctus diam est, ut ultricies magna ullamcorper eget. Vestibulum eget nisl ultrices, placerat metus ac, commodo tortor. In hac habitasse platea dictumst. Vestibulum iaculis elementum congue. Vivamus ultrices mollis lorem, a placerat arcu finibus sed. Aliquam pulvinar lectus et tempus rutrum. Nullam semper fermentum libero sed sollicitudin. Morbi dui nunc, tincidunt eu pharetra sit amet, facilisis vel nisl. In commodo nunc turpis, ac efficitur nisl fermentum bibendum. Nullam mauris nisi, maximus a ex vitae, efficitur congue risus. Pellentesque eget eleifend eros. Ut et nulla ut enim eleifend convallis et eu sapien."
-    , undefined, 256, 'black'); // clear('cyan')
+    , undefined, i * 35, 'black'); // clear('cyan')
+    }
+    
 	//dynamicTexture.texture.anisotropy = renderer.getMaxAnisotropy();
-
+    console.log(dynamicTexture);
     controls.createBook();
 
     let animationList = [];
