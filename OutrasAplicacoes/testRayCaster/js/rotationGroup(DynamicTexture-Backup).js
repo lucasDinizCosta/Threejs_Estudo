@@ -32,7 +32,7 @@ function main() {
     orbitControls.minDistance = 10;
     orbitControls.maxDistance = 100;
     var spotLight = new THREE.SpotLight(0xffffff);
-    spotLight.position.copy(new THREE.Vector3(0, 15, 15));
+    spotLight.position.copy(new THREE.Vector3(12, 15, 15));
     spotLight.shadow.mapSize.width = 2048;
     spotLight.shadow.mapSize.height = 2048;
     spotLight.shadow.camera.fov = 15;
@@ -197,9 +197,8 @@ function main() {
 
         this.createButtonsBook = function(){
             let readButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
-            let readButtonMaterial = new THREE.MeshBasicMaterial({
-                /*color:"rgb(100, 100, 0)",*/ side:THREE.DoubleSide,
-                map: textureLoader.load("../assets/icons/read.png"),
+            let readButtonMaterial = new THREE.MeshStandardMaterial({
+                color:"rgb(100, 100, 0)", side:THREE.DoubleSide
             });
             let readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
             readButton.position.set(-this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + 8); //readButton.position.set(0, this.book.position.y + 5, 0); 
@@ -208,11 +207,6 @@ function main() {
             this.buttonsBook[0].visible = false;
             this.buttonsBook[0].rotateX(THREE.Math.degToRad(-90));
             scene.add(this.buttonsBook[0]);
-            readButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
-            readButtonMaterial = new THREE.MeshBasicMaterial({
-                /*color:"rgb(100, 100, 0)",*/ side:THREE.DoubleSide,
-                map: textureLoader.load("../assets/icons/read.png"),
-            });
             readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
             readButton.position.set(this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + 8); //readButton.position.set(0, this.book.position.y + 5, 0); 
             this.buttonsBook[1] = readButton;
@@ -221,9 +215,8 @@ function main() {
             this.buttonsBook[1].rotateX(THREE.Math.degToRad(-90));
             scene.add(this.buttonsBook[1]);
             let exitButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
-            let exitButtonMaterial = new THREE.MeshBasicMaterial({
-                /*color:"rgb(0, 100, 100)", */side:THREE.DoubleSide,
-                map: textureLoader.load("../assets/icons/back.png")
+            let exitButtonMaterial = new THREE.MeshStandardMaterial({
+                color:"rgb(0, 100, 100)", side:THREE.DoubleSide
             });
             let exitButton = new THREE.Mesh(exitButtonGeometry, exitButtonMaterial);
             exitButton.position.set(0, this.book.position.y + 0.5, this.book.position.z + 8);
@@ -268,6 +261,7 @@ function main() {
             }
         }
     }
+    
 
     var dynamicTexture = new THREEx.DynamicTexture(512,512);
     console.log(dynamicTexture);
