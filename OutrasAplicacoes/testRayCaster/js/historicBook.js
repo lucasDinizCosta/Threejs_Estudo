@@ -59,6 +59,9 @@ function main() {
     var mouse = new THREE.Vector2();
     mouse.click = false;
 
+    // Remove console.log
+    //textureLoader.minFilter = THREE.LinearFilter;
+
     // Controls of sidebar
     var controls = new function() {
         // Axes
@@ -101,7 +104,6 @@ function main() {
                 let page = new THREE.Mesh(pageGeometry, pageMaterial);
                 page.position.set(this.widthPage / 2, 0, 0);
                 page.rotateX(THREE.Math.degToRad(-90));
-                page.receiveShadow = true;
                 sheet.add(page);
                 sheet.position.set(0, this.heightBook, 0);
                 sheet.page = this.numberPage;
@@ -110,27 +112,24 @@ function main() {
                 page.objectType = 0;               //Page type
 
                 // Image plane
-
                 let imageGeometry = new THREE.PlaneGeometry(this.widthPage/1.5, this.lengthPage/3, 0.1, 0.1);
                 let imageMaterial = new THREE.MeshStandardMaterial({
-                    color:"rgb(255, 255, 255)", side:THREE.DoubleSide
+                    color:"rgb(255, 255, 255)", side: THREE.DoubleSide
                 });
                 let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
-                //imagePlane.receiveShadow = true;
                 imagePlane.position.set(0, this.lengthPage/4.5, 0.01);
                 page.add(imagePlane);
 
                 // Informations block
-
-                let informationGeometry = new THREE.PlaneGeometry(this.widthPage/1.25, this.lengthPage/2.75, 0.1, 0.1);
+                let informationGeometry = new THREE.PlaneGeometry(this.widthPage/1.25, this.lengthPage/2.30, 0.1, 0.1);
                 let informationMaterial = new THREE.MeshStandardMaterial({
                     transparent: true,
-                    side:THREE.DoubleSide,
+                    side: THREE.DoubleSide,
                     /*color:"rgb(170, 0, 0)",*/ 
-                    map: textureLoader.load("../assets/text-Transparent.png")
+                    map: textureLoader.load("../assets/text-3.png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
-                informationPlane.position.set(0, -this.lengthPage/4.5, 0.01);
+                informationPlane.position.set(0, -this.lengthPage/5, 0.01);
                 page.add(informationPlane);
                 this.amountSheets++;
                 this.book.add(sheet);       // Added sheet with page on the book
@@ -156,7 +155,6 @@ function main() {
                 let page = new THREE.Mesh(pageGeometry, pageMaterial);
                 page.position.set(this.widthPage / 2, -0.005, 0);
                 page.rotateX(THREE.Math.degToRad(-90));
-                page.receiveShadow = true;
                 sheet.add(page);
                 sheet.position.set(0, this.heightBook, 0);
                 sheet.page = this.numberPage;
@@ -165,7 +163,6 @@ function main() {
                 page.objectType = 0;               // Page type
 
                 // Image plane
-
                 let imageGeometry = new THREE.PlaneGeometry(this.widthPage/1.5, this.lengthPage/3, 0.1, 0.1);
                 let imageMaterial = new THREE.MeshStandardMaterial({
                     color:"rgb(255, 255, 255)", side:THREE.DoubleSide
@@ -176,16 +173,15 @@ function main() {
                 page.add(imagePlane);
 
                 // Informations block
-
-                let informationGeometry = new THREE.PlaneGeometry(this.widthPage/1.25, this.lengthPage/2.75, 0.1, 0.1);
-                let informationMaterial = new THREE.MeshStandardMaterial({
-                    transparent: true,
+                let informationGeometry = new THREE.PlaneGeometry(this.widthPage/1.25, this.lengthPage/2.3, 0.1, 0.1);
+                let informationMaterial = new THREE.MeshBasicMaterial({
+                    transparent: true, /*opacity: 0.9,*/
                     side:THREE.DoubleSide,
                     /*color:"rgb(170, 0, 0)",*/ 
-                    map: textureLoader.load("../assets/text-2-Transparent.png")
+                    map: textureLoader.load("../assets/text-3.png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
-                informationPlane.position.set(0, -this.lengthPage/4.5, -0.01);
+                informationPlane.position.set(0, -this.lengthPage/5, -0.01);
                 informationPlane.rotateY(THREE.Math.degToRad(180));
                 page.add(informationPlane);
                 this.book.add(sheet);       // Added sheet with page on the book
