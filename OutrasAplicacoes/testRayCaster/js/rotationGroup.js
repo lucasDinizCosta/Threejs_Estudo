@@ -124,8 +124,10 @@ function main() {
 
                 let informationGeometry = new THREE.PlaneGeometry(this.widthPage/1.25, this.lengthPage/2.75, 0.1, 0.1);
                 let informationMaterial = new THREE.MeshStandardMaterial({
-                    /*color:"rgb(170, 0, 0)",*/ side:THREE.DoubleSide,
-                    map: dynamicTexture.texture
+                    transparent: true,
+                    side:THREE.DoubleSide,
+                    /*color:"rgb(170, 0, 0)",*/ 
+                    map: textureLoader.load("../assets/text-Transparent.png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 //imagePlane.receiveShadow = true;
@@ -179,7 +181,10 @@ function main() {
 
                 let informationGeometry = new THREE.PlaneGeometry(this.widthPage/1.25, this.lengthPage/2.75, 0.1, 0.1);
                 let informationMaterial = new THREE.MeshStandardMaterial({
-                    color:"rgb(170, 0, 0)", side:THREE.DoubleSide,
+                    transparent: true,
+                    side:THREE.DoubleSide,
+                    /*color:"rgb(170, 0, 0)",*/ 
+                    map: textureLoader.load("../assets/text-2-Transparent.png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.position.set(0, -this.lengthPage/4.5, -0.01);
@@ -268,22 +273,7 @@ function main() {
             }
         }
     }
-
-    var dynamicTexture = new THREEx.DynamicTexture(512,512);
-    //console.log(dynamicTexture);
-    dynamicTexture.context.font	= "bolder 32px Times New Roman";
-    //dynamicTexture.context.globalAlpha = 0.2;
-    dynamicTexture.context.textAlign = "justify";
     
-    dynamicTexture.clear(); // clear('rgb(100,100,100)');
-    for(let i = 1; i < 15; i++){
-        dynamicTexture.drawText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi libero justo, consequat sed dignissim a, mattis nec mauris."
-    + "Sed a arcu justo. Vivamus luctus diam est, ut ultricies magna ullamcorper eget. Vestibulum eget nisl ultrices, placerat metus ac, commodo tortor. In hac habitasse platea dictumst. Vestibulum iaculis elementum congue. Vivamus ultrices mollis lorem, a placerat arcu finibus sed. Aliquam pulvinar lectus et tempus rutrum. Nullam semper fermentum libero sed sollicitudin. Morbi dui nunc, tincidunt eu pharetra sit amet, facilisis vel nisl. In commodo nunc turpis, ac efficitur nisl fermentum bibendum. Nullam mauris nisi, maximus a ex vitae, efficitur congue risus. Pellentesque eget eleifend eros. Ut et nulla ut enim eleifend convallis et eu sapien."
-    , undefined, i * 35, 'black'); // clear('cyan')
-    }
-    
-	//dynamicTexture.texture.anisotropy = renderer.getMaxAnisotropy();
-    console.log(dynamicTexture);
     controls.createBook();
 
     let animationList = [];
