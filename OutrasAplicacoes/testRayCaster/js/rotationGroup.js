@@ -116,7 +116,7 @@ function main() {
                     color:"rgb(255, 255, 255)", side:THREE.DoubleSide
                 });
                 let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
-                imagePlane.receiveShadow = true;
+                //imagePlane.receiveShadow = true;
                 imagePlane.position.set(0, this.lengthPage/4.5, 0.01);
                 page.add(imagePlane);
 
@@ -130,7 +130,6 @@ function main() {
                     map: textureLoader.load("../assets/text-Transparent.png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
-                //imagePlane.receiveShadow = true;
                 informationPlane.position.set(0, -this.lengthPage/4.5, 0.01);
                 page.add(informationPlane);
                 this.amountSheets++;
@@ -172,7 +171,6 @@ function main() {
                     color:"rgb(255, 255, 255)", side:THREE.DoubleSide
                 });
                 let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
-                imagePlane.receiveShadow = true;
                 imagePlane.position.set(0, this.lengthPage/4.5, -0.01);
                 imagePlane.rotateY(THREE.Math.degToRad(180));
                 page.add(imagePlane);
