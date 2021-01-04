@@ -64,11 +64,9 @@ function main() {
 
     // Controls of sidebar
     var controls = new function() {
-        // Axes
-        this.axes = false,
-
         // Add objects to scene
         this.book = new THREE.Group(),
+        this.pictures = [],
 
         // bookAttributes
         this.angleBeginPage = 0,        
@@ -272,8 +270,7 @@ function main() {
 
     let animationList = [];
     let speedAnimation = 1.8;   //1.5
-    let paintWall = [];
-    paintWall = createPicturesPanel(scene);
+    controls.pictures = createPicturesPanel(scene);
 
     // Reajuste da renderização com base na mudança da janela
     function onResize(){
@@ -381,8 +378,8 @@ function main() {
     }
 
     // Adding the images of paintwall
-    for(let i = 0; i < paintWall.length; i++){
-        objectRaycaster.push(paintWall[i]);
+    for(let i = 0; i < controls.pictures.length; i++){
+        objectRaycaster.push(controls.pictures[i]);
     }
 
     // Buttons
