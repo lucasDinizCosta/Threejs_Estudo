@@ -56,6 +56,7 @@ function main() {
 
     // Creating raycaster objects
     var raycaster = new THREE.Raycaster();
+    var raycasterPictures = new THREE.Raycaster();      // To create a ghost image when the picture is moving from the wall
     var mouse = new THREE.Vector2();
     mouse.click = false;
 
@@ -66,7 +67,10 @@ function main() {
     var controls = new function() {
         // Add objects to scene
         this.book = new THREE.Group(),
+
+        // Pictures and Painting Wall
         this.pictures = [],
+        this.imageClone = null,
 
         // bookAttributes
         this.angleBeginPage = 0,        
@@ -120,7 +124,7 @@ function main() {
 
                 // Informations block
                 let informationGeometry = new THREE.PlaneGeometry(this.widthPage/1.25, this.lengthPage/2.30, 0.1, 0.1);
-                let informationMaterial = new THREE.MeshStandardMaterial({
+                let informationMaterial = new THREE.MeshBasicMaterial({
                     transparent: true,
                     side: THREE.DoubleSide,
                     /*color:"rgb(170, 0, 0)",*/ 
@@ -190,8 +194,7 @@ function main() {
         // Button Read / Exit
         this.buttonsBook = [null, null, null],    // Read(Left sheet, Right sheet), Exit
         this.sizeButton = 1.5,
-        this.cameraOption = 0,              // 0 => rotationCamera, 1 => UpperCamera
-
+        this.cameraOption = 0,                    // 0 => rotationCamera, 1 => UpperCamera
         this.createButtonsBook = function(){
             let readButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
             let readButtonMaterial = new THREE.MeshBasicMaterial({
@@ -241,6 +244,17 @@ function main() {
             scene.add(this.book);
             this.createButtonsBook();
         }
+        
+        this.createImageClone = function(){
+            panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+            panelMaterial = new THREE.MeshStandardMaterial({
+                map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
+            });
+            this.imageClone = new THREE.Mesh(panelGeometry, panelMaterial);
+            this.imageClone.position.set(-1000, -1000, -1000);//this.imageClone.position.set(-18, 7, -12);
+            scene.add(this.imageClone);
+            //this.imageClone.visible = false;
+        }
 
         this.adjustButtonsBook = function(){
             if(this.cameraOption != 1){
@@ -265,11 +279,23 @@ function main() {
             }
         }
     }
+    controls.createImageClone();
+    let dragControls = new THREE.DragControls([controls.imageClone], camera, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
+    dragControls.addEventListener( 'dragstart', function ( event ) {
+        //console.log('drag start');
+    });
+    dragControls.addEventListener ( 'drag', function( event ){
+        //console.log('drag');
+        event.object.position.z = -3.35; // This will prevent moving z axis, but will be on 0 line. change this to your object position of z axis.
+    });
+    dragControls.addEventListener( 'dragend', function ( event ) {
+        //console.log('drag end');
+    });
+
     
     controls.createBook();
-
     let animationList = [];
-    let speedAnimation = 1.8;   //1.5
+    let speedAnimation = 1.8;   // 1.5
     controls.pictures = createPicturesPanel(scene);
 
     // Reajuste da renderização com base na mudança da janela
@@ -282,6 +308,7 @@ function main() {
 
     window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
 
+    clearPickPosition();
     // Se o mouse sai da tela
     function clearPickPosition() {
         // unlike the mouse which always has a position
@@ -294,13 +321,14 @@ function main() {
 
     window.addEventListener( 'mousemove', onMouseMove, false );
 
-    function onMouseMove( event ) {
+    function onMouseMove(event) {
         event.preventDefault();
         // calculate mouse position in normalized device coordinates
         // (-1 to +1) for both components
-    
         mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
         mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+        //console.log("X: " + event.clientX, " -- Y: " + event.clientY);
     }
 
     window.addEventListener('mouseup', function up(){
@@ -311,6 +339,11 @@ function main() {
                 }
             }
         }
+        if(dragAndDropImage != null){       // Drop the picture
+            dragAndDropImage.visible = true;
+        }
+        controls.imageClone.position.set(-1000, -1000, -1000);
+        controls.imageClone.rotateX(THREE.Math.degToRad(90));
         dragAndDropImage = null;
         orbitControls.enableRotate = true;      // Enable rotation on camera
         mouse.click = false;
@@ -334,11 +367,14 @@ function main() {
                         }
                         controls.adjustButtonsBook();
                         animationList.push(objectLooked.sheet);
-                        //console.log(controls.currentSheet);
                     }
                     break;
                 case 1:     // Collide with image
                     dragAndDropImage = objectLooked;
+                    dragAndDropImage.visible = false;
+                    controls.imageClone.rotateX(THREE.Math.degToRad(-90));
+                    //controls.imageClone.rotation.y = pictureLooked.position.y;
+                    //controls.imageClone.position.z
                     break;
                 case 2:     // Read Left page Button
                     controls.cameraOption = 1;      // Turn camera option
@@ -368,6 +404,7 @@ function main() {
     }
 
     let objectRaycaster = [];
+    let objectRaycasterClonePictures = [];
 
     // Pages of book
     for (let i = 0; i < controls.book.children.length; i++) {
@@ -380,6 +417,7 @@ function main() {
     // Adding the images of paintwall
     for(let i = 0; i < controls.pictures.length; i++){
         objectRaycaster.push(controls.pictures[i]);
+        objectRaycasterClonePictures.push(controls.pictures[i]);
     }
 
     // Buttons
@@ -397,13 +435,31 @@ function main() {
         let intersects = raycaster.intersectObjects(objectRaycaster);
         if(intersects.length > 0){
             objectLooked = intersects[0].object;
-            if(!intersects[0].object.visible){ // Object is not visible
+            if(!objectLooked.visible){ // Object is not visible
                 objectLooked = null;
             }
-            //console.log(objectLooked.objectType);
         }
         else{
             objectLooked = null;
+        }
+    }
+
+    function checkRaycasterClonePictures(){         //Only verify if has a collision with the pictures
+        // update the picking ray with the camera and mouse position
+        raycasterPictures.setFromCamera(mouse, defaultCamera);
+        let intersects = raycasterPictures.intersectObjects(objectRaycasterClonePictures);            
+        if(intersects.length > 0){
+            let pictureLooked = intersects[0].object;
+            if(pictureLooked.visible && objectLooked != null){ // Object is not visible
+                controls.imageClone.position.x = pictureLooked.position.x;
+                controls.imageClone.position.y = pictureLooked.position.y;
+                controls.imageClone.position.z = pictureLooked.position.z + 0.2;
+                controls.imageClone.material = pictureLooked.material.clone();
+                /*if(dragAndDropImage != null){
+                    objectLooked.material.transparent = true;
+                    objectLooked.material.opacity = 0.3;
+                }*/
+            }
         }
     }
 
@@ -413,13 +469,13 @@ function main() {
         stats.update();
         orbitControls.update(clock.getDelta());
         checkRaycaster();
+        checkRaycasterClonePictures();
         animationBook();
         requestAnimationFrame(render);
         renderer.render(scene, defaultCamera);
     }
 
     // Add a small and simple ground plane
-
     function createGroundPlane(width, height) {
         // create the ground plane
         var planeGeometry = new THREE.PlaneGeometry(width, height, 10, 10);
@@ -454,13 +510,12 @@ function main() {
                 animationList[i].animationAngle = animationList[i].animationAngle - speedAnimation;
                 animationList[i].rotateZ(THREE.Math.degToRad(- speedAnimation));
             }
-            
         }
     }
 
     function createPicturesPanel(scene){
         let paintList = [];
-        let painelGeometry = new THREE.BoxGeometry(30, 10, 5);//new THREE.PlaneGeometry(30, 10, 0.1, 0.1);
+        let painelGeometry = new THREE.BoxGeometry(30, 10, 5);
         let painelMaterial = new THREE.MeshStandardMaterial({
             transparent: true,
             opacity: 0.5,
