@@ -128,7 +128,7 @@ function main() {
                     transparent: true,
                     side: THREE.DoubleSide,
                     /*color:"rgb(170, 0, 0)",*/ 
-                    map: textureLoader.load("../assets/text-4.png")
+                    map: textureLoader.load("../assets/text-4-transparent.png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.position.set(0, -this.lengthPage/5, 0.01);
@@ -180,7 +180,7 @@ function main() {
                     transparent: true, /*opacity: 0.9,*/
                     side:THREE.DoubleSide,
                     /*color:"rgb(170, 0, 0)",*/ 
-                    map: textureLoader.load("../assets/text-4.png")
+                    map: textureLoader.load("../assets/text-4-transparent.png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.position.set(0, -this.lengthPage/5, -0.01);
