@@ -29,8 +29,8 @@ function main() {
     // Enable mouse rotation, pan, zoom etc.
     var orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
     orbitControls.target.set(0, 0, 0);
-    orbitControls.minDistance = 10;
-    orbitControls.maxDistance = 100;
+    orbitControls.minDistance = 20;
+    orbitControls.maxDistance = 60;
     var spotLight = new THREE.SpotLight(0xffffff);
     spotLight.position.copy(new THREE.Vector3(0, 15, 15));
     spotLight.shadow.mapSize.width = 2048;
@@ -45,7 +45,7 @@ function main() {
     ambientLight.name = "ambientLight";
     scene.add(ambientLight);
     // Show axes (parameter is size of each axis)
-    var axes = new THREE.AxesHelper(12);
+    var axes = new THREE.AxesHelper(24);
     axes.name = "AXES";
     axes.visible = true;
     scene.add(axes);
@@ -60,7 +60,6 @@ function main() {
     var mouse = new THREE.Vector2();
     mouse.click = false;
 
-    // Remove console.log
     //textureLoader.minFilter = THREE.LinearFilter;
 
     // Controls of sidebar
@@ -127,7 +126,7 @@ function main() {
                 let informationMaterial = new THREE.MeshBasicMaterial({
                     transparent: true,
                     side: THREE.DoubleSide,
-                    map: textureLoader.load("../assets/text-4-transparent.png")
+                    map: textureLoader.load("../assets/text-6-transparent(1024x512).png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.position.set(0, -this.lengthPage/5, 0.01);
@@ -178,7 +177,7 @@ function main() {
                 let informationMaterial = new THREE.MeshBasicMaterial({
                     transparent: true, /*opacity: 0.9,*/
                     side: THREE.DoubleSide,
-                    map: textureLoader.load("../assets/text-4-transparent.png")
+                    map: textureLoader.load("../assets/text-6-transparent(1024x512).png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.position.set(0, -this.lengthPage/5, -0.01);
@@ -196,7 +195,7 @@ function main() {
         this.createButtonsBook = function(){
             let readButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
             let readButtonMaterial = new THREE.MeshBasicMaterial({
-                /*color:"rgb(100, 100, 0)",*/ side:THREE.DoubleSide,
+                side:THREE.DoubleSide,
                 map: textureLoader.load("../assets/icons/read.png"),
             });
             let readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
@@ -249,7 +248,7 @@ function main() {
                 map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
             });
             this.imageClone = new THREE.Mesh(panelGeometry, panelMaterial);
-            this.imageClone.position.set(-1000, -1000, -1000);//this.imageClone.position.set(-18, 7, -12);
+            this.imageClone.position.set(-18, 7, -12);//this.imageClone.position.set(-100, -100, -100)
             scene.add(this.imageClone);
         }
 
@@ -438,21 +437,23 @@ function main() {
         }
     }
 
-    function checkRaycasterClonePictures(){         //Only verify if has a collision with the pictures
-        // update the picking ray with the camera and mouse position
-        raycasterPictures.setFromCamera(mouse, defaultCamera);
-        let intersects = raycasterPictures.intersectObjects(objectRaycasterClonePictures);            
-        if(intersects.length > 0){
-            let pictureLooked = intersects[0].object;
-            if(pictureLooked.visible && objectLooked != null){ // Object is not visible
-                controls.imageClone.position.x = pictureLooked.position.x;
-                controls.imageClone.position.y = pictureLooked.position.y;
-                controls.imageClone.position.z = pictureLooked.position.z + 0.2;
-                controls.imageClone.material = pictureLooked.material.clone();
-                /*if(dragAndDropImage != null){
-                    objectLooked.material.transparent = true;
-                    objectLooked.material.opacity = 0.3;
-                }*/
+    //Only verify if has a collision with the pictures
+    function checkRaycasterClonePictures(){        
+        if(dragAndDropImage == null){                       // FIX the bug of change the picture when moving above another picture
+            raycasterPictures.setFromCamera(mouse, defaultCamera);
+            let intersects = raycasterPictures.intersectObjects(objectRaycasterClonePictures);            
+            if(intersects.length > 0){
+                let pictureLooked = intersects[0].object;
+                if(pictureLooked.visible && objectLooked != null){ // Object is not visible
+                    controls.imageClone.position.x = pictureLooked.position.x;
+                    controls.imageClone.position.y = pictureLooked.position.y;
+                    controls.imageClone.position.z = pictureLooked.position.z + 0.2;
+                    controls.imageClone.material = pictureLooked.material.clone();
+                    /*if(dragAndDropImage != null){
+                        objectLooked.material.transparent = true;
+                        objectLooked.material.opacity = 0.3;
+                    }*/
+                }
             }
         }
     }
