@@ -127,7 +127,6 @@ function main() {
                 let informationMaterial = new THREE.MeshBasicMaterial({
                     transparent: true,
                     side: THREE.DoubleSide,
-                    /*color:"rgb(170, 0, 0)",*/ 
                     map: textureLoader.load("../assets/text-4-transparent.png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
@@ -178,8 +177,7 @@ function main() {
                 let informationGeometry = new THREE.PlaneGeometry(this.widthPage/1.25, this.lengthPage/2.3, 0.1, 0.1);
                 let informationMaterial = new THREE.MeshBasicMaterial({
                     transparent: true, /*opacity: 0.9,*/
-                    side:THREE.DoubleSide,
-                    /*color:"rgb(170, 0, 0)",*/ 
+                    side: THREE.DoubleSide,
                     map: textureLoader.load("../assets/text-4-transparent.png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
@@ -210,7 +208,7 @@ function main() {
             scene.add(this.buttonsBook[0]);
             readButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
             readButtonMaterial = new THREE.MeshBasicMaterial({
-                /*color:"rgb(100, 100, 0)",*/ side:THREE.DoubleSide,
+                side:THREE.DoubleSide,
                 map: textureLoader.load("../assets/icons/read.png"),
             });
             readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
@@ -222,7 +220,7 @@ function main() {
             scene.add(this.buttonsBook[1]);
             let backButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
             let backButtonMaterial = new THREE.MeshBasicMaterial({
-                /*color:"rgb(0, 100, 100)", */side:THREE.DoubleSide,
+                side:THREE.DoubleSide,
                 map: textureLoader.load("../assets/icons/back.png")
             });
             let backButton = new THREE.Mesh(backButtonGeometry, backButtonMaterial);
@@ -253,7 +251,6 @@ function main() {
             this.imageClone = new THREE.Mesh(panelGeometry, panelMaterial);
             this.imageClone.position.set(-1000, -1000, -1000);//this.imageClone.position.set(-18, 7, -12);
             scene.add(this.imageClone);
-            //this.imageClone.visible = false;
         }
 
         this.adjustButtonsBook = function(){
@@ -327,8 +324,6 @@ function main() {
         // (-1 to +1) for both components
         mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
         mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-        //console.log("X: " + event.clientX, " -- Y: " + event.clientY);
     }
 
     window.addEventListener('mouseup', function up(){
@@ -356,7 +351,8 @@ function main() {
             orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
             switch(objectLooked.objectType){
                 case 0:
-                    if(objectLooked.sheet.animationAngle == 0){     //Don't rotate if the page is moving
+                    if((objectLooked.sheet.animationAngle == 0) && 
+                    (controls.cameraOption == 0)){     //Don't rotate if the page is moving
                         if(objectLooked.sheet.sideOption == 0){
                             objectLooked.sheet.sideOption = 1;
                             controls.currentSheet++;
@@ -373,8 +369,6 @@ function main() {
                     dragAndDropImage = objectLooked;
                     dragAndDropImage.visible = false;
                     controls.imageClone.rotateX(THREE.Math.degToRad(-90));
-                    //controls.imageClone.rotation.y = pictureLooked.position.y;
-                    //controls.imageClone.position.z
                     break;
                 case 2:     // Read Left page Button
                     controls.cameraOption = 1;      // Turn camera option
