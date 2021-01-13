@@ -17,7 +17,7 @@ function main() {
     renderer.shadowMap.enabled = true;
     document.getElementById("webgl-output").appendChild(renderer.domElement);
     var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
-    camera.position.set(0, 15, 30);
+    camera.position.set(0, 15, 28);
     camera.up.set(0, 1, 0);
     camera.lookAt(0, 0, 0);
     var defaultCamera = camera;
@@ -58,7 +58,6 @@ function main() {
     var raycaster = new THREE.Raycaster();
     var raycasterPictures = new THREE.Raycaster();      // To create a ghost image when the picture is moving from the wall
     var mouse = new THREE.Vector2();
-    mouse.click = false;
 
     //textureLoader.minFilter = THREE.LinearFilter;
 
@@ -195,7 +194,7 @@ function main() {
         this.createButtonsBook = function(){
             let readButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
             let readButtonMaterial = new THREE.MeshBasicMaterial({
-                side:THREE.DoubleSide,
+                side: THREE.DoubleSide,
                 map: textureLoader.load("../assets/icons/read.png"),
             });
             let readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
@@ -325,75 +324,79 @@ function main() {
         mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
     }
 
-    window.addEventListener('mouseup', function up(){
-        if(objectLooked != null){
-            if(controls.cameraOption == 0){
-                if(objectLooked.objectType == 0 && dragAndDropImage != null){
-                    objectLooked.children[0].material = dragAndDropImage.material.clone(); // Generate a clone of material and replace on image plane    
+    window.addEventListener('mouseup', function up(event){
+        //console.log(event);
+        if(event.button == 0){              // Left Button
+            if(controls.cameraOption == 0){ // Camera Upper
+                if(objectLooked != null){
+                    if(objectLooked.objectType == 0 && dragAndDropImage != null){
+                        objectLooked.children[0].material = dragAndDropImage.material.clone(); // Generate a clone of material and replace on image plane    
+                    }
                 }
+                if(dragAndDropImage != null){       // Drop the picture
+                    dragAndDropImage.visible = true;
+                    controls.imageClone.position.set(-100, -100, -100);
+                    controls.imageClone.rotateX(THREE.Math.degToRad(90));
+                }
+                dragAndDropImage = null;
+                orbitControls.enableRotate = true;      // Enable rotation on camera
             }
         }
-        if(dragAndDropImage != null){       // Drop the picture
-            dragAndDropImage.visible = true;
-        }
-        controls.imageClone.position.set(-1000, -1000, -1000);
-        controls.imageClone.rotateX(THREE.Math.degToRad(90));
-        dragAndDropImage = null;
-        orbitControls.enableRotate = true;      // Enable rotation on camera
-        mouse.click = false;
     });
     window.addEventListener('mouseout', clearPickPosition);       // Mouse sai da tela
     window.addEventListener('mouseleave', clearPickPosition);
     window.addEventListener('mousedown', raycasterController);
-    function raycasterController(){
-        if(objectLooked != null){
-            orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
-            switch(objectLooked.objectType){
-                case 0:
-                    if((objectLooked.sheet.animationAngle == 0) && 
-                    (controls.cameraOption == 0)){     //Don't rotate if the page is moving
-                        if(objectLooked.sheet.sideOption == 0){
-                            objectLooked.sheet.sideOption = 1;
-                            controls.currentSheet++;
+    function raycasterController(event){
+        //console.log(event);
+        if(event.button == 0){              // Left Button
+            if(objectLooked != null){
+                orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
+                switch(objectLooked.objectType){
+                    case 0:
+                        if((objectLooked.sheet.animationAngle == 0) && 
+                        (controls.cameraOption == 0)){     //Don't rotate if the page is moving
+                            if(objectLooked.sheet.sideOption == 0){
+                                objectLooked.sheet.sideOption = 1;
+                                controls.currentSheet++;
+                            }
+                            else{
+                                objectLooked.sheet.sideOption = 0;
+                                controls.currentSheet--;
+                            }
+                            controls.adjustButtonsBook();
+                            animationList.push(objectLooked.sheet);
                         }
-                        else{
-                            objectLooked.sheet.sideOption = 0;
-                            controls.currentSheet--;
-                        }
+                        break;
+                    case 1:     // Collide with image
+                        dragAndDropImage = objectLooked;
+                        dragAndDropImage.visible = false;
+                        controls.imageClone.rotateX(THREE.Math.degToRad(-90));
+                        break;
+                    case 2:     // Read Left page Button
+                        controls.cameraOption = 1;      // Turn camera option
+                        defaultCamera = upperCamera;
                         controls.adjustButtonsBook();
-                        animationList.push(objectLooked.sheet);
-                    }
-                    break;
-                case 1:     // Collide with image
-                    dragAndDropImage = objectLooked;
-                    dragAndDropImage.visible = false;
-                    controls.imageClone.rotateX(THREE.Math.degToRad(-90));
-                    break;
-                case 2:     // Read Left page Button
-                    controls.cameraOption = 1;      // Turn camera option
-                    defaultCamera = upperCamera;
-                    controls.adjustButtonsBook();
-                    controls.buttonsBook[2].visible = true;
-                    defaultCamera.position.set(-controls.widthPage/2, 17, 0);   // Y = 25
-                    controls.buttonsBook[2].position.set(-controls.widthPage - controls.sizeButton/2, controls.buttonsBook[2].position.y, 0);   
-                    break;
-                case 3:     // Read Right page Button
-                    controls.cameraOption = 1;      // Turn camera option
-                    defaultCamera = upperCamera;
-                    controls.adjustButtonsBook();
-                    controls.buttonsBook[2].visible = true;
-                    defaultCamera.position.set(controls.widthPage/2, 17, 0);
-                    controls.buttonsBook[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttonsBook[2].position.y, 0);   
-                    break;
-                case 4:     // Exit Button
-                    controls.cameraOption = 0;
-                    defaultCamera = camera;
-                    controls.adjustButtonsBook();
-                    controls.buttonsBook[2].visible = false;
-                    break;
+                        controls.buttonsBook[2].visible = true;
+                        defaultCamera.position.set(-controls.widthPage/2, 17, 0);   // Y = 25
+                        controls.buttonsBook[2].position.set(-controls.widthPage - controls.sizeButton/2, controls.buttonsBook[2].position.y, 0);   
+                        break;
+                    case 3:     // Read Right page Button
+                        controls.cameraOption = 1;      // Turn camera option
+                        defaultCamera = upperCamera;
+                        controls.adjustButtonsBook();
+                        controls.buttonsBook[2].visible = true;
+                        defaultCamera.position.set(controls.widthPage/2, 17, 0);
+                        controls.buttonsBook[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttonsBook[2].position.y, 0);   
+                        break;
+                    case 4:     // Exit Button
+                        controls.cameraOption = 0;
+                        defaultCamera = camera;
+                        controls.adjustButtonsBook();
+                        controls.buttonsBook[2].visible = false;
+                        break;
+                }
             }
         }
-        mouse.click = true;
     }
 
     let objectRaycaster = [];
@@ -444,15 +447,11 @@ function main() {
             let intersects = raycasterPictures.intersectObjects(objectRaycasterClonePictures);            
             if(intersects.length > 0){
                 let pictureLooked = intersects[0].object;
-                if(pictureLooked.visible && objectLooked != null){ // Object is not visible
+                if(pictureLooked.visible && objectLooked != null){      // picture is not visible, only the clone it is
                     controls.imageClone.position.x = pictureLooked.position.x;
                     controls.imageClone.position.y = pictureLooked.position.y;
                     controls.imageClone.position.z = pictureLooked.position.z + 0.2;
                     controls.imageClone.material = pictureLooked.material.clone();
-                    /*if(dragAndDropImage != null){
-                        objectLooked.material.transparent = true;
-                        objectLooked.material.opacity = 0.3;
-                    }*/
                 }
             }
         }
