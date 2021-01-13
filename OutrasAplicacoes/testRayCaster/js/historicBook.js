@@ -362,7 +362,7 @@ function main() {
     });
     dragControls.addEventListener ( 'drag', function( event ){
         //console.log('drag');
-        event.object.position.z = -3.35; // This will prevent moving z axis, but will be on 0 line. change this to your object position of z axis.
+        event.object.position.z = -3.35; // This will prevent moving z axis, but will be on -3.35 line. change this to your object position of z axis.
     });
     dragControls.addEventListener( 'dragend', function ( event ) {
         //console.log('drag end');
@@ -410,7 +410,7 @@ function main() {
                     (objectLooked.indexPicture == selectedImage.indexPicture)
                     ){
                         objectLooked.children[0].material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane    
-
+                        //controls.removePictureFromWall(selectedImage);
                     }
                 }
                 if(selectedImage != null){       // Drop the picture
