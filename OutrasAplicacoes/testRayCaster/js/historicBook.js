@@ -69,6 +69,7 @@ function main() {
         // Pictures and Painting Wall
         this.pictures = [],
         this.imageClone = null,
+        this.orderPicturesBook = [],
 
         // bookAttributes
         this.angleBeginPage = 0,        
@@ -76,13 +77,13 @@ function main() {
         this.angleRatePage = 0.75,      //0.15  
 
         // page and sheet attributes
-        this.widthPage = 12,         //Padrao antigo: 4
-        this.lengthPage = 14,        //Padrao antigo: 6
+        this.widthPage = 12,         
+        this.lengthPage = 14,        
         this.heightBook = 0.5,
         this.amountSheets = 0,
         this.currentSheet = 0,
         this.amountPages = 0,
-        this.createPage = function (){
+        this.createPage = function (indexPicture){
             if(this.amountPages % 2 == 0){   //Pair pages on the book
                 // Adjust of rotation of the sheets inside of book
                 for(let i = 0; i < this.book.children.length; i++){
@@ -110,6 +111,7 @@ function main() {
                 sheet.sideOption = 0;              //0 => Right, 1 => Left
                 page.sheet = sheet;
                 page.objectType = 0;               //Page type
+                page.indexPicture = indexPicture;
 
                 // Image plane
                 let imageGeometry = new THREE.PlaneGeometry(this.widthPage/1.5, this.lengthPage/3, 0.1, 0.1);
@@ -160,6 +162,7 @@ function main() {
                 sheet.sideOption = 0;              // 0 => Right, 1 => Left
                 page.sheet = sheet;
                 page.objectType = 0;               // Page type
+                page.indexPicture = indexPicture;
 
                 // Image plane
                 let imageGeometry = new THREE.PlaneGeometry(this.widthPage/1.5, this.lengthPage/3, 0.1, 0.1);
@@ -234,8 +237,8 @@ function main() {
         },
 
         this.createBook = function(){
-            for (let index = 0; index < 9; index++) {
-                this.createPage();  
+            for (let index = 0; index < this.pictures.length; index++) {
+                this.createPage(this.orderPicturesBook[index]);  
             }
             scene.add(this.book);
             this.createButtonsBook();
@@ -247,7 +250,7 @@ function main() {
                 map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
             });
             this.imageClone = new THREE.Mesh(panelGeometry, panelMaterial);
-            this.imageClone.position.set(-18, 7, -12);//this.imageClone.position.set(-100, -100, -100)
+            this.imageClone.position.set(-100, -100, -100);
             scene.add(this.imageClone);
         }
 
@@ -272,9 +275,87 @@ function main() {
                 this.buttonsBook[0].visible = false;
                 this.buttonsBook[1].visible = false;
             }
+        },
+
+        this.createPicturesPanel = function(scene){
+            let painelGeometry = new THREE.BoxGeometry(30, 10, 5);
+            let painelMaterial = new THREE.MeshStandardMaterial({
+                transparent: true,
+                opacity: 0.5,
+                map: textureLoader.load("../assets/general/wood-2.jpg"), side: THREE.DoubleSide
+            });
+            let panelPlane = new THREE.Mesh(painelGeometry, painelMaterial);
+            panelPlane.position.set(0, 5, -15.1);
+            scene.add(panelPlane);
+            let skyboxGeometry = new THREE.SphereGeometry(100, 64, 64);
+            let skyboxMaterial = new THREE.MeshBasicMaterial({
+                map: textureLoader.load("../assets/museum.jpg"), side: THREE.DoubleSide   
+            });
+            let skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
+            scene.add(skybox);
+    
+            /** Pictures */
+    
+            let pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+            let pictureMaterial = new THREE.MeshStandardMaterial({
+                map: textureLoader.load("../assets/paintings/1.jpg"), side: THREE.DoubleSide
+            });
+            let picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
+            picture.position.set(-10, 7, -12);
+            picture.objectType = 1;          //Image type
+            picture.indexPicture = 0;
+            scene.add(picture);
+            this.pictures.push(picture);
+            this.orderPicturesBook.push(picture.indexPicture);
+            pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+            pictureMaterial = new THREE.MeshStandardMaterial({
+                map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
+            });
+            picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
+            picture.position.set(-0, 7, -12);
+            picture.objectType = 1;          //Image type
+            picture.indexPicture = 1;
+            scene.add(picture);
+            this.pictures.push(picture);
+            this.orderPicturesBook.push(picture.indexPicture);
+            pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+            pictureMaterial = new THREE.MeshStandardMaterial({
+                map: textureLoader.load("../assets/paintings/4.jpg"), side: THREE.DoubleSide
+            });
+            picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
+            picture.position.set(10, 7, -12);
+            picture.objectType = 1;          //Image type
+            picture.indexPicture = 2;
+            scene.add(picture);
+            this.pictures.push(picture);
+            this.orderPicturesBook.push(picture.indexPicture);
+        },
+
+        this.createScenary = function(){
+            this.createImageClone();
+            this.createPicturesPanel(scene);
+            console.log(this.orderPicturesBook);
+            this.orderPicturesBook = this.shuffleList(this.orderPicturesBook);
+            console.log(this.orderPicturesBook);
+            this.createBook();
+        }
+
+        this.shuffleList = function(list){
+            let auxOrderList = [];
+            let auxList = [];
+            for(let i = 0; i < list.length; i++){
+                auxList.push(list[i]);
+            }
+            for(let i = 0; i < auxList.length; i++){
+                let randomIndex = Math.floor(Math.random() * auxList.length)
+                auxOrderList.push(auxList[randomIndex]);
+                auxList.splice(randomIndex, 1);
+            };
+            auxOrderList.push(auxList[0]);   // Last element on the list
+            return auxOrderList;
         }
     }
-    controls.createImageClone();
+    controls.createScenary();
     let dragControls = new THREE.DragControls([controls.imageClone], camera, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
     dragControls.addEventListener( 'dragstart', function ( event ) {
         //console.log('drag start');
@@ -286,19 +367,15 @@ function main() {
     dragControls.addEventListener( 'dragend', function ( event ) {
         //console.log('drag end');
     });
-
     
-    controls.createBook();
     let animationList = [];
     let speedAnimation = 1.8;   // 1.5
-    controls.pictures = createPicturesPanel(scene);
-
+    
     // Reajuste da renderização com base na mudança da janela
     function onResize(){
         camera.aspect = window.innerWidth / window.innerHeight;  //Atualiza o aspect da camera com relação as novas dimensões
         camera.updateProjectionMatrix();                         //Atualiza a matriz de projeção
         renderer.setSize(window.innerWidth, window.innerHeight); //Define os novos valores para o renderizador
-        //console.log('Resizing to %s x %s.', window.innerWidth, window.innerHeight);
     }
 
     window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
@@ -329,16 +406,19 @@ function main() {
         if(event.button == 0){              // Left Button
             if(controls.cameraOption == 0){ // Camera Upper
                 if(objectLooked != null){
-                    if(objectLooked.objectType == 0 && dragAndDropImage != null){
-                        objectLooked.children[0].material = dragAndDropImage.material.clone(); // Generate a clone of material and replace on image plane    
+                    if(objectLooked.objectType == 0 && selectedImage != null && 
+                    (objectLooked.indexPicture == selectedImage.indexPicture)
+                    ){
+                        objectLooked.children[0].material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane    
+
                     }
                 }
-                if(dragAndDropImage != null){       // Drop the picture
-                    dragAndDropImage.visible = true;
+                if(selectedImage != null){       // Drop the picture
+                    selectedImage.visible = true;
                     controls.imageClone.position.set(-100, -100, -100);
                     controls.imageClone.rotateX(THREE.Math.degToRad(90));
                 }
-                dragAndDropImage = null;
+                selectedImage = null;
                 orbitControls.enableRotate = true;      // Enable rotation on camera
             }
         }
@@ -368,8 +448,8 @@ function main() {
                         }
                         break;
                     case 1:     // Collide with image
-                        dragAndDropImage = objectLooked;
-                        dragAndDropImage.visible = false;
+                        selectedImage = objectLooked;
+                        selectedImage.visible = false;
                         controls.imageClone.rotateX(THREE.Math.degToRad(-90));
                         break;
                     case 2:     // Read Left page Button
@@ -423,7 +503,7 @@ function main() {
 
     // Raycaster and mouse Controllers 
     let objectLooked = null;
-    let dragAndDropImage = null;        
+    let selectedImage = null;        
 
     function checkRaycaster(){
         // update the picking ray with the camera and mouse position
@@ -442,7 +522,7 @@ function main() {
 
     //Only verify if has a collision with the pictures
     function checkRaycasterClonePictures(){        
-        if(dragAndDropImage == null){                       // FIX the bug of change the picture when moving above another picture
+        if(selectedImage == null){                       // FIX the bug of change the picture when moving above another picture
             raycasterPictures.setFromCamera(mouse, defaultCamera);
             let intersects = raycasterPictures.intersectObjects(objectRaycasterClonePictures);            
             if(intersects.length > 0){
@@ -505,61 +585,6 @@ function main() {
                 animationList[i].rotateZ(THREE.Math.degToRad(- speedAnimation));
             }
         }
-    }
-
-    function createPicturesPanel(scene){
-        let paintList = [];
-        let painelGeometry = new THREE.BoxGeometry(30, 10, 5);
-        let painelMaterial = new THREE.MeshStandardMaterial({
-            transparent: true,
-            opacity: 0.5,
-            map: textureLoader.load("../assets/general/wood-2.jpg"), side: THREE.DoubleSide
-        });
-        let panelPlane = new THREE.Mesh(painelGeometry, painelMaterial);
-        panelPlane.position.set(0, 5, -15.1);
-        scene.add(panelPlane);
-
-        panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
-        panelMaterial = new THREE.MeshStandardMaterial({
-            map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
-        });
-        panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
-        panelPlane.position.set(-10, 7, -12);
-        panelPlane.objectType = 1;          //Image type
-
-        scene.add(panelPlane);
-        paintList.push(panelPlane);
-
-        panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
-        panelMaterial = new THREE.MeshStandardMaterial({
-            map: textureLoader.load("../assets/paintings/4.jpg"), side: THREE.DoubleSide
-        });
-        panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
-        panelPlane.position.set(-0, 7, -12);
-        panelPlane.objectType = 1;          //Image type
-
-        scene.add(panelPlane);
-        paintList.push(panelPlane);
-
-        panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
-        panelMaterial = new THREE.MeshStandardMaterial({
-            map: textureLoader.load("../assets/paintings/1.jpg"), side: THREE.DoubleSide
-        });
-        panelPlane = new THREE.Mesh(panelGeometry, panelMaterial);
-        panelPlane.position.set(10, 7, -12);
-        panelPlane.objectType = 1;          //Image type
-
-        scene.add(panelPlane);
-        paintList.push(panelPlane);
-
-        let skyboxGeometry = new THREE.SphereGeometry(100, 64, 64);
-        let skyboxMaterial = new THREE.MeshBasicMaterial({
-            map: textureLoader.load("../assets/museum.jpg"), side: THREE.DoubleSide   
-        });
-        let skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
-        scene.add(skybox);
-
-        return paintList;
     }
 }
 
