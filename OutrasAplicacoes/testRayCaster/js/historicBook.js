@@ -47,7 +47,7 @@ function main() {
     // Show axes (parameter is size of each axis)
     var axes = new THREE.AxesHelper(24);
     axes.name = "AXES";
-    axes.visible = true;
+    axes.visible = false;
     scene.add(axes);
 
     var groundPlane = createGroundPlane(30, 30); // width and height
@@ -114,7 +114,7 @@ function main() {
                 page.indexPicture = indexPicture;
 
                 // Image plane
-                let imageGeometry = new THREE.PlaneGeometry(this.widthPage/1.5, this.lengthPage/3, 0.1, 0.1);
+                let imageGeometry = new THREE.PlaneGeometry(9, 4.5, 0.1, 0.1);
                 let imageMaterial = new THREE.MeshStandardMaterial({
                     color:"rgb(255, 255, 255)", side: THREE.DoubleSide
                 });
@@ -123,11 +123,12 @@ function main() {
                 page.add(imagePlane);
 
                 // Informations block
-                let informationGeometry = new THREE.PlaneGeometry(this.widthPage/1.25, this.lengthPage/2.30, 0.1, 0.1);
+                let informationGeometry = new THREE.PlaneGeometry(6.8, 6.8, 0.1, 0.1);
                 let informationMaterial = new THREE.MeshBasicMaterial({
                     transparent: true,
+                    //color: "white",
                     side: THREE.DoubleSide,
-                    map: textureLoader.load("../assets/text-6-transparent(1024x512).png")
+                    map: textureLoader.load("../assets/text-9-transparent(1024x1024).png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.position.set(0, -this.lengthPage/5, 0.01);
@@ -175,11 +176,12 @@ function main() {
                 page.add(imagePlane);
 
                 // Informations block
-                let informationGeometry = new THREE.PlaneGeometry(this.widthPage/1.25, this.lengthPage/2.3, 0.1, 0.1);
+                let informationGeometry = new THREE.PlaneGeometry(9.6, 6.08, 0.1, 0.1);
                 let informationMaterial = new THREE.MeshBasicMaterial({
                     transparent: true, /*opacity: 0.9,*/
+                    //color: "white",
                     side: THREE.DoubleSide,
-                    map: textureLoader.load("../assets/text-6-transparent(1024x512).png")
+                    map: textureLoader.load("../assets/text-8-transparent(1024x1024).png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.position.set(0, -this.lengthPage/5, -0.01);
@@ -304,6 +306,7 @@ function main() {
             picture.position.set(-10, 7, -12);
             picture.objectType = 1;          //Image type
             picture.indexPicture = 0;
+            picture.name = "picture_00";
             scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
@@ -312,6 +315,7 @@ function main() {
                 map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
             });
             picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
+            picture.name = "picture_01";
             picture.position.set(-0, 7, -12);
             picture.objectType = 1;          //Image type
             picture.indexPicture = 1;
@@ -326,6 +330,7 @@ function main() {
             picture.position.set(10, 7, -12);
             picture.objectType = 1;          //Image type
             picture.indexPicture = 2;
+            picture.name = "picture_02";
             scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
@@ -334,12 +339,9 @@ function main() {
         this.createScenary = function(){
             this.createImageClone();
             this.createPicturesPanel(scene);
-            console.log(this.orderPicturesBook);
             this.orderPicturesBook = this.shuffleList(this.orderPicturesBook);
-            console.log(this.orderPicturesBook);
             this.createBook();
-        }
-
+        },
         this.shuffleList = function(list){
             let auxOrderList = [];
             let auxList = [];
@@ -353,6 +355,35 @@ function main() {
             };
             auxOrderList.push(auxList[0]);   // Last element on the list
             return auxOrderList;
+        },
+        this.removePictureFromWall = function(image){
+            for (let i = 0; i < this.pictures.length; i++) {
+                if(this.pictures[i].indexPicture == image.indexPicture){
+                    this.pictures.splice(i, 1);
+                    break;
+                }
+            }
+            for (let j = 0; j < objectRaycaster.length; j++) {
+                if(objectRaycaster[j].indexPicture == image.indexPicture){
+                    objectRaycaster.splice(j, 1);
+                    break;
+                }
+            }
+            for (let j = 0; j < objectRaycasterClonePictures.length; j++) {
+                if(objectRaycasterClonePictures[j].indexPicture == image.indexPicture){
+                    objectRaycasterClonePictures.splice(j, 1);
+                    break;
+                }
+            }
+            this.removeEntity(image);
+            objectLooked = null;
+            selectedImage = null;
+            controls.imageClone.position.set(-100, -100, -100);
+            controls.imageClone.rotateX(THREE.Math.degToRad(90));
+        },
+        this.removeEntity = function(object){
+            let selected = scene.getObjectByName(object.name);
+            scene.remove(selected);
         }
     }
     controls.createScenary();
@@ -410,7 +441,7 @@ function main() {
                     (objectLooked.indexPicture == selectedImage.indexPicture)
                     ){
                         objectLooked.children[0].material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane    
-                        //controls.removePictureFromWall(selectedImage);
+                        controls.removePictureFromWall(selectedImage);      
                     }
                 }
                 if(selectedImage != null){       // Drop the picture
@@ -440,7 +471,7 @@ function main() {
                                 controls.currentSheet++;
                             }
                             else{
-                                objectLooked.sheet.sideOption = 0;
+                                objectLooked.sheet.sideOption  = 0;
                                 controls.currentSheet--;
                             }
                             controls.adjustButtonsBook();
@@ -450,7 +481,11 @@ function main() {
                     case 1:     // Collide with image
                         selectedImage = objectLooked;
                         selectedImage.visible = false;
+                        controls.imageClone.position.x = pointCollisionRayCaster.x;
+                        controls.imageClone.position.y = pointCollisionRayCaster.y;
+                        controls.imageClone.position.z = -3.35; //pointCollisionRayCaster.z;  
                         controls.imageClone.rotateX(THREE.Math.degToRad(-90));
+                        //controls.imageClone.position.copy(pointCollisionRayCaster);
                         break;
                     case 2:     // Read Left page Button
                         controls.cameraOption = 1;      // Turn camera option
@@ -503,7 +538,8 @@ function main() {
 
     // Raycaster and mouse Controllers 
     let objectLooked = null;
-    let selectedImage = null;        
+    let selectedImage = null;
+    let pointCollisionRayCaster = null;      
 
     function checkRaycaster(){
         // update the picking ray with the camera and mouse position
@@ -511,12 +547,15 @@ function main() {
         let intersects = raycaster.intersectObjects(objectRaycaster);
         if(intersects.length > 0){
             objectLooked = intersects[0].object;
+            pointCollisionRayCaster = intersects[0].point;
             if(!objectLooked.visible){ // Object is not visible
                 objectLooked = null;
+                pointCollisionRayCaster = null;   
             }
         }
         else{
             objectLooked = null;
+            pointCollisionRayCaster = null;
         }
     }
 
@@ -527,7 +566,7 @@ function main() {
             let intersects = raycasterPictures.intersectObjects(objectRaycasterClonePictures);            
             if(intersects.length > 0){
                 let pictureLooked = intersects[0].object;
-                if(pictureLooked.visible && objectLooked != null){      // picture is not visible, only the clone it is
+                if(pictureLooked.visible && objectLooked.visible){      // picture is not visible, only the clone it is
                     controls.imageClone.position.x = pictureLooked.position.x;
                     controls.imageClone.position.y = pictureLooked.position.y;
                     controls.imageClone.position.z = pictureLooked.position.z + 0.2;
