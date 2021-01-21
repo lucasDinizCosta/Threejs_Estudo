@@ -220,12 +220,12 @@ function main() {
                 page.add(imagePlane);
 
                 // Informations block
-                let informationGeometry = new THREE.PlaneGeometry(6.8, 6.8, 0.1, 0.1);
+                let informationGeometry = new THREE.PlaneGeometry(9.6, 6.08, 0.1, 0.1);
                 let informationMaterial = new THREE.MeshBasicMaterial({
                     transparent: true,
                     //color: "white",
                     side: THREE.DoubleSide,
-                    map: textureLoader.load("../assets/text-9-transparent(1024x1024).png")
+                    map: textureLoader.load("../assets/text-10-transparent(1024x624).png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.position.set(0, -this.lengthPage/5, 0.01);
@@ -278,7 +278,7 @@ function main() {
                     transparent: true, /*opacity: 0.9,*/
                     //color: "white",
                     side: THREE.DoubleSide,
-                    map: textureLoader.load("../assets/text-8-transparent(1024x1024).png")
+                    map:  textureLoader.load("../assets/text-10-transparent(1024x624).png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.position.set(0, -this.lengthPage/5, -0.01);
