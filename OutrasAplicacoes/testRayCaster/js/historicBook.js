@@ -70,6 +70,7 @@ function main() {
         this.pictures = [],
         this.imageClone = null,
         this.orderPicturesBook = [],
+        this.messageVictory = null,
 
         // bookAttributes
         this.angleBeginPage = 0,        
@@ -83,6 +84,102 @@ function main() {
         this.amountSheets = 0,
         this.currentSheet = 0,
         this.amountPages = 0,
+
+        // Button Read / Exit
+        this.buttonsBook = [null, null, null],    // Read(Left sheet, Right sheet), Exit
+        this.sizeButton = 1.5,
+        this.cameraOption = 0,                    // 0 => rotationCamera, 1 => UpperCamera
+
+        // Functions
+        this.createBook = function(){
+            for (let index = 0; index < this.pictures.length; index++) {
+                this.createPage(this.orderPicturesBook[index]);  
+            }
+            scene.add(this.book);
+            this.createButtonsBook();
+        },
+        this.adjustButtonsBook = function(){
+            if(this.cameraOption != 1){
+                if(this.currentSheet < this.amountSheets){ 
+                    if(this.currentSheet > 0){
+                        this.buttonsBook[0].visible = true;
+                        this.buttonsBook[1].visible = true;
+                    }
+                    else{
+                        this.buttonsBook[0].visible = false;
+                        this.buttonsBook[1].visible = true;
+                    }
+                }
+                else{                                   // End of book
+                    this.buttonsBook[0].visible = true;
+                    this.buttonsBook[1].visible = false;
+                }
+            }
+            else{
+                this.buttonsBook[0].visible = false;
+                this.buttonsBook[1].visible = false;
+            }
+        },
+        this.createButtonsBook = function(){
+            let readButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
+            let readButtonMaterial = new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: textureLoader.load("../assets/icons/read.png"),
+            });
+            let readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
+            readButton.position.set(-this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + 8); //readButton.position.set(0, this.book.position.y + 5, 0); 
+            this.buttonsBook[0] = readButton;
+            this.buttonsBook[0].objectType = 2;
+            this.buttonsBook[0].visible = false;
+            this.buttonsBook[0].rotateX(THREE.Math.degToRad(-90));
+            scene.add(this.buttonsBook[0]);
+            readButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
+            readButtonMaterial = new THREE.MeshBasicMaterial({
+                side:THREE.DoubleSide,
+                map: textureLoader.load("../assets/icons/read.png"),
+            });
+            readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
+            readButton.position.set(this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + 8); //readButton.position.set(0, this.book.position.y + 5, 0); 
+            this.buttonsBook[1] = readButton;
+            this.buttonsBook[1].visible = false;
+            this.buttonsBook[1].objectType = 3;
+            this.buttonsBook[1].rotateX(THREE.Math.degToRad(-90));
+            scene.add(this.buttonsBook[1]);
+            let backButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
+            let backButtonMaterial = new THREE.MeshBasicMaterial({
+                side:THREE.DoubleSide,
+                map: textureLoader.load("../assets/icons/back.png")
+            });
+            let backButton = new THREE.Mesh(backButtonGeometry, backButtonMaterial);
+            backButton.position.set(0, this.book.position.y + 0.5, this.book.position.z + 8);
+            backButton.rotateX(THREE.Math.degToRad(-90));
+            this.buttonsBook[2] = backButton;
+            this.buttonsBook[2].visible = false;
+            this.buttonsBook[2].objectType = 4;
+            scene.add(this.buttonsBook[2]);
+            if(this.amountSheets > 0){
+                this.buttonsBook[1].visible = true;
+            }
+        },
+        this.createImageClone = function(){
+            let panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+            let panelMaterial = new THREE.MeshStandardMaterial({
+                color: "rgb(255,255,255)", side: THREE.DoubleSide
+            });
+            this.imageClone = new THREE.Mesh(panelGeometry, panelMaterial);
+            this.imageClone.position.set(-100, -100, -100);
+            scene.add(this.imageClone);
+        },
+        this.createMessageVictory = function(){
+            let messageVictoryGeometry = new THREE.PlaneGeometry(26, 8, 0.1, 0.1);
+            let messageVictoryMaterial = new THREE.MeshStandardMaterial({
+                map: textureLoader.load("../assets/messageVictory.png"), side: THREE.DoubleSide
+            });
+            this.messageVictory = new THREE.Mesh(messageVictoryGeometry, messageVictoryMaterial);
+            this.messageVictory.position.set(0, 5, -12);
+            this.messageVictory.visible = false;
+            scene.add(this.messageVictory); 
+        },
         this.createPage = function (indexPicture){
             if(this.amountPages % 2 == 0){   //Pair pages on the book
                 // Adjust of rotation of the sheets inside of book
@@ -190,95 +287,7 @@ function main() {
                 this.book.add(sheet);       // Added sheet with page on the book
             }
             this.amountPages++;
-        }
-
-        // Button Read / Exit
-        this.buttonsBook = [null, null, null],    // Read(Left sheet, Right sheet), Exit
-        this.sizeButton = 1.5,
-        this.cameraOption = 0,                    // 0 => rotationCamera, 1 => UpperCamera
-        this.createButtonsBook = function(){
-            let readButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
-            let readButtonMaterial = new THREE.MeshBasicMaterial({
-                side: THREE.DoubleSide,
-                map: textureLoader.load("../assets/icons/read.png"),
-            });
-            let readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
-            readButton.position.set(-this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + 8); //readButton.position.set(0, this.book.position.y + 5, 0); 
-            this.buttonsBook[0] = readButton;
-            this.buttonsBook[0].objectType = 2;
-            this.buttonsBook[0].visible = false;
-            this.buttonsBook[0].rotateX(THREE.Math.degToRad(-90));
-            scene.add(this.buttonsBook[0]);
-            readButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
-            readButtonMaterial = new THREE.MeshBasicMaterial({
-                side:THREE.DoubleSide,
-                map: textureLoader.load("../assets/icons/read.png"),
-            });
-            readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
-            readButton.position.set(this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + 8); //readButton.position.set(0, this.book.position.y + 5, 0); 
-            this.buttonsBook[1] = readButton;
-            this.buttonsBook[1].visible = false;
-            this.buttonsBook[1].objectType = 3;
-            this.buttonsBook[1].rotateX(THREE.Math.degToRad(-90));
-            scene.add(this.buttonsBook[1]);
-            let backButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
-            let backButtonMaterial = new THREE.MeshBasicMaterial({
-                side:THREE.DoubleSide,
-                map: textureLoader.load("../assets/icons/back.png")
-            });
-            let backButton = new THREE.Mesh(backButtonGeometry, backButtonMaterial);
-            backButton.position.set(0, this.book.position.y + 0.5, this.book.position.z + 8);
-            backButton.rotateX(THREE.Math.degToRad(-90));
-            this.buttonsBook[2] = backButton;
-            this.buttonsBook[2].visible = false;
-            this.buttonsBook[2].objectType = 4;
-            scene.add(this.buttonsBook[2]);
-            if(this.amountSheets > 0){
-                this.buttonsBook[1].visible = true;
-            }
         },
-
-        this.createBook = function(){
-            for (let index = 0; index < this.pictures.length; index++) {
-                this.createPage(this.orderPicturesBook[index]);  
-            }
-            scene.add(this.book);
-            this.createButtonsBook();
-        }
-        
-        this.createImageClone = function(){
-            panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
-            panelMaterial = new THREE.MeshStandardMaterial({
-                map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
-            });
-            this.imageClone = new THREE.Mesh(panelGeometry, panelMaterial);
-            this.imageClone.position.set(-100, -100, -100);
-            scene.add(this.imageClone);
-        }
-
-        this.adjustButtonsBook = function(){
-            if(this.cameraOption != 1){
-                if(this.currentSheet < this.amountSheets){ 
-                    if(this.currentSheet > 0){
-                        this.buttonsBook[0].visible = true;
-                        this.buttonsBook[1].visible = true;
-                    }
-                    else{
-                        this.buttonsBook[0].visible = false;
-                        this.buttonsBook[1].visible = true;
-                    }
-                }
-                else{                                   // End of book
-                    this.buttonsBook[0].visible = true;
-                    this.buttonsBook[1].visible = false;
-                }
-            }
-            else{
-                this.buttonsBook[0].visible = false;
-                this.buttonsBook[1].visible = false;
-            }
-        },
-
         this.createPicturesPanel = function(scene){
             let painelGeometry = new THREE.BoxGeometry(30, 10, 5);
             let painelMaterial = new THREE.MeshStandardMaterial({
@@ -335,26 +344,16 @@ function main() {
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
         },
-
         this.createScenary = function(){
             this.createImageClone();
             this.createPicturesPanel(scene);
             this.orderPicturesBook = this.shuffleList(this.orderPicturesBook);
             this.createBook();
+            this.createMessageVictory();
         },
-        this.shuffleList = function(list){
-            let auxOrderList = [];
-            let auxList = [];
-            for(let i = 0; i < list.length; i++){
-                auxList.push(list[i]);
-            }
-            for(let i = 0; i < auxList.length; i++){
-                let randomIndex = Math.floor(Math.random() * auxList.length)
-                auxOrderList.push(auxList[randomIndex]);
-                auxList.splice(randomIndex, 1);
-            };
-            auxOrderList.push(auxList[0]);   // Last element on the list
-            return auxOrderList;
+        this.removeEntity = function(object){
+            let selected = scene.getObjectByName(object.name);
+            scene.remove(selected);
         },
         this.removePictureFromWall = function(image){
             for (let i = 0; i < this.pictures.length; i++) {
@@ -381,9 +380,19 @@ function main() {
             controls.imageClone.position.set(-100, -100, -100);
             controls.imageClone.rotateX(THREE.Math.degToRad(90));
         },
-        this.removeEntity = function(object){
-            let selected = scene.getObjectByName(object.name);
-            scene.remove(selected);
+        this.shuffleList = function(list){
+            let auxOrderList = [];
+            let auxList = [];
+            for(let i = 0; i < list.length; i++){
+                auxList.push(list[i]);
+            }
+            for(let i = 0; i < auxList.length; i++){
+                let randomIndex = Math.floor(Math.random() * auxList.length)
+                auxOrderList.push(auxList[randomIndex]);
+                auxList.splice(randomIndex, 1);
+            };
+            auxOrderList.push(auxList[0]);   // Last element on the list
+            return auxOrderList;
         }
     }
     controls.createScenary();
@@ -441,7 +450,10 @@ function main() {
                     (objectLooked.indexPicture == selectedImage.indexPicture)
                     ){
                         objectLooked.children[0].material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane    
-                        controls.removePictureFromWall(selectedImage);      
+                        controls.removePictureFromWall(selectedImage);   
+                        if(controls.pictures.length == 0){
+                            controls.messageVictory.visible = true;
+                        }   
                     }
                 }
                 if(selectedImage != null){       // Drop the picture
