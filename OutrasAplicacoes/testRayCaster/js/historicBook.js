@@ -1,4 +1,14 @@
 function main() {
+    
+    // TODO: Afastar a câmera pra que seja possível visualizar todas as fotos
+    // TODO: Criar a primeira versão com textos e imagens correspondentes para vermos se a ideia funciona (ideia é termos 9 imagens em um grid 3 x 3) -- 
+    // TODO: Finalizar a implementação do sistema de acerto e erro -- 
+    //      >> Tem que criar um contador para acabar o 'jogo' ao errar X vezes
+    // TODO: Fixar o texto com resolução: 1024 x 624; Razão de aspecto: 1,64 -- 
+    // TODO: Ao clicar, transladar o centro da imagem rotacionada para o local do cursor para facilitar a colagem (deixar por último) --
+    // TODO: Painel Lateral ao de madeira com um botão reload pra recarregar a cena
+    // TODO: Encontrar 9 imagens pro painel
+
     // use the defaults
     var scene = new THREE.Scene();
     var stats = new Stats();
@@ -28,7 +38,7 @@ function main() {
     var clock = new THREE.Clock();
     // Enable mouse rotation, pan, zoom etc.
     var orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
-    orbitControls.target.set(0, 0, 0);
+    orbitControls.target.set(0, 10, 9);
     orbitControls.minDistance = 20;
     orbitControls.maxDistance = 60;
     var spotLight = new THREE.SpotLight(0xffffff);
@@ -47,7 +57,7 @@ function main() {
     // Show axes (parameter is size of each axis)
     var axes = new THREE.AxesHelper(24);
     axes.name = "AXES";
-    axes.visible = false;
+    axes.visible = true;
     scene.add(axes);
 
     var groundPlane = createGroundPlane(30, 30); // width and height
@@ -87,7 +97,7 @@ function main() {
 
         // Button Read / Exit
         this.buttonsBook = [null, null, null],    // Read(Left sheet, Right sheet), Exit
-        this.sizeButton = 1.5,
+        this.sizeButton = 1.75,
         this.cameraOption = 0,                    // 0 => rotationCamera, 1 => UpperCamera
 
         // Functions
@@ -127,7 +137,7 @@ function main() {
                 map: textureLoader.load("../assets/icons/read.png"),
             });
             let readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
-            readButton.position.set(-this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + 8); //readButton.position.set(0, this.book.position.y + 5, 0); 
+            readButton.position.set(-this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + this.lengthPage/2 + 0.5 + this.sizeButton/2); //readButton.position.set(0, this.book.position.y + 5, 0); 
             this.buttonsBook[0] = readButton;
             this.buttonsBook[0].objectType = 2;
             this.buttonsBook[0].visible = false;
@@ -139,7 +149,7 @@ function main() {
                 map: textureLoader.load("../assets/icons/read.png"),
             });
             readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
-            readButton.position.set(this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + 8); //readButton.position.set(0, this.book.position.y + 5, 0); 
+            readButton.position.set(this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + this.lengthPage/2 + 0.5 + this.sizeButton/2); //readButton.position.set(0, this.book.position.y + 5, 0); 
             this.buttonsBook[1] = readButton;
             this.buttonsBook[1].visible = false;
             this.buttonsBook[1].objectType = 3;
@@ -147,11 +157,11 @@ function main() {
             scene.add(this.buttonsBook[1]);
             let backButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
             let backButtonMaterial = new THREE.MeshBasicMaterial({
-                side:THREE.DoubleSide,
+                side: THREE.DoubleSide,
                 map: textureLoader.load("../assets/icons/back.png")
             });
             let backButton = new THREE.Mesh(backButtonGeometry, backButtonMaterial);
-            backButton.position.set(0, this.book.position.y + 0.5, this.book.position.z + 8);
+            backButton.position.set(0, this.book.position.y + 1.5, 0);
             backButton.rotateX(THREE.Math.degToRad(-90));
             this.buttonsBook[2] = backButton;
             this.buttonsBook[2].visible = false;
@@ -289,14 +299,14 @@ function main() {
             this.amountPages++;
         },
         this.createPicturesPanel = function(scene){
-            let painelGeometry = new THREE.BoxGeometry(30, 10, 5);
+            let painelGeometry = new THREE.BoxGeometry(30, 17, 5);
             let painelMaterial = new THREE.MeshStandardMaterial({
                 transparent: true,
                 opacity: 0.5,
                 map: textureLoader.load("../assets/general/wood-2.jpg"), side: THREE.DoubleSide
             });
             let panelPlane = new THREE.Mesh(painelGeometry, painelMaterial);
-            panelPlane.position.set(0, 5, -15.1);
+            panelPlane.position.set(0, 8.5, -15.1);
             scene.add(panelPlane);
             let skyboxGeometry = new THREE.SphereGeometry(100, 64, 64);
             let skyboxMaterial = new THREE.MeshBasicMaterial({
@@ -312,7 +322,7 @@ function main() {
                 map: textureLoader.load("../assets/paintings/1.jpg"), side: THREE.DoubleSide
             });
             let picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
-            picture.position.set(-10, 7, -12);
+            picture.position.set(-10, 4, -12);
             picture.objectType = 1;          //Image type
             picture.indexPicture = 0;
             picture.name = "picture_00";
@@ -325,7 +335,7 @@ function main() {
             });
             picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
             picture.name = "picture_01";
-            picture.position.set(-0, 7, -12);
+            picture.position.set(-0, 4, -12);
             picture.objectType = 1;          //Image type
             picture.indexPicture = 1;
             scene.add(picture);
@@ -336,10 +346,85 @@ function main() {
                 map: textureLoader.load("../assets/paintings/4.jpg"), side: THREE.DoubleSide
             });
             picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
-            picture.position.set(10, 7, -12);
+            picture.position.set(10, 4, -12);
             picture.objectType = 1;          //Image type
             picture.indexPicture = 2;
             picture.name = "picture_02";
+            scene.add(picture);
+            this.pictures.push(picture);
+            this.orderPicturesBook.push(picture.indexPicture);
+
+
+            pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+            pictureMaterial = new THREE.MeshStandardMaterial({
+                map: textureLoader.load("../assets/paintings/1.jpg"), side: THREE.DoubleSide
+            });
+            picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
+            picture.position.set(-10, 9, -12);
+            picture.objectType = 1;          //Image type
+            picture.indexPicture = 3;
+            picture.name = "picture_04";
+            scene.add(picture);
+            this.pictures.push(picture);
+            this.orderPicturesBook.push(picture.indexPicture);
+            pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+            pictureMaterial = new THREE.MeshStandardMaterial({
+                map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
+            });
+            picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
+            picture.name = "picture_05";
+            picture.position.set(0, 9, -12);
+            picture.objectType = 1;          //Image type
+            picture.indexPicture = 4;
+            scene.add(picture);
+            this.pictures.push(picture);
+            this.orderPicturesBook.push(picture.indexPicture);
+            pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+            pictureMaterial = new THREE.MeshStandardMaterial({
+                map: textureLoader.load("../assets/paintings/4.jpg"), side: THREE.DoubleSide
+            });
+            picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
+            picture.position.set(10, 9, -12);
+            picture.objectType = 1;          //Image type
+            picture.indexPicture = 5;
+            picture.name = "picture_06";
+            scene.add(picture);
+            this.pictures.push(picture);
+            this.orderPicturesBook.push(picture.indexPicture);
+
+            pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+            pictureMaterial = new THREE.MeshStandardMaterial({
+                map: textureLoader.load("../assets/paintings/1.jpg"), side: THREE.DoubleSide
+            });
+            picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
+            picture.position.set(-10, 14, -12);
+            picture.objectType = 1;          //Image type
+            picture.indexPicture = 6;
+            picture.name = "picture_07";
+            scene.add(picture);
+            this.pictures.push(picture);
+            this.orderPicturesBook.push(picture.indexPicture);
+            pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+            pictureMaterial = new THREE.MeshStandardMaterial({
+                map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
+            });
+            picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
+            picture.name = "picture_08";
+            picture.position.set(0, 14, -12);
+            picture.objectType = 1;          //Image type
+            picture.indexPicture = 7;
+            scene.add(picture);
+            this.pictures.push(picture);
+            this.orderPicturesBook.push(picture.indexPicture);
+            pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+            pictureMaterial = new THREE.MeshStandardMaterial({
+                map: textureLoader.load("../assets/paintings/4.jpg"), side: THREE.DoubleSide
+            });
+            picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
+            picture.position.set(10, 14, -12);
+            picture.objectType = 1;          //Image type
+            picture.indexPicture = 8;
+            picture.name = "picture_09";
             scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
