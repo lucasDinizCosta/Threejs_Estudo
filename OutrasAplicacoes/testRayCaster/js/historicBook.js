@@ -76,6 +76,18 @@ function main() {
         // Add objects to scene
         this.book = new THREE.Group(),
 
+        // Game Attributes
+        this.fails = 0,
+        this.correct = 0,
+        this.timer = {
+            minutes: 0,
+            seconds: 0,
+        },
+        this.menu = {
+            object: null,
+            retryButton: null, 
+        },
+
         // Pictures and Painting Wall
         this.pictures = [],
         this.imageClone = null,
@@ -101,13 +113,6 @@ function main() {
         this.cameraOption = 0,                    // 0 => rotationCamera, 1 => UpperCamera
 
         // Functions
-        this.createBook = function(){
-            for (let index = 0; index < this.pictures.length; index++) {
-                this.createPage(this.orderPicturesBook[index]);  
-            }
-            scene.add(this.book);
-            this.createButtonsBook();
-        },
         this.adjustButtonsBook = function(){
             if(this.cameraOption != 1){
                 if(this.currentSheet < this.amountSheets){ 
@@ -129,6 +134,13 @@ function main() {
                 this.buttonsBook[0].visible = false;
                 this.buttonsBook[1].visible = false;
             }
+        },
+        this.createBook = function(){
+            for (let index = 0; index < this.pictures.length; index++) {
+                this.createPage(this.orderPicturesBook[index]);  
+            }
+            scene.add(this.book);
+            this.createButtonsBook();
         },
         this.createButtonsBook = function(){
             let readButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
@@ -179,6 +191,42 @@ function main() {
             this.imageClone = new THREE.Mesh(panelGeometry, panelMaterial);
             this.imageClone.position.set(-100, -100, -100);
             scene.add(this.imageClone);
+        },
+        this.createMenu = function(){
+            
+            //let menu = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
+            /////// draw text on canvas /////////
+
+            // create a canvas element
+            var canvas1 = document.createElement('canvas');
+            var context1 = canvas1.getContext('2d');
+            canvas1.style.width = `600px`;
+            canvas1.style.height = `1200px`;
+            console.log(canvas1);
+            context1.width = 300;//"600px";
+            context1.height = 600;//"600px";
+            context1.fillStyle = "white";
+            context1.fillRect(0, 0, 800, 160);
+            context1.strokeStyle = "black";
+            context1.strokeRect(0, 0, context1.width, context1.height);
+            context1.font = "Bold 30px Arial";
+            context1.fillStyle = "rgba(255,0,0,0.95)";
+            context1.fillText('HELLO WORLD!', 2, 26);
+            
+            // canvas contents will be used for a texture
+            var texture1 = new THREE.Texture(canvas1);
+            texture1.needsUpdate = true;
+            
+            var material1 = new THREE.MeshBasicMaterial( {map: texture1, side:THREE.DoubleSide } );
+            material1.transparent = false;//true;
+
+            var mesh1 = new THREE.Mesh(
+                new THREE.PlaneGeometry(8, 16),//new THREE.PlaneGeometry(canvas1.width, canvas1.height),
+                material1
+            );
+            mesh1.position.set(17.5, 8.5, -8.1);
+            mesh1.rotateY(THREE.Math.degToRad(-30));
+            scene.add( mesh1 );
         },
         this.createMessageVictory = function(){
             let messageVictoryGeometry = new THREE.PlaneGeometry(26, 8, 0.1, 0.1);
@@ -430,6 +478,7 @@ function main() {
             this.orderPicturesBook.push(picture.indexPicture);
         },
         this.createScenary = function(){
+            this.createMenu();
             this.createImageClone();
             this.createPicturesPanel(scene);
             this.orderPicturesBook = this.shuffleList(this.orderPicturesBook);
@@ -534,11 +583,17 @@ function main() {
                     if(objectLooked.objectType == 0 && selectedImage != null && 
                     (objectLooked.indexPicture == selectedImage.indexPicture)
                     ){
-                        objectLooked.children[0].material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane    
+                        objectLooked.children[0].material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane   
+                        controls.hits++;
+                        console.log("Hits: ", controls.hits); 
                         controls.removePictureFromWall(selectedImage);   
                         if(controls.pictures.length == 0){
                             controls.messageVictory.visible = true;
                         }   
+                    }
+                    else{
+                        controls.fails++;
+                        console.log("Fails: ", controls.fails);
                     }
                 }
                 if(selectedImage != null){       // Drop the picture
