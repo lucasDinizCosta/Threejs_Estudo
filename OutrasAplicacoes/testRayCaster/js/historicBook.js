@@ -1,6 +1,5 @@
 function main() {
     
-    // TODO: Afastar a câmera pra que seja possível visualizar todas as fotos
     // TODO: Criar a primeira versão com textos e imagens correspondentes para vermos se a ideia funciona (ideia é termos 9 imagens em um grid 3 x 3) -- 
     // TODO: Finalizar a implementação do sistema de acerto e erro -- 
     //      >> Tem que criar um contador para acabar o 'jogo' ao errar X vezes
@@ -8,6 +7,7 @@ function main() {
     // TODO: Ao clicar, transladar o centro da imagem rotacionada para o local do cursor para facilitar a colagem (deixar por último) --
     // TODO: Painel Lateral ao de madeira com um botão reload pra recarregar a cena
     // TODO: Encontrar 9 imagens pro painel
+    // TALVEZ O MENU LATERAL FICARIA MELHOR EM CIMA DO PAINEL DO QUE DO LADO
 
     // use the defaults
     var scene = new THREE.Scene();
@@ -78,7 +78,7 @@ function main() {
 
         // Game Attributes
         this.fails = 0,
-        this.correct = 0,
+        this.hits = 0,
         this.timer = {
             minutes: 0,
             seconds: 0,
@@ -579,10 +579,8 @@ function main() {
         //console.log(event);
         if(event.button == 0){              // Left Button
             if(controls.cameraOption == 0){ // Camera Upper
-                if(objectLooked != null){
-                    if(objectLooked.objectType == 0 && selectedImage != null && 
-                    (objectLooked.indexPicture == selectedImage.indexPicture)
-                    ){
+                if((objectLooked != null) && (objectLooked.objectType == 0)){
+                    if(selectedImage != null &&  (objectLooked.indexPicture == selectedImage.indexPicture)){
                         objectLooked.children[0].material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane   
                         controls.hits++;
                         console.log("Hits: ", controls.hits); 
