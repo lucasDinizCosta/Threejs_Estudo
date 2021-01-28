@@ -55,14 +55,18 @@ function main() {
     ambientLight.name = "ambientLight";
     scene.add(ambientLight);
     // Show axes (parameter is size of each axis)
-    var axes = new THREE.AxesHelper(24);
+    /*var axes = new THREE.AxesHelper(24);
     axes.name = "AXES";
     axes.visible = true;
-    scene.add(axes);
+    scene.add(axes);*/
 
     var groundPlane = createGroundPlane(30, 30); // width and height
     groundPlane.rotateX(THREE.Math.degToRad(-90));
     scene.add(groundPlane);
+
+    // Time controlling
+    var timeAfter = 0;
+    var dt = 0;
 
     // Creating raycaster objects
     var raycaster = new THREE.Raycaster();
@@ -82,10 +86,41 @@ function main() {
         this.timer = {
             minutes: 0,
             seconds: 0,
+            updateTime: function(dt){
+                this.seconds += (dt);
+                if(this.seconds > 59){
+                    this.seconds = 0;
+                    this.minutes++;
+                }
+            }
         },
         this.menu = {
             object: null,
-            retryButton: null, 
+            canvas: null,
+            ctx: null,          // Context
+            retryButton: null,
+            drawMenu: function(){
+                this.ctx.fillStyle = "white";
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.lineWidth = 2;
+                this.ctx.strokeStyle = "black";
+                this.ctx.strokeRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.font = "Bold 30px Arial";
+                this.ctx.fillStyle = "rgba(255,0,0,0.95)";
+                this.ctx.fillText("MENU PRINCIPAL!", 380, 26);
+                this.ctx.fillText("FAILS: " + controls.fails, 30, 70);
+                this.ctx.fillText("HITS: " + controls.hits, 200, 70);
+                this.ctx.fillText("TIMER:  " + controls.timer.minutes + " : " + controls.timer.seconds.toFixed(0), 350, 70);
+                //console.log(controls.fails);
+                //this.object.material.map.needsUpdate = true;        //Update the canvas texture
+            },
+            clearMenu: function(){
+                this.ctx.fillStyle = "black";
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                this.object.material.map.needsUpdate = true;        //Update the canvas texture
+                //this.object.material.needsUpdate = true;
+                //console.log(this.object);
+            },
         },
 
         // Pictures and Painting Wall
@@ -134,6 +169,33 @@ function main() {
                 this.buttonsBook[0].visible = false;
                 this.buttonsBook[1].visible = false;
             }
+        },
+        this.animationBook = function(){
+            for (let i = 0; i < animationList.length; i++) {
+                if(animationList[i].sideOption == 1){
+                    if(animationList[i].animationAngle > animationList[i].angleFinish){
+                        animationList[i].animationAngle = 0;
+                        animationList.splice(i, 1);
+                        continue;
+                    }
+                    animationList[i].animationAngle = animationList[i].animationAngle + speedAnimation;
+                    animationList[i].rotateZ(THREE.Math.degToRad(speedAnimation));
+                }
+                else{
+                    if(animationList[i].animationAngle < (-animationList[i].angleFinish)){
+                        animationList[i].animationAngle = 0;
+                        animationList.splice(i, 1);
+                        continue;
+                    }
+                    animationList[i].animationAngle = animationList[i].animationAngle - speedAnimation;
+                    animationList[i].rotateZ(THREE.Math.degToRad(- speedAnimation));
+                }
+            }
+        },
+        this.animationScenary = function(){
+            this.menu.clearMenu();
+            this.menu.drawMenu();
+            this.animationBook();
         },
         this.createBook = function(){
             for (let index = 0; index < this.pictures.length; index++) {
@@ -193,40 +255,27 @@ function main() {
             scene.add(this.imageClone);
         },
         this.createMenu = function(){
-            
-            //let menu = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
-            /////// draw text on canvas /////////
-
             // create a canvas element
             var canvas1 = document.createElement('canvas');
             var context1 = canvas1.getContext('2d');
-            canvas1.style.width = `600px`;
-            canvas1.style.height = `1200px`;
-            console.log(canvas1);
-            context1.width = 300;//"600px";
-            context1.height = 600;//"600px";
-            context1.fillStyle = "white";
-            context1.fillRect(0, 0, 800, 160);
-            context1.strokeStyle = "black";
-            context1.strokeRect(0, 0, context1.width, context1.height);
-            context1.font = "Bold 30px Arial";
-            context1.fillStyle = "rgba(255,0,0,0.95)";
-            context1.fillText('HELLO WORLD!', 2, 26);
+            canvas1.width = 1000;
+            canvas1.height = 100;   //Set dimensions of the canvas texture to adjust aspect ratio
             
             // canvas contents will be used for a texture
             var texture1 = new THREE.Texture(canvas1);
             texture1.needsUpdate = true;
             
             var material1 = new THREE.MeshBasicMaterial( {map: texture1, side:THREE.DoubleSide } );
-            material1.transparent = false;//true;
-
+            material1.transparent = true; //true;
             var mesh1 = new THREE.Mesh(
-                new THREE.PlaneGeometry(8, 16),//new THREE.PlaneGeometry(canvas1.width, canvas1.height),
+                new THREE.PlaneGeometry(30, 3),
                 material1
             );
-            mesh1.position.set(17.5, 8.5, -8.1);
-            mesh1.rotateY(THREE.Math.degToRad(-30));
-            scene.add( mesh1 );
+            mesh1.position.set(0, 18.5, -12.1);
+            this.menu.object = mesh1;
+            this.menu.canvas = canvas1;
+            this.menu.ctx = context1;
+            scene.add(mesh1);
         },
         this.createMessageVictory = function(){
             let messageVictoryGeometry = new THREE.PlaneGeometry(26, 8, 0.1, 0.1);
@@ -590,14 +639,16 @@ function main() {
                         }   
                     }
                     else{
-                        controls.fails++;
-                        console.log("Fails: ", controls.fails);
+                        //controls.fails++;
+                        //console.log("Fails: ", controls.fails);
                     }
                 }
                 if(selectedImage != null){       // Drop the picture
                     selectedImage.visible = true;
                     controls.imageClone.position.set(-100, -100, -100);
                     controls.imageClone.rotateX(THREE.Math.degToRad(90));
+                    controls.fails++;
+                    console.log("Fails: ", controls.fails);
                 }
                 selectedImage = null;
                 orbitControls.enableRotate = true;      // Enable rotation on camera
@@ -726,16 +777,19 @@ function main() {
         }
     }
 
-    render();
+    requestAnimationFrame(render);
 
-    function render() {
+    function render(t) {
+        dt = (t - timeAfter) / 1000;
         stats.update();
         orbitControls.update(clock.getDelta());
+        controls.timer.updateTime(dt);
         checkRaycaster();
         checkRaycasterClonePictures();
-        animationBook();
-        requestAnimationFrame(render);
+        controls.animationScenary();
         renderer.render(scene, defaultCamera);
+        timeAfter = t;
+        requestAnimationFrame(render);
     }
 
     // Add a small and simple ground plane
@@ -751,29 +805,6 @@ function main() {
         var plane = new THREE.Mesh(planeGeometry, planeMaterial);
         plane.receiveShadow = true;
         return plane;
-    }
-
-    function animationBook(){
-        for (let i = 0; i < animationList.length; i++) {
-            if(animationList[i].sideOption == 1){
-                if(animationList[i].animationAngle > animationList[i].angleFinish){
-                    animationList[i].animationAngle = 0;
-                    animationList.splice(i, 1);
-                    continue;
-                }
-                animationList[i].animationAngle = animationList[i].animationAngle + speedAnimation;
-                animationList[i].rotateZ(THREE.Math.degToRad(speedAnimation));
-            }
-            else{
-                if(animationList[i].animationAngle < (-animationList[i].angleFinish)){
-                    animationList[i].animationAngle = 0;
-                    animationList.splice(i, 1);
-                    continue;
-                }
-                animationList[i].animationAngle = animationList[i].animationAngle - speedAnimation;
-                animationList[i].rotateZ(THREE.Math.degToRad(- speedAnimation));
-            }
-        }
     }
 }
 
