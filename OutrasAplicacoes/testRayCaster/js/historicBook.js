@@ -41,29 +41,6 @@ function main() {
     orbitControls.target.set(0, 10, 9);
     orbitControls.minDistance = 20;
     orbitControls.maxDistance = 60;
-    var spotLight = new THREE.SpotLight(0xffffff);
-    spotLight.position.copy(new THREE.Vector3(0, 15, 15));
-    spotLight.shadow.mapSize.width = 2048;
-    spotLight.shadow.mapSize.height = 2048;
-    spotLight.shadow.camera.fov = 15;
-    spotLight.castShadow = true;
-    spotLight.decay = 2;
-    spotLight.penumbra = 0.05;
-    spotLight.name = "spotLight"
-    scene.add(spotLight);
-    var ambientLight = new THREE.AmbientLight(0x343434);
-    ambientLight.name = "ambientLight";
-    scene.add(ambientLight);
-
-    // Show axes (parameter is size of each axis)
-    /*var axes = new THREE.AxesHelper(24);
-    axes.name = "AXES";
-    axes.visible = true;
-    scene.add(axes);*/
-
-    var groundPlane = createGroundPlane(30, 30); // width and height
-    groundPlane.rotateX(THREE.Math.degToRad(-90));
-    scene.add(groundPlane);
 
     // Time controlling
     var timeAfter = 0;
@@ -84,6 +61,8 @@ function main() {
     let objectLooked = null;
     let selectedImage = null;
     let pointCollisionRayCaster = null;  
+    let dragControls;
+    
 
     // Controls of sidebar
     var controls = new function() {
@@ -115,23 +94,18 @@ function main() {
                 this.ctx.strokeStyle = "black";
                 this.ctx.strokeRect(0, 0, this.canvas.width, this.canvas.height);
                 this.ctx.font = "Bold 38px Arial";
-                this.ctx.fillStyle = "rgba(255,0,0,0.95)";
+                this.ctx.fillStyle = "rgba(255,255,0,1)";
                 this.ctx.fillText("MENU PRINCIPAL", 380, 32);
                 this.ctx.fillText("FAILS: " + controls.fails, 30, 100);
                 this.ctx.fillText("HITS: " + controls.hits, 200, 100);
                 this.ctx.fillText("TIMER:  " + controls.timer.minutes + " : " + controls.timer.seconds.toFixed(0), 350, 100);
                 this.object.material.map.needsUpdate = true;        //Update the canvas texture
-                //this.object.material.map.needsUpdate = true;        //Update the canvas texture
-                //console.log(controls.fails);
-                //this.object.material.map.needsUpdate = true;        //Update the canvas texture
             },
             clearMenu: function(){
-                //this.object.material.map.needsUpdate = true;        //Update the canvas texture
-                this.ctx.fillStyle = "rgba(10,10,10,0.05)";
+                this.ctx.fillStyle = "rgba(10, 10, 10)";
                 this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-                //this.object.material.map.needsUpdate = true;        //Update the canvas texture
-                //this.object.material.needsUpdate = true;
-                //console.log(this.object);
+                this.object.material.map.needsUpdate = true;        //Update the canvas texture
+                //this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             },
         },
 
@@ -550,6 +524,29 @@ function main() {
             this.orderPicturesBook.push(picture.indexPicture);
         },
         this.createScenary = function(){
+            var spotLight = new THREE.SpotLight(0xffffff);
+            spotLight.position.copy(new THREE.Vector3(0, 15, 15));
+            spotLight.shadow.mapSize.width = 2048;
+            spotLight.shadow.mapSize.height = 2048;
+            spotLight.shadow.camera.fov = 15;
+            spotLight.castShadow = true;
+            spotLight.decay = 2;
+            spotLight.penumbra = 0.05;
+            spotLight.name = "spotLight"
+            scene.add(spotLight);
+            var ambientLight = new THREE.AmbientLight(0x343434);
+            ambientLight.name = "ambientLight";
+            scene.add(ambientLight);
+
+            // Show axes (parameter is size of each axis)
+            /*var axes = new THREE.AxesHelper(24);
+            axes.name = "AXES";
+            axes.visible = true;
+            scene.add(axes);*/
+
+            var groundPlane = createGroundPlane(30, 30); // width and height
+            groundPlane.rotateX(THREE.Math.degToRad(-90));
+            scene.add(groundPlane);
 
             this.createMenu();
             this.createImageClone();
@@ -558,29 +555,33 @@ function main() {
             this.createBook();
             this.createMessageVictory();
 
+            pictureLooked = null;
             animationList = [];
             objectRaycaster = [];
             objectRaycasterClonePictures = [];
 
+            //Recreate DragControls
+            dragControls = new THREE.DragControls([controls.imageClone], camera, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
+
             // Pages of book
-            for (let i = 0; i < controls.book.children.length; i++) {
-                let pageGroupRotation = controls.book.children[i];
+            for (let i = 0; i < this.book.children.length; i++) {
+                let pageGroupRotation = this.book.children[i];
                 for(let j = 0; j < pageGroupRotation.children.length; j++){
                     objectRaycaster.push(pageGroupRotation.children[j]);        //Put inside only page without the group rotation
                 }
             }
 
             // Adding the images of paintwall
-            for(let i = 0; i < controls.pictures.length; i++){
-                objectRaycaster.push(controls.pictures[i]);
-                objectRaycasterClonePictures.push(controls.pictures[i]);
+            for(let i = 0; i < this.pictures.length; i++){
+                objectRaycaster.push(this.pictures[i]);
+                objectRaycasterClonePictures.push(this.pictures[i]);
             }
 
             // Buttons
-            objectRaycaster.push(controls.buttonsBook[0]);
-            objectRaycaster.push(controls.buttonsBook[1]);
-            objectRaycaster.push(controls.buttonsBook[2]);
-            objectRaycaster.push(controls.buttonRetry);
+            objectRaycaster.push(this.buttonsBook[0]);
+            objectRaycaster.push(this.buttonsBook[1]);
+            objectRaycaster.push(this.buttonsBook[2]);
+            objectRaycaster.push(this.buttonRetry);
 
             // Raycaster and mouse Controllers 
             objectLooked = null;
@@ -592,6 +593,23 @@ function main() {
             while(scene.children.length > 0){       //OU scene.remove.apply(scene, scene.children);
                 scene.remove(scene.children[0]); 
             }
+            this.fails = 0;
+            this.hits = 0;
+            this.buttonRetry = null;
+            this.timer.seconds = 0;
+            this.timer.minutes = 0;
+            this.amountSheets = 0;
+            this.currentSheet = 0;
+            this.amountPages = 0;
+            this.pictures = [];
+            this.orderPicturesBook = [];
+            objectLooked = null;
+            selectedImage = null;
+            pictureLooked = null;
+            objectRaycaster = [];
+            objectRaycasterClonePictures = [];
+            this.imageClone = null;
+            this.book = new THREE.Group;
         },
         this.removeEntity = function(object){
             let selected = scene.getObjectByName(object.name);
@@ -638,7 +656,9 @@ function main() {
         }
     }
     controls.createScenary();
-    let dragControls = new THREE.DragControls([controls.imageClone], camera, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
+    
+    // DragControls functions
+
     dragControls.addEventListener( 'dragstart', function ( event ) {
         //console.log('drag start');
     });
@@ -762,6 +782,7 @@ function main() {
                         break;
                     case 5:     // Retry Button
                         controls.emptyScene();
+                        controls.createScenary();
                         break;
                 }
             }
