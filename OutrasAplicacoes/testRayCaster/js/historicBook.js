@@ -54,6 +54,7 @@ function main() {
     var ambientLight = new THREE.AmbientLight(0x343434);
     ambientLight.name = "ambientLight";
     scene.add(ambientLight);
+
     // Show axes (parameter is size of each axis)
     /*var axes = new THREE.AxesHelper(24);
     axes.name = "AXES";
@@ -73,7 +74,16 @@ function main() {
     var raycasterPictures = new THREE.Raycaster();      // To create a ghost image when the picture is moving from the wall
     var mouse = new THREE.Vector2();
 
-    //textureLoader.minFilter = THREE.LinearFilter;
+    // Animation pages
+    let animationList = [];
+    let speedAnimation = 1.8;   // 1.5
+
+    // Raycaster and mouse Controllers 
+    let objectRaycaster = [];
+    let objectRaycasterClonePictures = [];
+    let objectLooked = null;
+    let selectedImage = null;
+    let pointCollisionRayCaster = null;  
 
     // Controls of sidebar
     var controls = new function() {
@@ -83,6 +93,7 @@ function main() {
         // Game Attributes
         this.fails = 0,
         this.hits = 0,
+        this.buttonRetry = null,
         this.timer = {
             minutes: 0,
             seconds: 0,
@@ -100,22 +111,22 @@ function main() {
             ctx: null,          // Context
             retryButton: null,
             drawMenu: function(){
-                this.ctx.fillStyle = "white";
-                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
                 this.ctx.lineWidth = 2;
                 this.ctx.strokeStyle = "black";
                 this.ctx.strokeRect(0, 0, this.canvas.width, this.canvas.height);
-                this.ctx.font = "Bold 30px Arial";
+                this.ctx.font = "Bold 38px Arial";
                 this.ctx.fillStyle = "rgba(255,0,0,0.95)";
-                this.ctx.fillText("MENU PRINCIPAL!", 380, 26);
-                this.ctx.fillText("FAILS: " + controls.fails, 30, 70);
-                this.ctx.fillText("HITS: " + controls.hits, 200, 70);
-                this.ctx.fillText("TIMER:  " + controls.timer.minutes + " : " + controls.timer.seconds.toFixed(0), 350, 70);
+                this.ctx.fillText("MENU PRINCIPAL", 380, 32);
+                this.ctx.fillText("FAILS: " + controls.fails, 30, 100);
+                this.ctx.fillText("HITS: " + controls.hits, 200, 100);
+                this.ctx.fillText("TIMER:  " + controls.timer.minutes + " : " + controls.timer.seconds.toFixed(0), 350, 100);
+                //this.object.material.map.needsUpdate = true;        //Update the canvas texture
                 //console.log(controls.fails);
                 //this.object.material.map.needsUpdate = true;        //Update the canvas texture
             },
             clearMenu: function(){
-                this.ctx.fillStyle = "black";
+                this.object.material.map.needsUpdate = true;        //Update the canvas texture
+                this.ctx.fillStyle = "rgba(0,0,0,0.05)";
                 this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
                 this.object.material.map.needsUpdate = true;        //Update the canvas texture
                 //this.object.material.needsUpdate = true;
@@ -256,18 +267,18 @@ function main() {
         },
         this.createMenu = function(){
             // create a canvas element
-            var canvas1 = document.createElement('canvas');
-            var context1 = canvas1.getContext('2d');
-            canvas1.width = 1000;
-            canvas1.height = 100;   //Set dimensions of the canvas texture to adjust aspect ratio
+            let canvas1 = document.createElement('canvas');
+            let context1 = canvas1.getContext('2d');
+            canvas1.width = 1024;
+            canvas1.height = 128;   //Set dimensions of the canvas texture to adjust aspect ratio
             
             // canvas contents will be used for a texture
-            var texture1 = new THREE.Texture(canvas1);
+            let texture1 = new THREE.Texture(canvas1);
             texture1.needsUpdate = true;
             
-            var material1 = new THREE.MeshBasicMaterial( {map: texture1, side:THREE.DoubleSide } );
+            let material1 = new THREE.MeshBasicMaterial( {map: texture1, side:THREE.DoubleSide } );
             material1.transparent = true; //true;
-            var mesh1 = new THREE.Mesh(
+            let mesh1 = new THREE.Mesh(
                 new THREE.PlaneGeometry(30, 3),
                 material1
             );
@@ -276,6 +287,17 @@ function main() {
             this.menu.canvas = canvas1;
             this.menu.ctx = context1;
             scene.add(mesh1);
+            
+            // Button Retry
+            let buttonRetryGeometry = new THREE.PlaneGeometry(3, 1.5, 0.1, 0.1);
+            let buttonRetryMaterial = new THREE.MeshBasicMaterial({
+                color: "rgb(255, 255, 0)",
+                /*map: textureLoader.load("../assets/messageVictory.png"),*/ side: THREE.DoubleSide
+            });
+            this.buttonRetry = new THREE.Mesh(buttonRetryGeometry, buttonRetryMaterial);
+            this.buttonRetry.position.set(13, 18.25, -11.9);
+            this.buttonRetry.objectType = 5;
+            scene.add(this.buttonRetry); 
         },
         this.createMessageVictory = function(){
             let messageVictoryGeometry = new THREE.PlaneGeometry(26, 8, 0.1, 0.1);
@@ -527,12 +549,48 @@ function main() {
             this.orderPicturesBook.push(picture.indexPicture);
         },
         this.createScenary = function(){
+
             this.createMenu();
             this.createImageClone();
             this.createPicturesPanel(scene);
             this.orderPicturesBook = this.shuffleList(this.orderPicturesBook);
             this.createBook();
             this.createMessageVictory();
+
+            animationList = [];
+            objectRaycaster = [];
+            objectRaycasterClonePictures = [];
+
+            // Pages of book
+            for (let i = 0; i < controls.book.children.length; i++) {
+                let pageGroupRotation = controls.book.children[i];
+                for(let j = 0; j < pageGroupRotation.children.length; j++){
+                    objectRaycaster.push(pageGroupRotation.children[j]);        //Put inside only page without the group rotation
+                }
+            }
+
+            // Adding the images of paintwall
+            for(let i = 0; i < controls.pictures.length; i++){
+                objectRaycaster.push(controls.pictures[i]);
+                objectRaycasterClonePictures.push(controls.pictures[i]);
+            }
+
+            // Buttons
+            objectRaycaster.push(controls.buttonsBook[0]);
+            objectRaycaster.push(controls.buttonsBook[1]);
+            objectRaycaster.push(controls.buttonsBook[2]);
+            objectRaycaster.push(controls.buttonRetry);
+
+            // Raycaster and mouse Controllers 
+            objectLooked = null;
+            selectedImage = null;
+            pointCollisionRayCaster = null;   
+        },
+        this.emptyScene = function(){
+            console.log("Empty Scene");
+            while(scene.children.length > 0){       //OU scene.remove.apply(scene, scene.children);
+                scene.remove(scene.children[0]); 
+            }
         },
         this.removeEntity = function(object){
             let selected = scene.getObjectByName(object.name);
@@ -591,9 +649,6 @@ function main() {
         //console.log('drag end');
     });
     
-    let animationList = [];
-    let speedAnimation = 1.8;   // 1.5
-    
     // Reajuste da renderização com base na mudança da janela
     function onResize(){
         camera.aspect = window.innerWidth / window.innerHeight;  //Atualiza o aspect da camera com relação as novas dimensões
@@ -632,15 +687,10 @@ function main() {
                     if(selectedImage != null &&  (objectLooked.indexPicture == selectedImage.indexPicture)){
                         objectLooked.children[0].material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane   
                         controls.hits++;
-                        console.log("Hits: ", controls.hits); 
                         controls.removePictureFromWall(selectedImage);   
                         if(controls.pictures.length == 0){
                             controls.messageVictory.visible = true;
                         }   
-                    }
-                    else{
-                        //controls.fails++;
-                        //console.log("Fails: ", controls.fails);
                     }
                 }
                 if(selectedImage != null){       // Drop the picture
@@ -648,7 +698,6 @@ function main() {
                     controls.imageClone.position.set(-100, -100, -100);
                     controls.imageClone.rotateX(THREE.Math.degToRad(90));
                     controls.fails++;
-                    console.log("Fails: ", controls.fails);
                 }
                 selectedImage = null;
                 orbitControls.enableRotate = true;      // Enable rotation on camera
@@ -710,37 +759,13 @@ function main() {
                         controls.adjustButtonsBook();
                         controls.buttonsBook[2].visible = false;
                         break;
+                    case 5:     // Retry Button
+                        controls.emptyScene();
+                        break;
                 }
             }
         }
-    }
-
-    let objectRaycaster = [];
-    let objectRaycasterClonePictures = [];
-
-    // Pages of book
-    for (let i = 0; i < controls.book.children.length; i++) {
-        let pageGroupRotation = controls.book.children[i];
-        for(let j = 0; j < pageGroupRotation.children.length; j++){
-            objectRaycaster.push(pageGroupRotation.children[j]);        //Put inside only page without the group rotation
-        }
-    }
-
-    // Adding the images of paintwall
-    for(let i = 0; i < controls.pictures.length; i++){
-        objectRaycaster.push(controls.pictures[i]);
-        objectRaycasterClonePictures.push(controls.pictures[i]);
-    }
-
-    // Buttons
-    objectRaycaster.push(controls.buttonsBook[0]);
-    objectRaycaster.push(controls.buttonsBook[1]);
-    objectRaycaster.push(controls.buttonsBook[2]);
-
-    // Raycaster and mouse Controllers 
-    let objectLooked = null;
-    let selectedImage = null;
-    let pointCollisionRayCaster = null;      
+    }    
 
     function checkRaycaster(){
         // update the picking ray with the camera and mouse position
