@@ -120,15 +120,16 @@ function main() {
                 this.ctx.fillText("FAILS: " + controls.fails, 30, 100);
                 this.ctx.fillText("HITS: " + controls.hits, 200, 100);
                 this.ctx.fillText("TIMER:  " + controls.timer.minutes + " : " + controls.timer.seconds.toFixed(0), 350, 100);
+                this.object.material.map.needsUpdate = true;        //Update the canvas texture
                 //this.object.material.map.needsUpdate = true;        //Update the canvas texture
                 //console.log(controls.fails);
                 //this.object.material.map.needsUpdate = true;        //Update the canvas texture
             },
             clearMenu: function(){
-                this.object.material.map.needsUpdate = true;        //Update the canvas texture
-                this.ctx.fillStyle = "rgba(0,0,0,0.05)";
+                //this.object.material.map.needsUpdate = true;        //Update the canvas texture
+                this.ctx.fillStyle = "rgba(10,10,10,0.05)";
                 this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-                this.object.material.map.needsUpdate = true;        //Update the canvas texture
+                //this.object.material.map.needsUpdate = true;        //Update the canvas texture
                 //this.object.material.needsUpdate = true;
                 //console.log(this.object);
             },
