@@ -266,8 +266,8 @@ function main() {
             // Button Retry
             let buttonRetryGeometry = new THREE.PlaneGeometry(3, 1.5, 0.1, 0.1);
             let buttonRetryMaterial = new THREE.MeshBasicMaterial({
-                color: "rgb(255, 255, 0)",
-                /*map: textureLoader.load("../assets/messageVictory.png"),*/ side: THREE.DoubleSide
+                //color: "rgb(255, 255, 0)",
+                map: textureLoader.load("../assets/icons/retry.png"), side: THREE.DoubleSide
             });
             this.buttonRetry = new THREE.Mesh(buttonRetryGeometry, buttonRetryMaterial);
             this.buttonRetry.position.set(13, 18.25, -11.9);
