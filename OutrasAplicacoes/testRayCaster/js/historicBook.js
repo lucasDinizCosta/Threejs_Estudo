@@ -1,13 +1,10 @@
 function main() {
     
     // TODO: Criar a primeira versão com textos e imagens correspondentes para vermos se a ideia funciona (ideia é termos 9 imagens em um grid 3 x 3) -- 
-    // TODO: Finalizar a implementação do sistema de acerto e erro -- 
-    //      >> Tem que criar um contador para acabar o 'jogo' ao errar X vezes
     // TODO: Fixar o texto com resolução: 1024 x 624; Razão de aspecto: 1,64 -- 
     // TODO: Ao clicar, transladar o centro da imagem rotacionada para o local do cursor para facilitar a colagem (deixar por último) --
-    // TODO: Painel Lateral ao de madeira com um botão reload pra recarregar a cena
     // TODO: Encontrar 9 imagens pro painel
-    // TALVEZ O MENU LATERAL FICARIA MELHOR EM CIMA DO PAINEL DO QUE DO LADO
+    // TODO: SOLTAR O COMENTARIO QUE DEIXA ALEATÓRIA A ORDEM DAS IMAGENS
 
     // use the defaults
     var scene = new THREE.Scene();
@@ -545,6 +542,7 @@ function main() {
             scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
+            //console.log(this.orderPicturesBook);
         },
         this.createScenary = function(){
             var spotLight = new THREE.SpotLight(0xffffff);
@@ -574,8 +572,8 @@ function main() {
             this.createMenu();
             this.createImageClone();
             this.createPicturesPanel(scene);
-            this.orderPicturesBook = this.shuffleList(this.orderPicturesBook);
-            console.log(this.orderPicturesBook);
+            /** SOLTAR PARA SER ALEATORIO */
+            //this.orderPicturesBook = this.shuffleList(this.orderPicturesBook);
             this.createBook();
             this.createMessages();
 
@@ -690,11 +688,11 @@ function main() {
                 auxList.push(list[i]);
             }
             for(let i = 0; i < auxList.length; i++){
-                let randomIndex = Math.floor(Math.random() * auxList.length)
+                let randomIndex = Math.floor(Math.random() * auxList.length);
                 auxOrderList.push(auxList[randomIndex]);
                 auxList.splice(randomIndex, 1);
+                i--;                    // FIX remove when works with ".length"
             };
-            auxOrderList.push(auxList[0]);   // Last element on the list
             return auxOrderList;
         }
     }
