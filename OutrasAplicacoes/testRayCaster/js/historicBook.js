@@ -520,7 +520,7 @@ function main() {
             this.orderPicturesBook.push(picture.indexPicture);
             pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
             pictureMaterial = new THREE.MeshStandardMaterial({
-                map: textureLoader.load("../assets/paintings/9.jpg"), side: THREE.DoubleSide
+                map: textureLoader.load("../assets/paintings/8.jpg"), side: THREE.DoubleSide
             });
             picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
             picture.name = "picture_08";
@@ -532,7 +532,7 @@ function main() {
             this.orderPicturesBook.push(picture.indexPicture);
             pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
             pictureMaterial = new THREE.MeshStandardMaterial({
-                map: textureLoader.load("../assets/paintings/4.jpg"), side: THREE.DoubleSide
+                map: textureLoader.load("../assets/paintings/9.jpg"), side: THREE.DoubleSide
             });
             picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
             picture.position.set(10, 14, -12);
