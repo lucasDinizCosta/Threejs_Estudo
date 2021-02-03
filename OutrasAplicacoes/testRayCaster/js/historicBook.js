@@ -73,6 +73,14 @@ function main() {
         this.fails = 0,
         this.hits = 0,
         this.buttonRetry = null,
+        /**************************
+         *          States        *
+         *  0 => Game Running     * 
+         *  1 => Victory          * 
+         *  2 => Loose            * 
+         *                        *
+         **************************/
+        this.state = 0,         
         this.timer = {
             minutes: 0,
             seconds: 0,
@@ -94,11 +102,11 @@ function main() {
                 this.ctx.strokeStyle = "black";
                 this.ctx.strokeRect(0, 0, this.canvas.width, this.canvas.height);
                 this.ctx.font = "Bold 38px Arial";
-                this.ctx.fillStyle = "rgba(255,255,0,1)";
-                this.ctx.fillText("MENU PRINCIPAL", 380, 32);
+                this.ctx.fillStyle = "rgb(255, 255, 0)";
+                this.ctx.fillText("MENU PRINCIPAL", 380, 45);
                 this.ctx.fillText("FAILS: " + controls.fails, 30, 100);
-                this.ctx.fillText("HITS: " + controls.hits, 200, 100);
-                this.ctx.fillText("TIMER:  " + controls.timer.minutes + " : " + controls.timer.seconds.toFixed(0), 350, 100);
+                this.ctx.fillText(" HITS: " + controls.hits, 200, 100);
+                this.ctx.fillText(" TIMER:  " + controls.timer.minutes + " : " + controls.timer.seconds.toFixed(0), 350, 100);
                 this.object.material.map.needsUpdate = true;        //Update the canvas texture
             },
             clearMenu: function(){
@@ -114,6 +122,7 @@ function main() {
         this.imageClone = null,
         this.orderPicturesBook = [],
         this.messageVictory = null,
+        this.messageLoose = null,
 
         // bookAttributes
         this.angleBeginPage = 0,        
@@ -199,7 +208,7 @@ function main() {
             let readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
             readButton.position.set(-this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + this.lengthPage/2 + 0.5 + this.sizeButton/2); //readButton.position.set(0, this.book.position.y + 5, 0); 
             this.buttonsBook[0] = readButton;
-            this.buttonsBook[0].objectType = 2;
+            this.buttonsBook[0].objectType = 3;
             this.buttonsBook[0].visible = false;
             this.buttonsBook[0].rotateX(THREE.Math.degToRad(-90));
             scene.add(this.buttonsBook[0]);
@@ -212,7 +221,7 @@ function main() {
             readButton.position.set(this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + this.lengthPage/2 + 0.5 + this.sizeButton/2); //readButton.position.set(0, this.book.position.y + 5, 0); 
             this.buttonsBook[1] = readButton;
             this.buttonsBook[1].visible = false;
-            this.buttonsBook[1].objectType = 3;
+            this.buttonsBook[1].objectType = 4;
             this.buttonsBook[1].rotateX(THREE.Math.degToRad(-90));
             scene.add(this.buttonsBook[1]);
             let backButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
@@ -225,7 +234,7 @@ function main() {
             backButton.rotateX(THREE.Math.degToRad(-90));
             this.buttonsBook[2] = backButton;
             this.buttonsBook[2].visible = false;
-            this.buttonsBook[2].objectType = 4;
+            this.buttonsBook[2].objectType = 5;
             scene.add(this.buttonsBook[2]);
             if(this.amountSheets > 0){
                 this.buttonsBook[1].visible = true;
@@ -271,18 +280,27 @@ function main() {
             });
             this.buttonRetry = new THREE.Mesh(buttonRetryGeometry, buttonRetryMaterial);
             this.buttonRetry.position.set(13, 18.25, -11.9);
-            this.buttonRetry.objectType = 5;
+            this.buttonRetry.objectType = 6;
             scene.add(this.buttonRetry); 
         },
-        this.createMessageVictory = function(){
+        this.createMessages = function(){       // Victory and Loose
             let messageVictoryGeometry = new THREE.PlaneGeometry(26, 8, 0.1, 0.1);
             let messageVictoryMaterial = new THREE.MeshStandardMaterial({
                 map: textureLoader.load("../assets/messageVictory.png"), side: THREE.DoubleSide
             });
             this.messageVictory = new THREE.Mesh(messageVictoryGeometry, messageVictoryMaterial);
-            this.messageVictory.position.set(0, 5, -12);
+            this.messageVictory.position.set(0, 9, -12);
             this.messageVictory.visible = false;
             scene.add(this.messageVictory); 
+
+            let messageLooseGeometry = new THREE.PlaneGeometry(26, 8, 0.1, 0.1);
+            let messageLooseMaterial = new THREE.MeshStandardMaterial({
+                map: textureLoader.load("../assets/messageLoose.png"), side: THREE.DoubleSide
+            });
+            this.messageLoose = new THREE.Mesh(messageLooseGeometry, messageLooseMaterial);
+            this.messageLoose.position.set(0, 9, -12);
+            this.messageLoose.visible = false;
+            scene.add(this.messageLoose); 
         },
         this.createPage = function (indexPicture){
             if(this.amountPages % 2 == 0){   //Pair pages on the book
@@ -311,7 +329,7 @@ function main() {
                 sheet.page = this.numberPage;
                 sheet.sideOption = 0;              //0 => Right, 1 => Left
                 page.sheet = sheet;
-                page.objectType = 0;               //Page type
+                page.objectType = 0;               // Page type
                 page.indexPicture = indexPicture;
 
                 // Image plane
@@ -321,7 +339,10 @@ function main() {
                 });
                 let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
                 imagePlane.position.set(0, this.lengthPage/4.5, 0.01);
+                imagePlane.objectType = 2;
                 page.add(imagePlane);
+                imagePlane.indexPicture = indexPicture;
+                
 
                 // Informations block
                 let informationGeometry = new THREE.PlaneGeometry(9.6, 6.08, 0.1, 0.1);
@@ -374,6 +395,8 @@ function main() {
                 let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
                 imagePlane.position.set(0, this.lengthPage/4.5, -0.01);
                 imagePlane.rotateY(THREE.Math.degToRad(180));
+                imagePlane.objectType = 2;
+                imagePlane.indexPicture = indexPicture;
                 page.add(imagePlane);
 
                 // Informations block
@@ -552,8 +575,9 @@ function main() {
             this.createImageClone();
             this.createPicturesPanel(scene);
             this.orderPicturesBook = this.shuffleList(this.orderPicturesBook);
+            console.log(this.orderPicturesBook);
             this.createBook();
-            this.createMessageVictory();
+            this.createMessages();
 
             pictureLooked = null;
             animationList = [];
@@ -568,6 +592,7 @@ function main() {
                 let pageGroupRotation = this.book.children[i];
                 for(let j = 0; j < pageGroupRotation.children.length; j++){
                     objectRaycaster.push(pageGroupRotation.children[j]);        //Put inside only page without the group rotation
+                    objectRaycaster.push(pageGroupRotation.children[j].children[0]);        // Image Block
                 }
             }
 
@@ -595,6 +620,7 @@ function main() {
             }
             this.fails = 0;
             this.hits = 0;
+            this.state = 0;
             this.buttonRetry = null;
             this.timer.seconds = 0;
             this.timer.minutes = 0;
@@ -615,7 +641,7 @@ function main() {
             let selected = scene.getObjectByName(object.name);
             scene.remove(selected);
         },
-        this.removePictureFromWall = function(image){
+        this.removePictureFromWall = function(image, imagePlane){
             for (let i = 0; i < this.pictures.length; i++) {
                 if(this.pictures[i].indexPicture == image.indexPicture){
                     this.pictures.splice(i, 1);
@@ -628,6 +654,12 @@ function main() {
                     break;
                 }
             }
+            for (let j = 0; j < objectRaycaster.length; j++) {  // Remove imagePlane of raycaster
+                if(objectRaycaster[j] == imagePlane){
+                    objectRaycaster.splice(j, 1);
+                    break;
+                }
+            }
             for (let j = 0; j < objectRaycasterClonePictures.length; j++) {
                 if(objectRaycasterClonePictures[j].indexPicture == image.indexPicture){
                     objectRaycasterClonePictures.splice(j, 1);
@@ -635,6 +667,17 @@ function main() {
                 }
             }
             this.removeEntity(image);
+            objectLooked = null;
+            selectedImage = null;
+            controls.imageClone.position.set(-100, -100, -100);
+            controls.imageClone.rotateX(THREE.Math.degToRad(90));
+        },
+        this.removeAllPictures = function(){
+            for (let i = 0; i < this.pictures.length; i++) {
+                let aux = this.pictures[i];
+                this.removeEntity(aux);
+            }
+            objectRaycasterClonePictures = [];
             objectLooked = null;
             selectedImage = null;
             controls.imageClone.position.set(-100, -100, -100);
@@ -704,21 +747,33 @@ function main() {
         //console.log(event);
         if(event.button == 0){              // Left Button
             if(controls.cameraOption == 0){ // Camera Upper
-                if((objectLooked != null) && (objectLooked.objectType == 0)){
-                    if(selectedImage != null &&  (objectLooked.indexPicture == selectedImage.indexPicture)){
-                        objectLooked.children[0].material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane   
-                        controls.hits++;
-                        controls.removePictureFromWall(selectedImage);   
-                        if(controls.pictures.length == 0){
-                            controls.messageVictory.visible = true;
-                        }   
+                if((objectLooked != null) && (objectLooked.objectType == 2)){
+                    if(selectedImage != null){
+                        if(objectLooked.indexPicture == selectedImage.indexPicture){
+                            objectLooked.material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane   
+                            controls.hits++;
+                            controls.removePictureFromWall(selectedImage, objectLooked);   // Remove imagePlane and picture of panel
+                            if(controls.pictures.length == 0){
+                                controls.state = 1;
+                                controls.messageVictory.visible = true;
+                            } 
+                        }
+                        else{
+                            controls.fails++;
+                            if(controls.fails > 2){
+                                controls.state = 2;
+                                //console.log("You lose");
+                                controls.removeAllPictures();
+                                controls.messageLoose.visible = true;
+
+                            } 
+                        }
                     }
                 }
                 if(selectedImage != null){       // Drop the picture
                     selectedImage.visible = true;
                     controls.imageClone.position.set(-100, -100, -100);
                     controls.imageClone.rotateX(THREE.Math.degToRad(90));
-                    controls.fails++;
                 }
                 selectedImage = null;
                 orbitControls.enableRotate = true;      // Enable rotation on camera
@@ -758,7 +813,11 @@ function main() {
                         controls.imageClone.rotateX(THREE.Math.degToRad(-90));
                         //controls.imageClone.position.copy(pointCollisionRayCaster);
                         break;
-                    case 2:     // Read Left page Button
+                    case 2:     // Collide with imagePlane on Page 
+                        //
+                        //
+                        break;
+                    case 3:     // Read Left page Button
                         controls.cameraOption = 1;      // Turn camera option
                         defaultCamera = upperCamera;
                         controls.adjustButtonsBook();
@@ -766,7 +825,7 @@ function main() {
                         defaultCamera.position.set(-controls.widthPage/2, 17, 0);   // Y = 25
                         controls.buttonsBook[2].position.set(-controls.widthPage - controls.sizeButton/2, controls.buttonsBook[2].position.y, 0);   
                         break;
-                    case 3:     // Read Right page Button
+                    case 4:     // Read Right page Button
                         controls.cameraOption = 1;      // Turn camera option
                         defaultCamera = upperCamera;
                         controls.adjustButtonsBook();
@@ -774,13 +833,13 @@ function main() {
                         defaultCamera.position.set(controls.widthPage/2, 17, 0);
                         controls.buttonsBook[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttonsBook[2].position.y, 0);   
                         break;
-                    case 4:     // Exit Button
+                    case 5:     // Exit Button
                         controls.cameraOption = 0;
                         defaultCamera = camera;
                         controls.adjustButtonsBook();
                         controls.buttonsBook[2].visible = false;
                         break;
-                    case 5:     // Retry Button
+                    case 6:     // Retry Button
                         controls.emptyScene();
                         controls.createScenary();
                         break;
@@ -830,10 +889,18 @@ function main() {
         dt = (t - timeAfter) / 1000;
         stats.update();
         orbitControls.update(clock.getDelta());
-        controls.timer.updateTime(dt);
         checkRaycaster();
-        checkRaycasterClonePictures();
         controls.animationScenary();
+        switch(controls.state){
+            case 0:         // Game Running
+                controls.timer.updateTime(dt);
+                checkRaycasterClonePictures();
+                break;
+            case 1:         // Victory
+                break;
+            case 2:         // Loose
+                break;
+        }
         renderer.render(scene, defaultCamera);
         timeAfter = t;
         requestAnimationFrame(render);
