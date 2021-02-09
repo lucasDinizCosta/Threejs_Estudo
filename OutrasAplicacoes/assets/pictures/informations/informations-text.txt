@@ -1,0 +1,81 @@
+Attributes of the texture:
+=> Dimensions: 1024x624
+=> Aspect Ratio: 1.64
+=> Font: Times New Roman 54px
+
+Information of the pictures:
+
+01) Marie Curie:
+
+=> PT-BR: 
+Cientista polonesa naturalizada na França, foi a primeira pessoa a conseguir 2 prêmios nobel em áreas distintas, 
+sendo estes um da área da Física e outro da Química, seus estudos consistiram na formulação da teoria da radioatividade,  
+no isolamento de isotopos radioativos e na descoberta dos elementos químicos radioativos polonio e radio.
+
+=> EN:
+Polish scientist naturalized in France, he was the first person to win 2 Nobel Prizes in different areas, 
+one of them in the area of Physics and the other of Chemistry, her studies consisted in the formulation of the theory of radioactivity, 
+in the isolation of radioactive isotopes and in the discovery of radioactive chemical elements, polonium and radio.
+
+02) Napoleon Bonaparte (Napoleão Bonaparte):
+
+=> PT-BR: 
+
+
+=> EN:
+
+03) Winston Churchill:
+
+=> PT-BR: 
+
+
+=> EN:
+
+
+04) Benjamin Franklin:
+
+=> PT-BR: 
+
+
+=> EN:
+
+
+05) Isaac Newton:
+
+=> PT-BR: 
+
+
+=> EN:
+
+
+06) Adolf Hitler:
+
+=> PT-BR: 
+
+
+=> EN:
+
+07) Albert Einstein:
+
+=> PT-BR: 
+
+
+=> EN:
+
+
+08) Martin Luther King Jr.:
+
+=> PT-BR: 
+
+
+=> EN:
+
+
+09) Alan Turing:
+
+=> PT-BR: 
+
+
+=> EN:
+
+
