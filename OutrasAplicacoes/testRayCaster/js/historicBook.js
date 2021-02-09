@@ -3,8 +3,9 @@ function main() {
     // TODO: Criar a primeira versão com textos e imagens correspondentes para vermos se a ideia funciona (ideia é termos 9 imagens em um grid 3 x 3) -- 
     // TODO: Fixar o texto com resolução: 1024 x 624; Razão de aspecto: 1,64 -- 
     // TODO: Ao clicar, transladar o centro da imagem rotacionada para o local do cursor para facilitar a colagem (deixar por último) --
-    // TODO: Encontrar 9 imagens pro painel
     // TODO: SOLTAR O COMENTARIO QUE DEIXA ALEATÓRIA A ORDEM DAS IMAGENS
+    // TODO: Colocar o texto das informações das imagens no livro
+    // TODO: Botão de zoom para painel de pinturas
 
     // use the defaults
     var scene = new THREE.Scene();
@@ -339,7 +340,6 @@ function main() {
                 imagePlane.objectType = 2;
                 page.add(imagePlane);
                 imagePlane.indexPicture = indexPicture;
-                
 
                 // Informations block
                 let informationGeometry = new THREE.PlaneGeometry(9.6, 6.08, 0.1, 0.1);
@@ -347,7 +347,7 @@ function main() {
                     transparent: true,
                     //color: "white",
                     side: THREE.DoubleSide,
-                    map: textureLoader.load("../assets/text-10-transparent(1024x624).png")
+                    map: textureLoader.load("../assets/pictures/informations/"+indexPicture+".png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.position.set(0, -this.lengthPage/5, 0.01);
@@ -402,7 +402,7 @@ function main() {
                     transparent: true, /*opacity: 0.9,*/
                     //color: "white",
                     side: THREE.DoubleSide,
-                    map:  textureLoader.load("../assets/text-10-transparent(1024x624).png")
+                    map: textureLoader.load("../assets/pictures/informations/"+indexPicture+".png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.position.set(0, -this.lengthPage/5, -0.01);
@@ -433,111 +433,108 @@ function main() {
     
             let pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
             let pictureMaterial = new THREE.MeshStandardMaterial({
-                map: textureLoader.load("../assets/paintings/1.jpg"), side: THREE.DoubleSide
+                map: textureLoader.load("../assets/pictures/1.jpg"), side: THREE.DoubleSide
             });
             let picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
             picture.position.set(-10, 4, -12);
             picture.objectType = 1;          //Image type
-            picture.indexPicture = 0;
-            picture.name = "picture_00";
+            picture.indexPicture = 1;
+            picture.name = "picture_01";
             scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
             pictureMaterial = new THREE.MeshStandardMaterial({
-                map: textureLoader.load("../assets/paintings/2.jpg"), side: THREE.DoubleSide
+                map: textureLoader.load("../assets/pictures/2.jpg"), side: THREE.DoubleSide
             });
             picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
-            picture.name = "picture_01";
+            picture.name = "picture_02";
             picture.position.set(-0, 4, -12);
             picture.objectType = 1;          //Image type
-            picture.indexPicture = 1;
+            picture.indexPicture = 2;
             scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
             pictureMaterial = new THREE.MeshStandardMaterial({
-                map: textureLoader.load("../assets/paintings/3.jpg"), side: THREE.DoubleSide
+                map: textureLoader.load("../assets/pictures/3.jpg"), side: THREE.DoubleSide
             });
             picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
             picture.position.set(10, 4, -12);
             picture.objectType = 1;          //Image type
-            picture.indexPicture = 2;
-            picture.name = "picture_02";
+            picture.indexPicture = 3;
+            picture.name = "picture_03";
             scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
-
-
             pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
             pictureMaterial = new THREE.MeshStandardMaterial({
-                map: textureLoader.load("../assets/paintings/4.jpg"), side: THREE.DoubleSide
+                map: textureLoader.load("../assets/pictures/4.jpg"), side: THREE.DoubleSide
             });
             picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
             picture.position.set(-10, 9, -12);
             picture.objectType = 1;          //Image type
-            picture.indexPicture = 3;
+            picture.indexPicture = 4;
             picture.name = "picture_04";
             scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
             pictureMaterial = new THREE.MeshStandardMaterial({
-                map: textureLoader.load("../assets/paintings/5.jpg"), side: THREE.DoubleSide
+                map: textureLoader.load("../assets/pictures/5.jpg"), side: THREE.DoubleSide
             });
             picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
             picture.name = "picture_05";
             picture.position.set(0, 9, -12);
             picture.objectType = 1;          //Image type
-            picture.indexPicture = 4;
+            picture.indexPicture = 5;
             scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
             pictureMaterial = new THREE.MeshStandardMaterial({
-                map: textureLoader.load("../assets/paintings/6.jpg"), side: THREE.DoubleSide
+                map: textureLoader.load("../assets/pictures/6.jpg"), side: THREE.DoubleSide
             });
             picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
             picture.position.set(10, 9, -12);
             picture.objectType = 1;          //Image type
-            picture.indexPicture = 5;
+            picture.indexPicture = 6;
             picture.name = "picture_06";
             scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
-
             pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
             pictureMaterial = new THREE.MeshStandardMaterial({
-                map: textureLoader.load("../assets/paintings/7.jpg"), side: THREE.DoubleSide
+                map: textureLoader.load("../assets/pictures/7.jpg"), side: THREE.DoubleSide
             });
             picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
             picture.position.set(-10, 14, -12);
             picture.objectType = 1;          //Image type
-            picture.indexPicture = 6;
+            picture.indexPicture = 7;
             picture.name = "picture_07";
             scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
             pictureMaterial = new THREE.MeshStandardMaterial({
-                map: textureLoader.load("../assets/paintings/8.jpg"), side: THREE.DoubleSide
+                map: textureLoader.load("../assets/pictures/8.jpg"), side: THREE.DoubleSide
             });
             picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
             picture.name = "picture_08";
             picture.position.set(0, 14, -12);
             picture.objectType = 1;          //Image type
-            picture.indexPicture = 7;
+            picture.indexPicture = 8;
             scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             pictureGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
             pictureMaterial = new THREE.MeshStandardMaterial({
-                map: textureLoader.load("../assets/paintings/9.jpg"), side: THREE.DoubleSide
+                map: textureLoader.load("../assets/pictures/9.jpg"), side: THREE.DoubleSide
             });
             picture = new THREE.Mesh(pictureGeometry, pictureMaterial);
             picture.position.set(10, 14, -12);
             picture.objectType = 1;          //Image type
-            picture.indexPicture = 8;
+            picture.indexPicture = 9;
             picture.name = "picture_09";
             scene.add(picture);
             this.pictures.push(picture);
