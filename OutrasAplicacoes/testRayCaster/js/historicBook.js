@@ -643,12 +643,12 @@ function main() {
             this.fails = 0;
             this.hits = 0;
             this.state = 0;
-            this.buttonRetry = null;
             this.timer.seconds = 0;
             this.timer.minutes = 0;
             this.amountSheets = 0;
             this.currentSheet = 0;
             this.amountPages = 0;
+            this.buttons = [];
             this.pictures = [];
             this.orderPicturesBook = [];
             objectLooked = null;
@@ -726,8 +726,6 @@ function main() {
         }
     }
     controls.createScenary();
-
-    console.log(objectRaycaster);
     
     // DragControls functions
 
@@ -822,7 +820,6 @@ function main() {
                         orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
                         switch(objectLooked.objectType){
                             case 0:
-                                console.log("0");
                                 if(objectLooked.sheet.animationAngle == 0){     //Don't rotate if the page is moving
                                     if(objectLooked.sheet.sideOption == 0){
                                         objectLooked.sheet.sideOption = 1;
