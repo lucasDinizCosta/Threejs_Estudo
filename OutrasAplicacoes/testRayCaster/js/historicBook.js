@@ -923,7 +923,13 @@ function main() {
                                 break;
                             case 8:     // Retry Button
                                 controls.emptyScene();
+                                controls.cameraOption = 0;
+                                defaultCamera = rotationCamera;
                                 controls.createScenary();
+                                controls.buttons[3].position.set(10, 18.25, -11.8);     // set position to not block raycaster
+                                controls.buttons[4].position.set(10, 18.25, -11.9);
+                                controls.buttons[3].visible = true;
+                                controls.buttons[4].visible = false;
                                 break;
                         }
                     }
