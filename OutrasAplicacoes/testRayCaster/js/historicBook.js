@@ -5,8 +5,6 @@ function main() {
     // TODO: Ao clicar, transladar o centro da imagem rotacionada para o local do cursor para facilitar a colagem (deixar por último) --
     // TODO: SOLTAR O COMENTARIO QUE DEIXA ALEATÓRIA A ORDEM DAS IMAGENS
     // TODO: Colocar o texto das informações das imagens no livro
-    // TODO: Botão de zoom para painel de pinturas
-    // TODO: Ajustar o raycaster pois o botao de zoom in e out da problema já que um sempre vai ser invisivel
 
     var scene = new THREE.Scene();
     //var stats = new Stats();
@@ -26,7 +24,7 @@ function main() {
     renderer.shadowMap.enabled = true;
     document.getElementById("webgl-output").appendChild(renderer.domElement);
     var rotationCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
-    rotationCamera.position.set(0, 15, 28);
+    rotationCamera.position.set(0, 15, 29);
     rotationCamera.up.set(0, 1, 0);
     rotationCamera.lookAt(0, 0, 0);
     var bookCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
@@ -103,17 +101,17 @@ function main() {
                 this.ctx.strokeRect(0, 0, this.canvas.width, this.canvas.height);
                 this.ctx.font = "Bold 38px Arial";
                 this.ctx.fillStyle = "rgb(255, 255, 0)";
-                this.ctx.fillText("MENU PRINCIPAL", 380, 45);
+                this.ctx.fillText("MAIN MENU", 350, 45);
                 this.ctx.fillText("FAILS: " + controls.fails, 30, 100);
-                this.ctx.fillText(" HITS: " + controls.hits, 200, 100);
-                this.ctx.fillText(" TIMER:  " + controls.timer.minutes + " : " + controls.timer.seconds.toFixed(0), 350, 100);
+                this.ctx.fillText("HITS: " + controls.hits, 300, 100);
+                this.ctx.fillText("TIMER:  " + (controls.timer.minutes).toLocaleString(undefined, {minimumIntegerDigits: 2}) 
+                + " : " + (controls.timer.seconds.toFixed(0)).toLocaleString(undefined, {minimumIntegerDigits: 2}), 500, 100);
                 this.object.material.map.needsUpdate = true;        //Update the canvas texture
             },
             clearMenu: function(){
                 this.ctx.fillStyle = "rgba(10, 10, 10)";
                 this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
                 this.object.material.map.needsUpdate = true;        //Update the canvas texture
-                //this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             },
         },
 
@@ -207,11 +205,11 @@ function main() {
                 map: textureLoader.load("../assets/icons/read.png"),
             });
             let readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
-            readButton.position.set(-this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + this.lengthPage/2 + 0.5 + this.sizeButton/2); //readButton.position.set(0, this.book.position.y + 5, 0); 
+            readButton.position.set(-this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + this.lengthPage/2 + 0.25 + this.sizeButton/2); //readButton.position.set(0, this.book.position.y + 5, 0); 
             this.buttons.push(readButton);
             this.buttons[0].objectType = 3;
             this.buttons[0].visible = false;
-            this.buttons[0].rotateX(THREE.Math.degToRad(-90));
+            this.buttons[0].rotateX(THREE.Math.degToRad(-70));
             scene.add(this.buttons[0]);
             readButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
             readButtonMaterial = new THREE.MeshBasicMaterial({
@@ -219,11 +217,11 @@ function main() {
                 map: textureLoader.load("../assets/icons/read.png"),
             });
             readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
-            readButton.position.set(this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + this.lengthPage/2 + 0.5 + this.sizeButton/2); //readButton.position.set(0, this.book.position.y + 5, 0); 
+            readButton.position.set(this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + this.lengthPage/2 + 0.25 + this.sizeButton/2); //readButton.position.set(0, this.book.position.y + 5, 0); 
             this.buttons.push(readButton);
             this.buttons[1].visible = false;
             this.buttons[1].objectType = 4;
-            this.buttons[1].rotateX(THREE.Math.degToRad(-90));
+            this.buttons[1].rotateX(THREE.Math.degToRad(-70));
             scene.add(this.buttons[1]);
             let backButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
             let backButtonMaterial = new THREE.MeshBasicMaterial({
@@ -681,7 +679,6 @@ function main() {
             }
             for (let j = 0; j < objectRaycaster.length; j++) {  
                 if(objectRaycaster[j] == imagePlane){   // Remove imageBlock of the page
-                    console.log(imagePlane);
                     objectRaycaster.splice(j, 1);
                     break;
                 }

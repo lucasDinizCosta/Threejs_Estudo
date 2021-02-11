@@ -21,7 +21,7 @@ in the isolation of radioactive isotopes and in the discovery of radioactive che
 Font size: Times New Roman 49px
 
 => PT-BR: 
-Imperador francês, considerado um dos maiores comandantes da história e suas guerras e conflitos são estudados até hoje. Seu domínio foi marcado 
+Imperador francês considerado um dos maiores comandantes da história e suas guerras e conflitos são estudados até hoje. Seu domínio foi marcado 
 pela resistência Russa na invasão da Rússia, devido ao forte inverno e as cidades invadidas não terem recursos para auxiliar as tropas no intenso frio, 
 seu exécito  foi perdendo forças até serem obrigados a recuar. Foi exilado duas vezes, sendo a primeira na ilha de Elba e a última na ilha de Santa Helena, 
 onde ficou até o final de seus dias.
@@ -35,6 +35,9 @@ where he stayed until the end of his days.
 03) Winston Churchill:
 
 => PT-BR: 
+Estadista britânico e escritor ganhador do prêmio Nobel de Literatura "Memórias da Segunda Guerra Mundial" foi conhecido por sua forte resistencia contra 
+o nazismo alemão através da atuação como primeiro-ministro do Reino Unido na Segunda Guerra Mundial e um dos principais responsáveis pela vitória dos Aliados 
+durante está fase.
 
 
 => EN:
@@ -43,7 +46,9 @@ where he stayed until the end of his days.
 04) Benjamin Franklin:
 
 => PT-BR: 
-
+Primeiro embaixador dos Estados Unidos na França conhecido por sua atuação na Revolução Americana e experimentos com eletricidade. Provou por meio do experimento
+de fazer voar uma pipa sobre uma tempestade, a natureza elétrica dos raios. Estabeleceu duas áreas de estudo das ciências naturais: eletricidade e a meteorologia.
+Também se destacou pela invenção do para-raios e do aquecedor de Franklin.
 
 => EN:
 
@@ -51,7 +56,9 @@ where he stayed until the end of his days.
 05) Isaac Newton:
 
 => PT-BR: 
-
+Amplamente reconhecido como um dos cientistas mais influentes da história, propõs as bases da mecânica clássica na dinâmica de forças. Formulou as leis do 
+movimento e da gravitação univesal que permitiu comprovar as leis de kepler sobre o movimento planetário de modo a erradicar a dúvida sobre a Terra ser o centro
+do Universo.
 
 => EN:
 
@@ -66,7 +73,9 @@ where he stayed until the end of his days.
 07) Albert Einstein:
 
 => PT-BR: 
-
+Físico teórico alemão que desenvolveu a teoria da relatividade geral, base importante para a Física moderna ao lado da mecânica quântica. Embora mais conhecido 
+pela equação mais famosa do mundo de equivalência massa-energia dada por  E = m*C². Em 1922 foi premiado com o Nobel de Física pela descoberta do efeito 
+fotoelétrico.
 
 => EN:
 
@@ -82,7 +91,9 @@ where he stayed until the end of his days.
 09) Alan Turing:
 
 => PT-BR: 
-
+Considerado o pai da computação teórica e da inteligência artificial, foi uma das pessoas mais importantes da História da Segunda Guerra Mundial, pois através 
+de sua liderança e experiência em criptografia e criptoanalise, liderou a equipe responsável com o proposito de decifrar mensagens e conversas de equipes nazistas,
+assim com a  descoberta dos planos adversários, foi possível elaborar estratégias para suprimir estas forças, assim sendo determinante para o término desta fase histórica.
 
 => EN:
 
