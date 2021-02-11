@@ -15,7 +15,7 @@ no isolamento de isotopos radioativos e na descoberta dos elementos químicos ra
 => EN:
 Polish scientist naturalized in France, he was the first person to win 2 Nobel Prizes in different areas, 
 one of them in the area of Physics and the other of Chemistry, her studies consisted in the formulation of the theory of radioactivity, 
-in the isolation of radioactive isotopes and in the discovery of radioactive chemical elements, polonium and radio.
+in the isolation of radioactive isotopes and in the discovery of radioactive chemical elements, polonium and radium.
 
 02) Napoleon Bonaparte (Napoleão Bonaparte):
 Font size: Times New Roman 49px
@@ -57,8 +57,8 @@ Também se destacou pela invenção do para-raios e do aquecedor de Franklin.
 
 => PT-BR: 
 Amplamente reconhecido como um dos cientistas mais influentes da história, propõs as bases da mecânica clássica na dinâmica de forças. Formulou as leis do 
-movimento e da gravitação univesal que permitiu comprovar as leis de kepler sobre o movimento planetário de modo a erradicar a dúvida sobre a Terra ser o centro
-do Universo.
+movimento e da gravitação univesal que permitiu comprovar as leis de kepler sobre o movimento planetário de modo a erradicar a dúvida sobre a Sol ser o centro
+do Universo ou Sistema Solar.
 
 => EN:
 
@@ -95,6 +95,9 @@ Considerado o pai da computação teórica e da inteligência artificial, foi um
 de sua liderança e experiência em criptografia e criptoanalise, liderou a equipe responsável com o proposito de decifrar mensagens e conversas de equipes nazistas,
 assim com a  descoberta dos planos adversários, foi possível elaborar estratégias para suprimir estas forças, assim sendo determinante para o término desta fase histórica.
 
+Considerado o pai da computação teórica e da inteligência artificial, foi uma das pessoas mais importantes da Segunda Guerra Mundial, pois através de sua liderança e 
+experiência em criptografia e criptoanalise, liderou a equipe responsável com o proposito de decifrar mensagens e conversas de equipes nazistas, assim com a 
+descoberta dos planos adversários, foi possível elaborar estratégias para suprimir estas forças, assim sendo determinante para o término desta fase histórica.
 => EN:
 
 
