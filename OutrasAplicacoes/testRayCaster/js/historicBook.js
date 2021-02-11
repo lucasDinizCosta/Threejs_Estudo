@@ -1,10 +1,9 @@
 function main() {
     
-    // TODO: Criar a primeira versão com textos e imagens correspondentes para vermos se a ideia funciona (ideia é termos 9 imagens em um grid 3 x 3) -- 
-    // TODO: Fixar o texto com resolução: 1024 x 624; Razão de aspecto: 1,64 -- 
     // TODO: Ao clicar, transladar o centro da imagem rotacionada para o local do cursor para facilitar a colagem (deixar por último) --
-    // TODO: SOLTAR O COMENTARIO QUE DEIXA ALEATÓRIA A ORDEM DAS IMAGENS
-    // TODO: Colocar o texto das informações das imagens no livro
+    // TODO: colocar o nome da pessoa histórica embaixo da imagem assim que a pessoa acertar
+    // TODO: bloco da imagem na página fica em cor “verde” quando o usuário for movimentar a imagem e estiver na posição correta.
+    // TODO: Adicionar o nome da personalidade histórica embaixo da imagem, quando o a imagem adicionada for correta
 
     var scene = new THREE.Scene();
     //var stats = new Stats();
@@ -594,7 +593,7 @@ function main() {
             this.createImageClone();
             this.createPicturesPanel(scene);
             /** SOLTAR PARA SER ALEATORIO */
-            //this.orderPicturesBook = this.shuffleList(this.orderPicturesBook);
+            this.orderPicturesBook = this.shuffleList(this.orderPicturesBook);
             this.createBook();
             this.createButtons();
             this.createMessages();
