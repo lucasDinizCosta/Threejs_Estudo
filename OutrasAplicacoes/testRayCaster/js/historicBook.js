@@ -94,7 +94,6 @@ function main() {
             object: null,
             canvas: null,
             ctx: null,          // Context
-            retryButton: null,
             drawMenu: function(){
                 this.ctx.lineWidth = 2;
                 this.ctx.strokeStyle = "black";
