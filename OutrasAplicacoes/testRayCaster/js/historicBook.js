@@ -6,12 +6,13 @@ function main() {
     // TODO: SOLTAR O COMENTARIO QUE DEIXA ALEATÓRIA A ORDEM DAS IMAGENS
     // TODO: Colocar o texto das informações das imagens no livro
     // TODO: Botão de zoom para painel de pinturas
+    // TODO: Ajustar o raycaster pois o botao de zoom in e out da problema já que um sempre vai ser invisivel
 
-    // use the defaults
     var scene = new THREE.Scene();
-    var stats = new Stats();
-    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.body.appendChild(stats.dom);
+    //var stats = new Stats();
+    //stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+    //document.body.appendChild(stats.dom);
+    var clock = new THREE.Clock();
     var textureLoader = new THREE.TextureLoader();
     var renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -24,18 +25,21 @@ function main() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
     document.getElementById("webgl-output").appendChild(renderer.domElement);
-    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
-    camera.position.set(0, 15, 28);
-    camera.up.set(0, 1, 0);
-    camera.lookAt(0, 0, 0);
-    var defaultCamera = camera;
-    var upperCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
-    upperCamera.position.set(0, 25, 0);
-    upperCamera.up.set(0, 1, 0);
-    upperCamera.lookAt(0, 0, 0);
-    var clock = new THREE.Clock();
+    var rotationCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
+    rotationCamera.position.set(0, 15, 28);
+    rotationCamera.up.set(0, 1, 0);
+    rotationCamera.lookAt(0, 0, 0);
+    var bookCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
+    bookCamera.position.set(0, 25, 0);
+    bookCamera.up.set(0, 1, 0);
+    bookCamera.lookAt(0, 0, 0);
+    var pictureCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
+    pictureCamera.position.set(0, 10, 11.5);
+    pictureCamera.up.set(0, 1, 0);
+    pictureCamera.lookAt(0, 10.1, -12);
+    var defaultCamera = rotationCamera;
     // Enable mouse rotation, pan, zoom etc.
-    var orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+    var orbitControls = new THREE.OrbitControls(rotationCamera, renderer.domElement);
     orbitControls.target.set(0, 10, 9);
     orbitControls.minDistance = 20;
     orbitControls.maxDistance = 60;
@@ -64,13 +68,11 @@ function main() {
 
     // Controls of sidebar
     var controls = new function() {
-        // Add objects to scene
         this.book = new THREE.Group(),
 
         // Game Attributes
         this.fails = 0,
         this.hits = 0,
-        this.buttonRetry = null,
         /**************************
          *          States        *
          *  0 => Game Running     * 
@@ -136,31 +138,33 @@ function main() {
         this.amountPages = 0,
 
         // Button Read / Exit
-        this.buttonsBook = [null, null, null],    // Read(Left sheet, Right sheet), Exit
+        this.buttons = [],              // Read(Left sheet, Right sheet), Exit, ZoomIn, ZoomOut
         this.sizeButton = 1.75,
-        this.cameraOption = 0,                    // 0 => rotationCamera, 1 => UpperCamera
+        this.cameraOption = 0,                // 0 => rotationCamera, 1 => bookCamera
 
         // Functions
-        this.adjustButtonsBook = function(){
-            if(this.cameraOption != 1){
+        this.adjustbuttons = function(){
+            if(this.cameraOption == 0){
                 if(this.currentSheet < this.amountSheets){ 
                     if(this.currentSheet > 0){
-                        this.buttonsBook[0].visible = true;
-                        this.buttonsBook[1].visible = true;
+                        this.buttons[0].visible = true;
+                        this.buttons[1].visible = true;
                     }
                     else{
-                        this.buttonsBook[0].visible = false;
-                        this.buttonsBook[1].visible = true;
+                        this.buttons[0].visible = false;
+                        this.buttons[1].visible = true;
                     }
                 }
                 else{                                   // End of book
-                    this.buttonsBook[0].visible = true;
-                    this.buttonsBook[1].visible = false;
+                    this.buttons[0].visible = true;
+                    this.buttons[1].visible = false;
                 }
+                this.buttons[3].visible = true;
+                this.buttons[4].visible = false;
             }
             else{
-                this.buttonsBook[0].visible = false;
-                this.buttonsBook[1].visible = false;
+                this.buttons[0].visible = false;
+                this.buttons[1].visible = false;
             }
         },
         this.animationBook = function(){
@@ -195,9 +199,8 @@ function main() {
                 this.createPage(this.orderPicturesBook[index]);  
             }
             scene.add(this.book);
-            this.createButtonsBook();
         },
-        this.createButtonsBook = function(){
+        this.createButtons = function(){
             let readButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
             let readButtonMaterial = new THREE.MeshBasicMaterial({
                 side: THREE.DoubleSide,
@@ -205,11 +208,11 @@ function main() {
             });
             let readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
             readButton.position.set(-this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + this.lengthPage/2 + 0.5 + this.sizeButton/2); //readButton.position.set(0, this.book.position.y + 5, 0); 
-            this.buttonsBook[0] = readButton;
-            this.buttonsBook[0].objectType = 3;
-            this.buttonsBook[0].visible = false;
-            this.buttonsBook[0].rotateX(THREE.Math.degToRad(-90));
-            scene.add(this.buttonsBook[0]);
+            this.buttons.push(readButton);
+            this.buttons[0].objectType = 3;
+            this.buttons[0].visible = false;
+            this.buttons[0].rotateX(THREE.Math.degToRad(-90));
+            scene.add(this.buttons[0]);
             readButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
             readButtonMaterial = new THREE.MeshBasicMaterial({
                 side:THREE.DoubleSide,
@@ -217,11 +220,11 @@ function main() {
             });
             readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
             readButton.position.set(this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + this.lengthPage/2 + 0.5 + this.sizeButton/2); //readButton.position.set(0, this.book.position.y + 5, 0); 
-            this.buttonsBook[1] = readButton;
-            this.buttonsBook[1].visible = false;
-            this.buttonsBook[1].objectType = 4;
-            this.buttonsBook[1].rotateX(THREE.Math.degToRad(-90));
-            scene.add(this.buttonsBook[1]);
+            this.buttons.push(readButton);
+            this.buttons[1].visible = false;
+            this.buttons[1].objectType = 4;
+            this.buttons[1].rotateX(THREE.Math.degToRad(-90));
+            scene.add(this.buttons[1]);
             let backButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
             let backButtonMaterial = new THREE.MeshBasicMaterial({
                 side: THREE.DoubleSide,
@@ -230,13 +233,44 @@ function main() {
             let backButton = new THREE.Mesh(backButtonGeometry, backButtonMaterial);
             backButton.position.set(0, this.book.position.y + 1.5, 0);
             backButton.rotateX(THREE.Math.degToRad(-90));
-            this.buttonsBook[2] = backButton;
-            this.buttonsBook[2].visible = false;
-            this.buttonsBook[2].objectType = 5;
-            scene.add(this.buttonsBook[2]);
+            this.buttons.push(backButton);
+            this.buttons[2].visible = false;
+            this.buttons[2].objectType = 5;
+            scene.add(this.buttons[2]);
             if(this.amountSheets > 0){
-                this.buttonsBook[1].visible = true;
+                this.buttons[1].visible = true;
             }
+            let zoomInButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
+            let zoomInButtonMaterial = new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: textureLoader.load("../assets/icons/zoomin.png"),
+            });
+            let zoomInButton = new THREE.Mesh(zoomInButtonGeometry, zoomInButtonMaterial);
+            this.buttons.push(zoomInButton);
+            this.buttons[3].position.set(10, 18.25, -11.8);
+            this.buttons[3].objectType = 6;
+            scene.add(this.buttons[3]);
+            let zoomOutButtonGeometry = new THREE.PlaneGeometry(this.sizeButton, this.sizeButton, 0.1, 0.1);
+            let zoomOutButtonMaterial = new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: textureLoader.load("../assets/icons/zoomout.png"),
+            });
+            let zoomOutButton = new THREE.Mesh(zoomOutButtonGeometry, zoomOutButtonMaterial);
+            this.buttons.push(zoomOutButton);
+            this.buttons[4].position.set(10, 18.25, -11.9);
+            this.buttons[4].objectType = 7;
+            this.buttons[4].visible = false;
+            scene.add(this.buttons[4]);
+            let buttonRetryGeometry = new THREE.PlaneGeometry(3, 1.5, 0.1, 0.1);
+            let buttonRetryMaterial = new THREE.MeshBasicMaterial({
+                side: THREE.DoubleSide,
+                map: textureLoader.load("../assets/icons/retry.png"),
+            });
+            let buttonRetry = new THREE.Mesh(buttonRetryGeometry, buttonRetryMaterial);
+            this.buttons.push(buttonRetry);
+            this.buttons[5].position.set(13, 18.25, -11.9);
+            this.buttons[5].objectType = 8;
+            scene.add(this.buttons[5]); 
         },
         this.createImageClone = function(){
             let panelGeometry = new THREE.PlaneGeometry(8, 4, 0.1, 0.1);
@@ -261,25 +295,14 @@ function main() {
             let material1 = new THREE.MeshBasicMaterial( {map: texture1, side:THREE.DoubleSide } );
             material1.transparent = true; //true;
             let mesh1 = new THREE.Mesh(
-                new THREE.PlaneGeometry(30, 3),
+                new THREE.PlaneGeometry(29.5, 3),
                 material1
             );
-            mesh1.position.set(0, 18.5, -12.1);
+            mesh1.position.set(0, 18.4, -12.1);
             this.menu.object = mesh1;
             this.menu.canvas = canvas1;
             this.menu.ctx = context1;
             scene.add(mesh1);
-            
-            // Button Retry
-            let buttonRetryGeometry = new THREE.PlaneGeometry(3, 1.5, 0.1, 0.1);
-            let buttonRetryMaterial = new THREE.MeshBasicMaterial({
-                //color: "rgb(255, 255, 0)",
-                map: textureLoader.load("../assets/icons/retry.png"), side: THREE.DoubleSide
-            });
-            this.buttonRetry = new THREE.Mesh(buttonRetryGeometry, buttonRetryMaterial);
-            this.buttonRetry.position.set(13, 18.25, -11.9);
-            this.buttonRetry.objectType = 6;
-            scene.add(this.buttonRetry); 
         },
         this.createMessages = function(){       // Victory and Loose
             let messageVictoryGeometry = new THREE.PlaneGeometry(26, 8, 0.1, 0.1);
@@ -320,11 +343,11 @@ function main() {
                 });
                 //pageMaterial.depthWrite = false;            // FIX the bug of transparency  --- https://github.com/mrdoob/three.js/issues/9977
                 let page = new THREE.Mesh(pageGeometry, pageMaterial);
+                page.name = "page_" + this.amountPages;
                 page.position.set(this.widthPage / 2, 0, 0);
                 page.rotateX(THREE.Math.degToRad(-90));
                 sheet.add(page);
                 sheet.position.set(0, this.heightBook, 0);
-                sheet.page = this.numberPage;
                 sheet.sideOption = 0;              //0 => Right, 1 => Left
                 page.sheet = sheet;
                 page.objectType = 0;               // Page type
@@ -338,6 +361,7 @@ function main() {
                 let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
                 imagePlane.position.set(0, this.lengthPage/4.5, 0.01);
                 imagePlane.objectType = 2;
+                imagePlane.name = "imageBlock-Page_"+this.amountPages;
                 page.add(imagePlane);
                 imagePlane.indexPicture = indexPicture;
 
@@ -350,6 +374,7 @@ function main() {
                     map: textureLoader.load("../assets/pictures/informations/"+indexPicture+".png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
+                informationPlane.name = "informationBlock-Page_"+this.amountPages;
                 informationPlane.position.set(0, -this.lengthPage/5, 0.01);
                 page.add(informationPlane);
                 this.amountSheets++;
@@ -374,11 +399,11 @@ function main() {
                     map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
                 });
                 let page = new THREE.Mesh(pageGeometry, pageMaterial);
+                page.name = "page_" + this.amountPages;
                 page.position.set(this.widthPage / 2, -0.005, 0);
                 page.rotateX(THREE.Math.degToRad(-90));
                 sheet.add(page);
                 sheet.position.set(0, this.heightBook, 0);
-                sheet.page = this.numberPage;
                 sheet.sideOption = 0;              // 0 => Right, 1 => Left
                 page.sheet = sheet;
                 page.objectType = 0;               // Page type
@@ -394,6 +419,7 @@ function main() {
                 imagePlane.rotateY(THREE.Math.degToRad(180));
                 imagePlane.objectType = 2;
                 imagePlane.indexPicture = indexPicture;
+                imagePlane.name = "imageBlock-Page_"+this.amountPages;
                 page.add(imagePlane);
 
                 // Informations block
@@ -405,6 +431,7 @@ function main() {
                     map: textureLoader.load("../assets/pictures/informations/"+indexPicture+".png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
+                informationPlane.name = "informationBlock-Page_"+this.amountPages;
                 informationPlane.position.set(0, -this.lengthPage/5, -0.01);
                 informationPlane.rotateY(THREE.Math.degToRad(180));
                 page.add(informationPlane);
@@ -550,7 +577,7 @@ function main() {
             spotLight.castShadow = true;
             spotLight.decay = 2;
             spotLight.penumbra = 0.05;
-            spotLight.name = "spotLight"
+            spotLight.name = "spotLight";
             scene.add(spotLight);
             var ambientLight = new THREE.AmbientLight(0x343434);
             ambientLight.name = "ambientLight";
@@ -572,6 +599,7 @@ function main() {
             /** SOLTAR PARA SER ALEATORIO */
             //this.orderPicturesBook = this.shuffleList(this.orderPicturesBook);
             this.createBook();
+            this.createButtons();
             this.createMessages();
 
             pictureLooked = null;
@@ -579,8 +607,8 @@ function main() {
             objectRaycaster = [];
             objectRaycasterClonePictures = [];
 
-            //Recreate DragControls
-            dragControls = new THREE.DragControls([controls.imageClone], camera, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
+            // Recreate DragControls
+            dragControls = new THREE.DragControls([controls.imageClone], rotationCamera, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
 
             // Pages of book
             for (let i = 0; i < this.book.children.length; i++) {
@@ -598,10 +626,9 @@ function main() {
             }
 
             // Buttons
-            objectRaycaster.push(this.buttonsBook[0]);
-            objectRaycaster.push(this.buttonsBook[1]);
-            objectRaycaster.push(this.buttonsBook[2]);
-            objectRaycaster.push(this.buttonRetry);
+            for(let i = 0; i < this.buttons.length; i++){
+                objectRaycaster.push(this.buttons[i]);
+            }
 
             // Raycaster and mouse Controllers 
             objectLooked = null;
@@ -609,7 +636,7 @@ function main() {
             pointCollisionRayCaster = null;   
         },
         this.emptyScene = function(){
-            console.log("Empty Scene");
+            //console.log("Empty Scene");
             while(scene.children.length > 0){       //OU scene.remove.apply(scene, scene.children);
                 scene.remove(scene.children[0]); 
             }
@@ -643,18 +670,23 @@ function main() {
                     break;
                 }
             }
+
             for (let j = 0; j < objectRaycaster.length; j++) {
-                if(objectRaycaster[j].indexPicture == image.indexPicture){
+                if(objectRaycaster[j].objectType == 1){         // picture of the wall
+                    if(objectRaycaster[j].indexPicture == image.indexPicture){
+                        objectRaycaster.splice(j, 1);
+                        break;
+                    }
+                }
+            }
+            for (let j = 0; j < objectRaycaster.length; j++) {  
+                if(objectRaycaster[j] == imagePlane){   // Remove imageBlock of the page
+                    console.log(imagePlane);
                     objectRaycaster.splice(j, 1);
                     break;
                 }
             }
-            for (let j = 0; j < objectRaycaster.length; j++) {  // Remove imagePlane of raycaster
-                if(objectRaycaster[j] == imagePlane){
-                    objectRaycaster.splice(j, 1);
-                    break;
-                }
-            }
+            
             for (let j = 0; j < objectRaycasterClonePictures.length; j++) {
                 if(objectRaycasterClonePictures[j].indexPicture == image.indexPicture){
                     objectRaycasterClonePictures.splice(j, 1);
@@ -694,24 +726,26 @@ function main() {
         }
     }
     controls.createScenary();
+
+    console.log(objectRaycaster);
     
     // DragControls functions
 
-    dragControls.addEventListener( 'dragstart', function ( event ) {
-        //console.log('drag start');
-    });
+    //dragControls.addEventListener( 'dragstart', function ( event ) {  console.log("dragstart");});
+    //dragControls.addEventListener( 'dragend', function ( event ) { console.log('drag end');});
     dragControls.addEventListener ( 'drag', function( event ){
         //console.log('drag');
         event.object.position.z = -3.35; // This will prevent moving z axis, but will be on -3.35 line. change this to your object position of z axis.
     });
-    dragControls.addEventListener( 'dragend', function ( event ) {
-        //console.log('drag end');
-    });
     
     // Reajuste da renderização com base na mudança da janela
     function onResize(){
-        camera.aspect = window.innerWidth / window.innerHeight;  //Atualiza o aspect da camera com relação as novas dimensões
-        camera.updateProjectionMatrix();                         //Atualiza a matriz de projeção
+        rotationCamera.aspect = window.innerWidth / window.innerHeight;  //Atualiza o aspect da camera com relação as novas dimensões
+        rotationCamera.updateProjectionMatrix();                         //Atualiza a matriz de projeção
+        bookCamera.aspect = window.innerWidth / window.innerHeight;  
+        bookCamera.updateProjectionMatrix();                         
+        pictureCamera.aspect = window.innerWidth / window.innerHeight;  
+        pictureCamera.updateProjectionMatrix();                         
         renderer.setSize(window.innerWidth, window.innerHeight); //Define os novos valores para o renderizador
     }
 
@@ -741,7 +775,7 @@ function main() {
     window.addEventListener('mouseup', function up(event){
         //console.log(event);
         if(event.button == 0){              // Left Button
-            if(controls.cameraOption == 0){ // Camera Upper
+            if(controls.cameraOption == 0){
                 if((objectLooked != null) && (objectLooked.objectType == 2)){
                     if(selectedImage != null){
                         if(objectLooked.indexPicture == selectedImage.indexPicture){
@@ -782,63 +816,120 @@ function main() {
         //console.log(event);
         if(event.button == 0){              // Left Button
             if(objectLooked != null){
-                orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
-                switch(objectLooked.objectType){
+                switch(controls.cameraOption){
                     case 0:
-                        if((objectLooked.sheet.animationAngle == 0) && 
-                        (controls.cameraOption == 0)){     //Don't rotate if the page is moving
-                            if(objectLooked.sheet.sideOption == 0){
-                                objectLooked.sheet.sideOption = 1;
-                                controls.currentSheet++;
-                            }
-                            else{
-                                objectLooked.sheet.sideOption  = 0;
-                                controls.currentSheet--;
-                            }
-                            controls.adjustButtonsBook();
-                            animationList.push(objectLooked.sheet);
+                    {
+                        orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
+                        switch(objectLooked.objectType){
+                            case 0:
+                                console.log("0");
+                                if(objectLooked.sheet.animationAngle == 0){     //Don't rotate if the page is moving
+                                    if(objectLooked.sheet.sideOption == 0){
+                                        objectLooked.sheet.sideOption = 1;
+                                        controls.currentSheet++;
+                                    }
+                                    else{
+                                        objectLooked.sheet.sideOption  = 0;
+                                        controls.currentSheet--;
+                                    }
+                                    controls.adjustbuttons();
+                                    animationList.push(objectLooked.sheet);
+                                }
+                                break;
+                            case 1:     // Collide with image
+                                selectedImage = objectLooked;
+                                selectedImage.visible = false;
+                                controls.imageClone.position.x = pointCollisionRayCaster.x;
+                                controls.imageClone.position.y = pointCollisionRayCaster.y;
+                                controls.imageClone.position.z = -3.35; //pointCollisionRayCaster.z;  
+                                controls.imageClone.rotateX(THREE.Math.degToRad(-90));
+                                //controls.imageClone.position.copy(pointCollisionRayCaster);
+                                break;
+                            case 2:     // Collide with imagePlane on Page 
+                                //
+                                //
+                                break;
+                            case 3:     // Read Left page Button
+                                controls.cameraOption = 1;      // Turn camera option
+                                defaultCamera = bookCamera;
+                                controls.adjustbuttons();
+                                controls.buttons[2].visible = true;
+                                defaultCamera.position.set(-controls.widthPage/2, 17, 0);   // Y = 25
+                                controls.buttons[2].position.set(-controls.widthPage - controls.sizeButton/2, controls.buttons[2].position.y, 0);   
+                                break;
+                            case 4:     // Read Right page Button
+                                controls.cameraOption = 1;      // Turn camera option
+                                defaultCamera = bookCamera;
+                                controls.adjustbuttons();
+                                controls.buttons[2].visible = true;
+                                bookCamera.position.set(controls.widthPage/2, 17, 0);
+                                controls.buttons[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttons[2].position.y, 0);   
+                                break;
+                            case 6:     // Zoom In
+                                controls.cameraOption = 2;
+                                defaultCamera = pictureCamera;
+                                controls.buttons[3].position.set(10, 18.25, -11.9);
+                                controls.buttons[4].position.set(10, 18.25, -11.8);
+                                controls.buttons[3].visible = false;
+                                controls.buttons[4].visible = true;
+                                break;
+                            case 8:     // Retry Button
+                                controls.emptyScene();
+                                controls.createScenary();
+                                break;
                         }
+                    }
                         break;
-                    case 1:     // Collide with image
-                        selectedImage = objectLooked;
-                        selectedImage.visible = false;
-                        controls.imageClone.position.x = pointCollisionRayCaster.x;
-                        controls.imageClone.position.y = pointCollisionRayCaster.y;
-                        controls.imageClone.position.z = -3.35; //pointCollisionRayCaster.z;  
-                        controls.imageClone.rotateX(THREE.Math.degToRad(-90));
-                        //controls.imageClone.position.copy(pointCollisionRayCaster);
+                    case 1:
+                    {
+                        orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
+                        switch(objectLooked.objectType){
+                            case 4:     // Read Right page Button
+                                controls.cameraOption = 1;      // Turn camera option
+                                defaultCamera = bookCamera;
+                                controls.adjustbuttons();
+                                controls.buttons[2].visible = true;
+                                defaultCamera.position.set(controls.widthPage/2, 17, 0);
+                                controls.buttons[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttons[2].position.y, 0);   
+                                break;
+                            case 5:     // Exit Button
+                                controls.cameraOption = 0;
+                                defaultCamera = rotationCamera;
+                                controls.adjustbuttons();
+                                controls.buttons[2].visible = false;
+                                break;
+                        }
+                    }
                         break;
-                    case 2:     // Collide with imagePlane on Page 
-                        //
-                        //
-                        break;
-                    case 3:     // Read Left page Button
-                        controls.cameraOption = 1;      // Turn camera option
-                        defaultCamera = upperCamera;
-                        controls.adjustButtonsBook();
-                        controls.buttonsBook[2].visible = true;
-                        defaultCamera.position.set(-controls.widthPage/2, 17, 0);   // Y = 25
-                        controls.buttonsBook[2].position.set(-controls.widthPage - controls.sizeButton/2, controls.buttonsBook[2].position.y, 0);   
-                        break;
-                    case 4:     // Read Right page Button
-                        controls.cameraOption = 1;      // Turn camera option
-                        defaultCamera = upperCamera;
-                        controls.adjustButtonsBook();
-                        controls.buttonsBook[2].visible = true;
-                        defaultCamera.position.set(controls.widthPage/2, 17, 0);
-                        controls.buttonsBook[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttonsBook[2].position.y, 0);   
-                        break;
-                    case 5:     // Exit Button
-                        controls.cameraOption = 0;
-                        defaultCamera = camera;
-                        controls.adjustButtonsBook();
-                        controls.buttonsBook[2].visible = false;
-                        break;
-                    case 6:     // Retry Button
-                        controls.emptyScene();
-                        controls.createScenary();
+                    case 2:
+                    {
+                        orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
+                        switch(objectLooked.objectType){
+                            case 6:     // Zoom In
+                                controls.cameraOption = 2;
+                                defaultCamera = pictureCamera;
+                                controls.buttons[3].position.set(10, 18.25, -11.9);
+                                controls.buttons[4].position.set(10, 18.25, -11.8);
+                                controls.buttons[3].visible = false;
+                                controls.buttons[4].visible = true;
+                                break;
+                            case 7:     // Zoom Out
+                                controls.cameraOption = 0;
+                                defaultCamera = rotationCamera;
+                                controls.buttons[3].position.set(10, 18.25, -11.8);     // set position to not block raycaster
+                                controls.buttons[4].position.set(10, 18.25, -11.9);
+                                controls.buttons[3].visible = true;
+                                controls.buttons[4].visible = false;
+                                break;
+                            case 8:     // Retry Button
+                                controls.emptyScene();
+                                controls.createScenary();
+                                break;
+                        }
+                    }
                         break;
                 }
+               
             }
         }
     }    
@@ -882,14 +973,16 @@ function main() {
 
     function render(t) {
         dt = (t - timeAfter) / 1000;
-        stats.update();
+        //stats.update();
         orbitControls.update(clock.getDelta());
         checkRaycaster();
         controls.animationScenary();
         switch(controls.state){
             case 0:         // Game Running
                 controls.timer.updateTime(dt);
-                checkRaycasterClonePictures();
+                if(controls.cameraOption == 0){
+                    checkRaycasterClonePictures();
+                }
                 break;
             case 1:         // Victory
                 break;
