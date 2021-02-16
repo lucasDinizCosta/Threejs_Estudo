@@ -1,4 +1,4 @@
-function main() {
+function main(language) {
     
     // TODO: Ao clicar, transladar o centro da imagem rotacionada para o local do cursor para facilitar a colagem (deixar por último) --
     // TODO: colocar o nome da pessoa histórica embaixo da imagem assim que a pessoa acertar
@@ -367,7 +367,7 @@ function main() {
                     transparent: true,
                     //color: "white",
                     side: THREE.DoubleSide,
-                    map: textureLoader.load("../assets/pictures/informations/"+indexPicture+".png")
+                    map: textureLoader.load("../assets/pictures/informations/"+language+"/"+indexPicture+".png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.name = "informationBlock-Page_"+this.amountPages;
@@ -424,7 +424,7 @@ function main() {
                     transparent: true, /*opacity: 0.9,*/
                     //color: "white",
                     side: THREE.DoubleSide,
-                    map: textureLoader.load("../assets/pictures/informations/"+indexPicture+".png")
+                    map: textureLoader.load("../assets/pictures/informations/"+language+"/"+indexPicture+".png")
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.name = "informationBlock-Page_"+this.amountPages;

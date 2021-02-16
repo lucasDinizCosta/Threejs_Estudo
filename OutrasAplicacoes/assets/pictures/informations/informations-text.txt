@@ -8,69 +8,76 @@ Information of the pictures:
 01) Marie Curie:
 
 => PT-BR: 
-Cientista polonesa naturalizada na França, foi a primeira pessoa a conseguir 2 prêmios nobel em áreas distintas, 
+Cientista polonesa naturalizada na França, foi a primeira pessoa a conseguir dois Prêmios Nobel em áreas distintas, 
 sendo estes um da área da Física e outro da Química, seus estudos consistiram na formulação da teoria da radioatividade,  
-no isolamento de isotopos radioativos e na descoberta dos elementos químicos radioativos polonio e radio.
+no isolamento de isótopos radioativos e na descoberta dos elementos químicos radioativos polônio e rádio.
 
 => EN:
-Polish scientist naturalized in France, he was the first person to win 2 Nobel Prizes in different areas, 
-one of them in the area of Physics and the other of Chemistry, her studies consisted in the formulation of the theory of radioactivity, 
-in the isolation of radioactive isotopes and in the discovery of radioactive chemical elements, polonium and radium.
+The Polish physicist, naturalized in France, was the first female to receive two Nobel Prizes in various disciplines, one in 
+the field of physics and the other in the field of chemistry. Her research consisted in formulating the principle of radioactivity, 
+isolating radioactive isotopes and identifying radioactive chemical elements, polonium and radium.
 
 02) Napoleon Bonaparte (Napoleão Bonaparte):
 Font size: Times New Roman 49px
 
 => PT-BR: 
-Imperador francês considerado um dos maiores comandantes da história e suas guerras e conflitos são estudados até hoje. Seu domínio foi marcado 
-pela resistência Russa na invasão da Rússia, devido ao forte inverno e as cidades invadidas não terem recursos para auxiliar as tropas no intenso frio, 
-seu exécito  foi perdendo forças até serem obrigados a recuar. Foi exilado duas vezes, sendo a primeira na ilha de Elba e a última na ilha de Santa Helena, 
-onde ficou até o final de seus dias.
+O imperador francês, considerado um dos generais mais importantes da história. Suas conquistas, batalhas e conflitos são pesquisados 
+até hoje. Devido ao forte inverno russo e ao fato das cidades dominadas não possuírem equipamentos para apoiar os soldados no frio extremo, 
+seu exército foi perdendo força até que eles foram forçados a recuar, período este foi marcado pela derrota para a Rússia. Foi exilado duas 
+vezes, sendo a primeira na ilha de Elba e a última na ilha de Santa Helena, onde ficou até o final de seus dias.
 
 => EN:
-French emperor, considered one of the greatest commanders in history and his wars and conflicts are studied to this day. His dominance was marked by the 
-Russian resistance to the invasion of Russia, due to the strong winter and the invaded cities did not have resources to help the troops in the intense cold, 
-his army was losing strength until they were forced to retreat. He was exiled twice, the first on the island of Elba and the last on the island of Santa Helena, 
-where he stayed until the end of his days.
+The French emperor, considered one of the most important generals in history. Your conquests, battles and conflicts are researched to 
+this day. Owing to the strong winter russian and fact of the dommined cities have no equipments to support the soldiers in the extreme cold, 
+his army was losing momentum until they were forced to retreated, this period was marked by defeat to Russia. Twice he was banished, 
+the first to the island of Elba and the second to the island of Santa Helena, where he lived until the end of his days.
 
 03) Winston Churchill:
 
 => PT-BR: 
-Estadista britânico e escritor ganhador do prêmio Nobel de Literatura "Memórias da Segunda Guerra Mundial" foi conhecido por sua forte resistencia contra 
-o nazismo alemão através da atuação como primeiro-ministro do Reino Unido na Segunda Guerra Mundial e um dos principais responsáveis pela vitória dos Aliados 
-durante está fase.
-
+Estadista britânico e escritor ganhador do Prêmio Nobel de Literatura "Memórias da Segunda Guerra Mundial", foi conhecido por sua forte 
+resistência contra o nazismo alemão através da atuação como primeiro-ministro do Reino Unido na Segunda Guerra Mundial e um dos principais 
+responsáveis pela vitória dos Aliados durante está fase.
 
 => EN:
+British statesman and Nobel Prize winner for Literature with book "Memories of World War II", he was known for his strong resistance 
+against German Nazism through his role as Prime Minister of the United Kingdom in World War II and one of the main responsible for the 
+victory of the Allies during this phase.
 
 
 04) Benjamin Franklin:
 
 => PT-BR: 
-Primeiro embaixador dos Estados Unidos na França conhecido por sua atuação na Revolução Americana e experimentos com eletricidade. Provou por meio do experimento
-de fazer voar uma pipa sobre uma tempestade, a natureza elétrica dos raios. Estabeleceu duas áreas de estudo das ciências naturais: eletricidade e a meteorologia.
-Também se destacou pela invenção do para-raios e do aquecedor de Franklin.
+Primeiro embaixador dos Estados Unidos na França conhecido por sua atuação na Revolução Americana e experimentos com eletricidade. Provou 
+por meio do experimento de empinar uma pipa sobre uma tempestade, a natureza elétrica dos raios. Estabeleceu duas áreas de estudo das 
+ciências naturais: eletricidade e a meteorologia. Também se destacou pela invenção do para-raios e do aquecedor de Franklin.
 
 => EN:
-
+The first US ambassador to France, known for his role in electricity experiments and the American Revolution. He proved the electrical nature 
+of the lightining by the experiment of flying a kite over a storm. In the natural sciences, he founded two fields of study: electricity and 
+meteorology. Knewed too by the invention of the lightning rod and Franklin's heater.
 
 05) Isaac Newton:
 
 => PT-BR: 
-Amplamente reconhecido como um dos cientistas mais influentes da história, propõs as bases da mecânica clássica na dinâmica de forças. Formulou as leis do 
-movimento e da gravitação univesal que permitiu comprovar as leis de kepler sobre o movimento planetário de modo a erradicar a dúvida sobre a Sol ser o centro
-do Universo ou Sistema Solar.
+Amplamente reconhecido como um dos cientistas mais influentes da história, propôs as bases da mecânica clássica na dinâmica de forças. 
+Formulou as leis do movimento e da gravitação universal que permitiu comprovar as leis de Kepler sobre o movimento planetário de modo 
+a erradicar o ceticismo sobre a Sol ser o centro do Sistema Solar.
 
 => EN:
-
+Widely recognized as one of the most influential scientists in history, he proposed the basis of classical mechanics in force dynamics. 
+He formulated the laws of motion and universal gravitation that allowed to prove Kepler's laws on planetary motion in order to eradicate 
+skepticism about the Sun being the center of the Solar System.
 
 06) Adolf Hitler:
 
 => PT-BR: 
-Político alemao e lider do Partido Nazista, foi o principal motivador da Segunda Guerra Mundial e figura central do Holocausto. Seu poder foi marcado por
-mecanismos de manipulação através da propaganda nazista de superioridade da raça Ariana e a forte repressão dos judeus.
+Político alemão e líder do Partido Nazista, foi o principal causador da Segunda Guerra Mundial e figura central do Holocausto. Seu poder 
+foi marcado por mecanismos de manipulação através da propaganda nazista de superioridade da raça Ariana e a forte repressão aos judeus.
 
 => EN:
-
+He was the primary cause of the Second World War and a leading figure in the Holocaust, a German politician and leader of the Nazi Party. 
+His dominance was characterized by processes of coercion by Nazi ideology of the Aryan race's supremacy and heavy persecution against Jews.
 
 07) Albert Einstein:
 
@@ -80,28 +87,34 @@ pela equação mais famosa do mundo de equivalência massa-energia dada por  E =
 fotoelétrico.
 
 => EN:
-
+German theoretical physicist who developed the theory of general relativity, an important basis for modern physics alongside quantum mechanics.
+Although best known for the world's most famous equation of mass-energy equivalence given by E = m * C². In 1922 he was awarded the Nobel Prize
+in Physics for discovering the effect photoelectric.
 
 08) Martin Luther King Jr.:
 
 => PT-BR: 
-Ativista politico estadunidense que se tornou a figura mais iminente e líder do movimento dos direitos civís nos Estados Unidos. Conhecido pela luta dos direitos
-civis e políticos através da não violência e desobediencia civil. Recebeu o Prêmio Nobel da Paz por combater o racismo nos Estados Unidos. Também famoso por seu
-discurso "Eu tenho um sonho" ('I have a dream') durante a marcha de Washington pregando a paz, união dos povos e fim da divisão racial.
+Ativista politico estadunidense que se tornou a figura mais iminente e líder do movimento dos direitos civis nos Estados Unidos. Conhecido 
+pela luta dos direitos civis e políticos através da não violência e desobediência civil e paz. Recebeu o Prêmio Nobel da Paz por combater o racismo 
+nos Estados Unidos. Também famoso por seu discurso "Eu tenho um sonho" ('I have a dream') durante a marcha de Washington pregando a paz, união 
+dos povos e fim da divisão racial.
 
 => EN:
-
+American political activist who has become the most imminent and leading figure in the civil rights movement in the United States. Known for 
+fighting civil and political rights through non-violence and civil disobedience and peace. He received the Nobel Peace Prize for fighting 
+racism in the United States. Also famous for his "I have a dream" speech during the Washington march preaching peace, unity of the peoples 
+and an end to racial division.
 
 09) Alan Turing:
 
 => PT-BR: 
-Considerado o pai da computação teórica e da inteligência artificial, foi uma das pessoas mais importantes da História da Segunda Guerra Mundial, pois através 
-de sua liderança e experiência em criptografia e criptoanalise, liderou a equipe responsável com o proposito de decifrar mensagens e conversas de equipes nazistas,
-assim com a  descoberta dos planos adversários, foi possível elaborar estratégias para suprimir estas forças, assim sendo determinante para o término desta fase histórica.
-
 Considerado o pai da computação teórica e da inteligência artificial, foi uma das pessoas mais importantes da Segunda Guerra Mundial, pois através de sua liderança e 
 experiência em criptografia e criptoanalise, liderou a equipe responsável com o proposito de decifrar mensagens e conversas de equipes nazistas, assim com a 
 descoberta dos planos adversários, foi possível elaborar estratégias para suprimir estas forças, assim sendo determinante para o término desta fase histórica.
-=> EN:
 
+=> EN:
+Considered the father of theoretical computing and artificial intelligence, he was one of the most important people of the Second World War, 
+because through his leadership and experience in cryptography and cryptanalysis, he led the responsible team with the purpose of deciphering 
+messages and conversations from Nazi teams, thus, with the discovery of opposing plans, it was possible to develop strategies to suppress 
+these forces, thus being decisive for the end of this historic phase. 
 
