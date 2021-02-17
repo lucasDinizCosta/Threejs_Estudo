@@ -2,7 +2,7 @@ function main(language) {
     
     // TODO: Ao clicar, transladar o centro da imagem rotacionada para o local do cursor para facilitar a colagem (deixar por último) --
     // TODO: bloco da imagem na página fica em cor “verde” quando o usuário for movimentar a imagem e estiver na posição correta.
-    // TODO: Adicionar o nome da personalidade histórica embaixo da imagem, quando o a imagem adicionada for correta
+    // TODO: Passar o projeto para o site do vrtools como "Historical Figures"
 
     var scene = new THREE.Scene();
     //var stats = new Stats();
@@ -22,9 +22,8 @@ function main(language) {
     renderer.shadowMap.enabled = true;
     document.getElementById("webgl-output").appendChild(renderer.domElement);
     var rotationCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
-    rotationCamera.position.set(0, 18, 30);
     rotationCamera.up.set(0, 1, 0);
-    //rotationCamera.lookAt(0, 0, 0);
+    rotationCamera.position.set(0, 15, 31);
     var bookCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
     bookCamera.position.set(0, 25, 0);
     bookCamera.up.set(0, 1, 0);
@@ -36,7 +35,7 @@ function main(language) {
     var defaultCamera = rotationCamera;
     // Enable mouse rotation, pan, zoom etc.
     var orbitControls = new THREE.OrbitControls(rotationCamera, renderer.domElement);
-    orbitControls.target.set(0, 13, 13);
+    orbitControls.target.set(0, 8, 0);
     orbitControls.minDistance = 10;
     orbitControls.maxDistance = 60;
 
