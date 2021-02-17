@@ -288,11 +288,8 @@ function main(language) {
             texture1.needsUpdate = true;
             
             let material1 = new THREE.MeshBasicMaterial( {map: texture1, side:THREE.DoubleSide } );
-            material1.transparent = true; //true;
-            let mesh1 = new THREE.Mesh(
-                new THREE.PlaneGeometry(29.5, 3),
-                material1
-            );
+            material1.transparent = true;
+            let mesh1 = new THREE.Mesh( new THREE.PlaneGeometry(29.5, 3), material1);
             mesh1.position.set(0, 20.4, -12.1);
             this.menu.object = mesh1;
             this.menu.canvas = canvas1;
@@ -466,10 +463,7 @@ function main(language) {
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             let nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
-            let nameBoxMaterial = new THREE.MeshStandardMaterial({
-                color: "white"
-                //map: textureLoader.load("../assets/pictures/1.jpg"), side: THREE.DoubleSide
-            });
+            let nameBoxMaterial = new THREE.MeshStandardMaterial({map: textureLoader.load("../assets/pictures/name/1.png"), side: THREE.DoubleSide});
             let nameBox = new THREE.Mesh(nameBoxGeometry, nameBoxMaterial);
             nameBox.position.set(-10, 1.5, -12);
             scene.add(nameBox);
@@ -486,10 +480,7 @@ function main(language) {
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
-            nameBoxMaterial = new THREE.MeshStandardMaterial({
-                color: "white"
-                //map: textureLoader.load("../assets/pictures/1.jpg"), side: THREE.DoubleSide
-            });
+            nameBoxMaterial = new THREE.MeshStandardMaterial({map: textureLoader.load("../assets/pictures/name/2.png"), side: THREE.DoubleSide});
             nameBox = new THREE.Mesh(nameBoxGeometry, nameBoxMaterial);
             nameBox.position.set(0, 1.5, -12);
             scene.add(nameBox);
@@ -506,10 +497,7 @@ function main(language) {
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
-            nameBoxMaterial = new THREE.MeshStandardMaterial({
-                color: "white"
-                //map: textureLoader.load("../assets/pictures/1.jpg"), side: THREE.DoubleSide
-            });
+            nameBoxMaterial = new THREE.MeshStandardMaterial({map: textureLoader.load("../assets/pictures/name/3.png"), side: THREE.DoubleSide});
             nameBox = new THREE.Mesh(nameBoxGeometry, nameBoxMaterial);
             nameBox.position.set(10, 1.5, -12);
             scene.add(nameBox);
@@ -526,10 +514,7 @@ function main(language) {
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
-            nameBoxMaterial = new THREE.MeshStandardMaterial({
-                color: "white"
-                //map: textureLoader.load("../assets/pictures/1.jpg"), side: THREE.DoubleSide
-            });
+            nameBoxMaterial = new THREE.MeshStandardMaterial({map: textureLoader.load("../assets/pictures/name/4.png"), side: THREE.DoubleSide});
             nameBox = new THREE.Mesh(nameBoxGeometry, nameBoxMaterial);
             nameBox.position.set(-10, 7.5, -12);
             scene.add(nameBox);
@@ -546,10 +531,7 @@ function main(language) {
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
-            nameBoxMaterial = new THREE.MeshStandardMaterial({
-                color: "white"
-                //map: textureLoader.load("../assets/pictures/1.jpg"), side: THREE.DoubleSide
-            });
+            nameBoxMaterial = new THREE.MeshStandardMaterial({map: textureLoader.load("../assets/pictures/name/5.png"), side: THREE.DoubleSide});
             nameBox = new THREE.Mesh(nameBoxGeometry, nameBoxMaterial);
             nameBox.position.set(0, 7.5, -12);
             scene.add(nameBox);
@@ -566,10 +548,7 @@ function main(language) {
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
-            nameBoxMaterial = new THREE.MeshStandardMaterial({
-                color: "white"
-                //map: textureLoader.load("../assets/pictures/1.jpg"), side: THREE.DoubleSide
-            });
+            nameBoxMaterial = new THREE.MeshStandardMaterial({map: textureLoader.load("../assets/pictures/name/6.png"), side: THREE.DoubleSide});
             nameBox = new THREE.Mesh(nameBoxGeometry, nameBoxMaterial);
             nameBox.position.set(10, 7.5, -12);
             scene.add(nameBox);
@@ -586,10 +565,7 @@ function main(language) {
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
-            nameBoxMaterial = new THREE.MeshStandardMaterial({
-                color: "white"
-                //map: textureLoader.load("../assets/pictures/1.jpg"), side: THREE.DoubleSide
-            });
+            nameBoxMaterial = new THREE.MeshStandardMaterial({map: textureLoader.load("../assets/pictures/name/7.png"), side: THREE.DoubleSide});
             nameBox = new THREE.Mesh(nameBoxGeometry, nameBoxMaterial);
             nameBox.position.set(-10, 13.5, -12);
             scene.add(nameBox);
@@ -606,10 +582,7 @@ function main(language) {
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
-            nameBoxMaterial = new THREE.MeshStandardMaterial({
-                color: "white"
-                //map: textureLoader.load("../assets/pictures/1.jpg"), side: THREE.DoubleSide
-            });
+            nameBoxMaterial = new THREE.MeshStandardMaterial({map: textureLoader.load("../assets/pictures/name/8.png"), side: THREE.DoubleSide});
             nameBox = new THREE.Mesh(nameBoxGeometry, nameBoxMaterial);
             nameBox.position.set(0, 13.5, -12);
             scene.add(nameBox);
@@ -626,10 +599,7 @@ function main(language) {
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
-            nameBoxMaterial = new THREE.MeshStandardMaterial({
-                color: "white"
-                //map: textureLoader.load("../assets/pictures/1.jpg"), side: THREE.DoubleSide
-            });
+            nameBoxMaterial = new THREE.MeshStandardMaterial({map: textureLoader.load("../assets/pictures/name/9.png"), side: THREE.DoubleSide});
             nameBox = new THREE.Mesh(nameBoxGeometry, nameBoxMaterial);
             nameBox.position.set(10, 13.5, -12);
             scene.add(nameBox);

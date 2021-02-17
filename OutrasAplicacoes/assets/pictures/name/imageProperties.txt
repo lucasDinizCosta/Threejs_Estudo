@@ -1,0 +1,4 @@
+--------- Images of the name: ------
+Font: Times new Roman 63px - Center
+Size: 744 x 93
+Aspect Ratio: 8/1 => 8
