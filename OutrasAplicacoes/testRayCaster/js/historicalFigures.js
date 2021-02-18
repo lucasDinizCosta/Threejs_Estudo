@@ -112,7 +112,7 @@ function main(language) {
         // bookAttributes
         this.angleBeginPage = 0,        
         this.angleFinishPage = 180,        
-        this.angleRatePage = 0.75,      //0.15  
+        this.angleRatePage = 0.75,      
 
         // page and sheet attributes
         this.widthPage = 12,         
@@ -125,7 +125,7 @@ function main(language) {
         // Button Read / Exit
         this.buttons = [],              // Read(Left sheet, Right sheet), Exit, ZoomIn, ZoomOut
         this.sizeButton = 1.75,
-        this.cameraOption = 0,                // 0 => rotationCamera, 1 => bookCamera
+        this.cameraOption = 0,                // 0 => rotationCamera, 1 => bookCamera, 2 => pictureCamera
 
         // Functions
         this.adjustbuttons = function(){
@@ -270,18 +270,13 @@ function main(language) {
         },
         this.createMessages = function(){       // Victory and Loose
             let messageVictoryGeometry = new THREE.PlaneGeometry(26, 8, 0.1, 0.1);
-            let messageVictoryMaterial = new THREE.MeshBasicMaterial({
-                map: textureLoader.load("../assets/messageVictory.png"), side: THREE.DoubleSide
-            });
+            let messageVictoryMaterial = new THREE.MeshBasicMaterial({map: textureLoader.load("../assets/messageVictory.png"), side: THREE.DoubleSide});
             this.messageVictory = new THREE.Mesh(messageVictoryGeometry, messageVictoryMaterial);
             this.messageVictory.position.set(0, 9, -11.9);
             this.messageVictory.visible = false;
             scene.add(this.messageVictory); 
-
             let messageLooseGeometry = new THREE.PlaneGeometry(26, 8, 0.1, 0.1);
-            let messageLooseMaterial = new THREE.MeshBasicMaterial({
-                map: textureLoader.load("../assets/messageLoose.png"), side: THREE.DoubleSide
-            });
+            let messageLooseMaterial = new THREE.MeshBasicMaterial({map: textureLoader.load("../assets/messageLoose.png"), side: THREE.DoubleSide});
             this.messageLoose = new THREE.Mesh(messageLooseGeometry, messageLooseMaterial);
             this.messageLoose.position.set(0, 9, -11.9);
             this.messageLoose.visible = false;
@@ -319,9 +314,7 @@ function main(language) {
 
                 // Image plane
                 let imageGeometry = new THREE.PlaneGeometry(9, 4.5, 0.1, 0.1);
-                let imageMaterial = new THREE.MeshBasicMaterial({
-                    color:"rgb(255, 255, 255)", side: THREE.DoubleSide
-                });
+                let imageMaterial = new THREE.MeshBasicMaterial({color:"rgb(255, 255, 255)", side: THREE.DoubleSide});
                 let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
                 imagePlane.position.set(0, this.lengthPage/4.5, 0.01);
                 imagePlane.objectType = 2;
@@ -333,7 +326,6 @@ function main(language) {
                 let informationGeometry = new THREE.PlaneGeometry(9.6, 6.08, 0.1, 0.1);
                 let informationMaterial = new THREE.MeshBasicMaterial({
                     transparent: true,
-                    //color: "white",
                     side: THREE.DoubleSide,
                     map: textureLoader.load("../assets/pictures/information/"+language+"/"+indexPicture+".png")
                 });
@@ -375,9 +367,7 @@ function main(language) {
 
                 // Image plane
                 let imageGeometry = new THREE.PlaneGeometry(this.widthPage/1.5, this.lengthPage/3, 0.1, 0.1);
-                let imageMaterial = new THREE.MeshBasicMaterial({
-                    color:"rgb(255, 255, 255)", side:THREE.DoubleSide
-                });
+                let imageMaterial = new THREE.MeshBasicMaterial({color:"rgb(255, 255, 255)", side:THREE.DoubleSide});
                 let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
                 imagePlane.position.set(0, this.lengthPage/4.5, -0.01);
                 imagePlane.rotateY(THREE.Math.degToRad(180));
@@ -560,7 +550,6 @@ function main(language) {
             nameBox = new THREE.Mesh(nameBoxGeometry, nameBoxMaterial);
             nameBox.position.set(10, 13.5, -12);
             scene.add(nameBox);
-            //console.log(this.orderPicturesBook);
         },
         this.createScenary = function(){
             var spotLight = new THREE.SpotLight(0xffffff);
@@ -635,7 +624,6 @@ function main(language) {
             // Raycaster and mouse Controllers 
             objectLooked = null;
             selectedImage = null;
-            pointCollisionRayCaster = null;   
         },
         this.emptyScene = function(){
             //console.log("Empty Scene");
