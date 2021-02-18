@@ -1,9 +1,4 @@
 function main(language) {
-    
-    // TODO: Ao clicar, transladar o centro da imagem rotacionada para o local do cursor para facilitar a colagem (deixar por último) --
-    // TODO: bloco da imagem na página fica em cor “verde” quando o usuário for movimentar a imagem e estiver na posição correta.
-    // TODO: Passar o projeto para o site do vrtools como "Historical Figures"
-
     var scene = new THREE.Scene();
     //var stats = new Stats();
     //stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -53,11 +48,8 @@ function main(language) {
     let speedAnimation = 1.8;   // 1.5
 
     // Raycaster and mouse Controllers 
-    let objectRaycaster = [];
-    let objectRaycasterClonePictures = [];
-    let objectLooked = null;
-    let selectedImage = null;
-    let pointCollisionRayCaster = null;  
+    let objectRaycaster = [], objectRaycasterClonePictures = [];
+    let objectLooked = null, objectImagePlane = null, selectedImage = null;
     let dragControls;
 
     // Controls of sidebar
@@ -113,7 +105,6 @@ function main(language) {
         // Pictures and Painting Wall
         this.pictures = [],
         this.imageClone = null,
-        this.objectImagePlane = null;       
         this.orderPicturesBook = [],
         this.messageVictory = null,
         this.messageLoose = null,
@@ -279,7 +270,7 @@ function main(language) {
         },
         this.createMessages = function(){       // Victory and Loose
             let messageVictoryGeometry = new THREE.PlaneGeometry(26, 8, 0.1, 0.1);
-            let messageVictoryMaterial = new THREE.MeshStandardMaterial({
+            let messageVictoryMaterial = new THREE.MeshBasicMaterial({
                 map: textureLoader.load("../assets/messageVictory.png"), side: THREE.DoubleSide
             });
             this.messageVictory = new THREE.Mesh(messageVictoryGeometry, messageVictoryMaterial);
@@ -288,7 +279,7 @@ function main(language) {
             scene.add(this.messageVictory); 
 
             let messageLooseGeometry = new THREE.PlaneGeometry(26, 8, 0.1, 0.1);
-            let messageLooseMaterial = new THREE.MeshStandardMaterial({
+            let messageLooseMaterial = new THREE.MeshBasicMaterial({
                 map: textureLoader.load("../assets/messageLoose.png"), side: THREE.DoubleSide
             });
             this.messageLoose = new THREE.Mesh(messageLooseGeometry, messageLooseMaterial);
@@ -615,10 +606,9 @@ function main(language) {
             //dragControls.addEventListener( 'dragend', function ( event ) { console.log('drag end');});
             dragControls.addEventListener ( 'drag', function( event ){
                 //console.log('drag');
-                if(event.object.position.y < 1){
+                if(event.object.position.y < 1){        // Stay about the page
                     event.object.position.y = 1.45;
                 }
-                //event.object.position.y = 0;
                 event.object.position.z = -3.35; // This will prevent moving z axis, but will be on -3.35 line. change this to your object position of z axis.
             });
 
@@ -796,6 +786,8 @@ function main(language) {
                                 controls.messageLoose.visible = true;
                             } 
                         }
+                        objectImagePlane.material.color = new THREE.Color("rgb(255,255,255)");
+                        objectImagePlane = null;
                     }
                 }
                 if(selectedImage != null){       // Drop the picture
@@ -970,13 +962,13 @@ function main(language) {
 
     function checkRaycasterOnImageAtPages(){
         if(objectLooked != null && selectedImage != null && objectLooked.objectType == 2){
-            controls.objectImagePlane = objectLooked;
-            controls.objectImagePlane.material.color = new THREE.Color("rgb(0,180,0)");
+            objectImagePlane = objectLooked;
+            objectImagePlane.material.color = new THREE.Color("rgb(0,180,0)");
         }
         else{
-            if(controls.objectImagePlane != null){
-                controls.objectImagePlane.material.color = new THREE.Color("rgb(255,255,255)");
-                controls.objectImagePlane = null;
+            if(objectImagePlane != null){
+                objectImagePlane.material.color = new THREE.Color("rgb(255,255,255)");
+                objectImagePlane = null;
             }
         }
     }
