@@ -30,7 +30,7 @@ function main(language) {
     var defaultCamera = rotationCamera;
     // Enable mouse rotation, pan, zoom etc.
     var orbitControls = new THREE.OrbitControls(rotationCamera, renderer.domElement);
-    orbitControls.target.set(0, 8, 0);
+    orbitControls.target.set(0, 8, 10);
     orbitControls.minDistance = 10;
     orbitControls.maxDistance = 60;
 
@@ -112,7 +112,7 @@ function main(language) {
         // bookAttributes
         this.angleBeginPage = 0,        
         this.angleFinishPage = 180,        
-        this.angleRatePage = 0.75,      
+        this.angleRatePage = 1.12,  //0.75      
 
         // page and sheet attributes
         this.widthPage = 12,         
@@ -298,7 +298,10 @@ function main(language) {
                 let pageGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
                 let pageMaterial = new THREE.MeshBasicMaterial({
                     transparent: true, //opacity: 0.5,
-                    map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
+                    map: textureLoader.load("../assets/parchment_alpha.png"), 
+                    side: THREE.DoubleSide,//THREE.DoubleSide,
+                    //depthWrite: false,
+                    //depthWrite: false, depthTest: false,
                 });
                 //pageMaterial.depthWrite = false;            // FIX the bug of transparency  --- https://github.com/mrdoob/three.js/issues/9977
                 let page = new THREE.Mesh(pageGeometry, pageMaterial);
@@ -327,11 +330,13 @@ function main(language) {
                 let informationMaterial = new THREE.MeshBasicMaterial({
                     transparent: true,
                     side: THREE.DoubleSide,
-                    map: textureLoader.load("../assets/pictures/information/"+language+"/"+indexPicture+".png")
+                    map: textureLoader.load("../assets/pictures/information/"+language+"/"+indexPicture+".png"),
+                    //depthWrite: false, 
+                    //depthTest: false,
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.name = "informationBlock-Page_"+this.amountPages;
-                informationPlane.position.set(0, -this.lengthPage/5, 0.01);
+                informationPlane.position.set(0, -this.lengthPage/5, 0.025); //0.01
                 page.add(informationPlane);
                 this.amountSheets++;
                 this.book.add(sheet);       // Added sheet with page on the book
@@ -352,7 +357,10 @@ function main(language) {
                 let pageGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
                 let pageMaterial = new THREE.MeshBasicMaterial({
                     transparent: true, //opacity: 0.5,
-                    map: textureLoader.load("../assets/parchment_alpha.png"), side:THREE.DoubleSide
+                    map: textureLoader.load("../assets/parchment_alpha.png"), 
+                    side: THREE.DoubleSide,//side:THREE.DoubleSide,
+                    //depthWrite: false, 
+                    //depthTest: false,
                 });
                 let page = new THREE.Mesh(pageGeometry, pageMaterial);
                 page.name = "page_" + this.amountPages;
@@ -381,11 +389,13 @@ function main(language) {
                 let informationMaterial = new THREE.MeshBasicMaterial({
                     transparent: true, /*opacity: 0.9,*/
                     side: THREE.DoubleSide,
-                    map: textureLoader.load("../assets/pictures/information/"+language+"/"+indexPicture+".png")
+                    map: textureLoader.load("../assets/pictures/information/"+language+"/"+indexPicture+".png"),
+                    //depthWrite: false, 
+                    //depthTest: false,
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.name = "informationBlock-Page_"+this.amountPages;
-                informationPlane.position.set(0, -this.lengthPage/5, -0.01);
+                informationPlane.position.set(0, -this.lengthPage/5, -0.025); // -0.01
                 informationPlane.rotateY(THREE.Math.degToRad(180));
                 page.add(informationPlane);
                 this.book.add(sheet);       // Added sheet with page on the book
@@ -931,6 +941,8 @@ function main(language) {
         }
     }
 
+    
+
     //Only verify if has a collision with the pictures
     function checkRaycasterClonePictures(){        
         if(selectedImage == null){                       // FIX the bug of change the picture when moving above another picture
@@ -992,10 +1004,11 @@ function main(language) {
         // create the ground plane
         var planeGeometry = new THREE.PlaneGeometry(width, height, 10, 10);
         var planeMaterial = new THREE.MeshStandardMaterial({
-            color:"rgb(200,200,200)",
+            //color:"rgb(200,200,200)",
+            map: textureLoader.load("../assets/general/floor-wood.jpg"),
             side:THREE.DoubleSide, 
-            transparent: true,
-            opacity: 0.5
+            //transparent: true,
+            //opacity: 0.5
         });
         var plane = new THREE.Mesh(planeGeometry, planeMaterial);
         plane.receiveShadow = true;

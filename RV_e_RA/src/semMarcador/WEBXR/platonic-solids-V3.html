@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Platonic Solids</title>
+    <meta charset="UTF-8">
+    <!-- Tag that adapt the dimensions(width, height) of interface for mobile devices:
+         https://developer.mozilla.org/pt-BR/docs/Mozilla/Mobile/Viewport_meta_tag
+    -->
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        a {
+            color: var(--color-blue);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        #newWindow {
+            display: block;
+            position: absolute;
+            bottom: 0em;
+            left: 0.4em;
+            color: #fff;
+            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        }
+    </style>
+
+    <!-- Libraries of configuration -->
+    <script type="text/javascript" charset="UTF-8" src="../../../libs/three/three.js"></script>
+    
+    <script type="text/javascript" src="../../../libs/util/Stats.js"></script>
+    <script type="text/javascript" src="../../../libs/util/dat.gui.js"></script>
+
+    <!-- There are many useful functionss -->
+    <script type="text/javascript" src="../../../libs/util/util.js"></script>
+
+</head>
+
+<body>
+    <div id="webgl-output"></div>
+    <script type="module">
+        // Importando módulos
+        import * as THREE from '../../../libs/build/three.module.js';
+        import { BoxLineGeometry } from '../../../libs/three/jsm/geometries/BoxLineGeometry.js';
+        import { VRButton } from '../../../libs/three/jsm/webxr/VRButton.js';
+        import { OrbitControls } from '../../../libs/three/jsm/controls/OrbitControls.js';
+        import { XRControllerModelFactory } from '../../../libs/three/jsm/webxr/XRControllerModelFactory.js';
+        
+        // use the defaults
+        var scene = new THREE.Scene();                  // Create main scene
+        var stats = initStats();                        // To show FPS information
+        var renderer = new THREE.WebGLRenderer( { antialias: true } );
+        renderer.setPixelRatio( window.devicePixelRatio );
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.shadowMap.enabled = true;
+
+        let controller1, controller2;
+        let controllerGrip1, controllerGrip2;
+
+        let raycaster;
+
+        const intersected = [];
+        const tempMatrix = new THREE.Matrix4();
+
+        //renderer.setClearColor("rgb(30, 30, 40)");
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.lookAt(0, 0, 0);
+        camera.position.set(5, 15, 30);
+        camera.up.set(0, 1, 0);
+        scene.add(camera);
+        
+
+        var light = initDefaultLighting(scene, new THREE.Vector3(25, 30, 20)); // Use default light
+
+        // Show axes (parameter is size of each axis)
+        var axes = new THREE.AxesHelper(12);
+        axes.name = "AXES";
+        axes.visible = false;
+        scene.add(axes);
+
+        var groundPlane = createGroundPlane(30, 30); // width and height
+        groundPlane.rotateX(degreesToRadians(-90));
+        scene.add(groundPlane);
+
+        // Container para o orbitControls
+        let container = document.createElement( 'div' );
+		document.body.appendChild( container );
+
+        // Enable mouse rotation, pan, zoom etc.
+        var orbitControls = new OrbitControls(camera, container);//(camera, renderer.domElement);
+        orbitControls.target.set(0, 0, -1);
+        orbitControls.update();
+
+        // Object Material for all objects
+        var objectMaterial = new THREE.MeshPhongMaterial({ color: "rgb(255, 0, 0)" });
+
+
+        let group = new THREE.Group();
+        scene.add( group );
+
+        // Add objects to scene
+        var objectArray = new Array();
+        scene.add(createTetrahedron(4.0, 0));
+        scene.add(createCube(5.0));
+        scene.add(createOctahedron(4.0, 0));
+        scene.add(createDodecahedron(4.0, 0));
+        scene.add(createIcosahedron(4.0, 0));
+
+        // Position of the cube
+        objectArray[1].position.y = 5;
+
+        // Controls of sidebar
+        var controls = new function() {
+            var self = this;
+
+            // Axes
+            this.axes = false;
+
+            // Inicia a geometria e material de base a serem controlados pelo menu interativo
+            this.castShadow = true;
+            this.groundPlaneVisible = true;
+
+            //Physics
+            this.rotation = 0.02;
+            this.color = "rgb(255, 0, 0)";
+
+            // Geometry
+            this.mesh = objectArray[0];
+            this.meshNumber = 0;
+            this.radius = 10;
+            this.detail = 0;
+            this.type = 'Tetrahedron';
+            this.size = 1.0
+
+            this.choosePoligon = function() {
+                objectArray[this.meshNumber].visible = false;
+                switch (this.type) {
+                    case 'Tetrahedron':
+                        this.meshNumber = 0;
+                        break;
+                    case 'Cube':
+                        this.meshNumber = 1;
+                        break;
+                    case 'Octahedron':
+                        this.meshNumber = 2;
+                        break;
+                    case 'Dodecahedron':
+                        this.meshNumber = 3;
+                        break;
+                    case 'Icosahedron':
+                        this.meshNumber = 4;
+                        break;
+                }
+                objectArray[this.meshNumber].visible = true;
+                this.mesh = objectArray[this.meshNumber];
+            }
+
+            this.resizePoligon = function() {
+                const poligon = objectArray[this.meshNumber]
+                const radius = poligon.name === "Cube" ? poligon.geometry.parameters.height : poligon.geometry.parameters.radius
+
+                poligon.scale.set(this.size, this.size, this.size)
+                    // console.log(poligon)
+                poligon.position.y = radius * this.size * 1.1
+            }
+
+            this.updateColor = function() {
+                // removing the objects with the old material color
+                for (let i = 0; i < objectArray.length; i++) {
+                    //scene.remove(scene.getObjectByName("particles1"));
+                    scene.remove(objectArray[i]);
+                }
+                objectArray = new Array();
+                objectMaterial = new THREE.MeshPhongMaterial({ color: controls.color }); // Setting the material with new color
+
+                // Recreating those objects
+                scene.add(createTetrahedron(4.0, 0));
+                scene.add(createCube(5.0));
+                scene.add(createOctahedron(4.0, 0));
+                scene.add(createDodecahedron(4.0, 0));
+                scene.add(createIcosahedron(4.0, 0));
+
+                // Position of the cube
+                objectArray[1].position.y = 5;
+
+                controls.choosePoligon();
+            }
+        }
+
+        controls.choosePoligon(); // Update de selection of the polygon
+
+        // Reajuste da renderização com base na mudança da janela
+        function onResize(){
+            camera.aspect = window.innerWidth / window.innerHeight;  //Atualiza o aspect da camera com relação as novas dimensões
+            camera.updateProjectionMatrix();                         //Atualiza a matriz de projeção
+            renderer.setSize(window.innerWidth, window.innerHeight); //Define os novos valores para o renderizador
+            console.log('Resizing to %s x %s.', window.innerWidth, window.innerHeight);
+        }
+
+        window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
+
+        // 4 faces
+        function createTetrahedron(radius, detail) {
+            var geometry = new THREE.TetrahedronGeometry(radius, detail);
+            var object = new THREE.Mesh(geometry, objectMaterial);
+            object.castShadow = true;
+            object.position.set(0.0, radius * 1.1, 0.0);
+            object.visible = false;
+            object.name = "Tetrahedron";
+            objectArray.push(object);
+            return object;
+        }
+
+        // 6 faces
+        function createCube(s) {
+            let geometry = new THREE.BoxGeometry(s, s, s);
+            let object = new THREE.Mesh(geometry, objectMaterial);
+            object.castShadow = true;
+            object.position.set(0.0, s / 2.0, 0.0);
+            object.visible = false;
+            object.name = "Cube";
+            objectArray.push(object);
+            return object;
+        }
+
+        // 8 faces
+        function createOctahedron(radius, detail) {
+            var geometry = new THREE.OctahedronGeometry(radius, detail);
+            var object = new THREE.Mesh(geometry, objectMaterial);
+            object.castShadow = true;
+            object.position.set(0.0, radius, 0.0);
+            object.visible = false;
+            object.name = "Octahedro";
+            objectArray.push(object);
+            return object;
+        }
+
+        // 12 faces
+        function createDodecahedron(radius, detail) {
+            var geometry = new THREE.DodecahedronGeometry(radius, detail);
+            var object = new THREE.Mesh(geometry, objectMaterial);
+            object.castShadow = true;
+            object.position.set(0.0, radius, 0.0);
+            object.visible = false;
+            object.name = "Dodecahedron";
+            objectArray.push(object);
+            return object;
+        }
+
+        // 20 faces
+        function createIcosahedron(radius, detail) {
+            let geometry = new THREE.IcosahedronGeometry(radius, detail);
+            let object = new THREE.Mesh(geometry, objectMaterial);
+            object.castShadow = true;
+            object.position.set(0.0, radius, 0.0);
+            object.visible = false;
+            object.name = "Icosahedron";
+            objectArray.push(object);
+            return object;
+        }
+
+        renderer.xr.enabled = true;     //tell your instance of WebGLRenderer to enable XR rendering
+        container.appendChild( renderer.domElement );
+
+        // Adiciona o renderer no elemento de VR
+        document.body.appendChild(VRButton.createButton( renderer ));
+
+        /************************************************
+         * 
+         * CONTROLADOR DO VR
+         * 
+         ************************************************/
+        
+        controller1 = renderer.xr.getController( 0 );
+        controller1.addEventListener( 'selectstart', onSelectStart );
+        controller1.addEventListener( 'selectend', onSelectEnd );
+        scene.add( controller1 );
+
+        controller2 = renderer.xr.getController( 1 );
+        controller2.addEventListener( 'selectstart', onSelectStart );
+        controller2.addEventListener( 'selectend', onSelectEnd );
+        scene.add( controller2 );
+
+        const controllerModelFactory = new XRControllerModelFactory();
+
+        controllerGrip1 = renderer.xr.getControllerGrip( 0 );
+        controllerGrip1.add( controllerModelFactory.createControllerModel( controllerGrip1 ) );
+        scene.add( controllerGrip1 );
+
+        controllerGrip2 = renderer.xr.getControllerGrip( 1 );
+        controllerGrip2.add( controllerModelFactory.createControllerModel( controllerGrip2 ) );
+        scene.add( controllerGrip2 );
+
+        function onSelectStart( event ) {
+            const controller = event.target;
+            const intersections = getIntersections( controller );
+            if ( intersections.length > 0 ) {
+                const intersection = intersections[ 0 ];
+                const object = intersection.object;
+                object.material.emissive.b = 1;
+                controller.attach( object );
+                controller.userData.selected = object;
+            }
+        }
+
+        function onSelectEnd( event ) {
+            const controller = event.target;
+            if ( controller.userData.selected !== undefined ) {
+                const object = controller.userData.selected;
+                object.material.emissive.b = 0;
+                group.attach( object );
+                controller.userData.selected = undefined;
+            }
+        }
+
+        function getIntersections( controller ) {
+            tempMatrix.identity().extractRotation( controller.matrixWorld );
+            raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
+            raycaster.ray.direction.set( 0, 0, - 1 ).applyMatrix4( tempMatrix );
+            return raycaster.intersectObjects( group.children );
+        }
+
+        function intersectObjects( controller ) {
+            // Do not highlight when already selected
+            if ( controller.userData.selected !== undefined ) return;
+
+            const line = controller.getObjectByName( 'line' );
+            const intersections = getIntersections( controller );
+
+            if ( intersections.length > 0 ) {
+
+                const intersection = intersections[ 0 ];
+
+                const object = intersection.object;
+                object.material.emissive.r = 1;
+                intersected.push( object );
+
+                line.scale.z = intersection.distance;
+
+            } else {
+
+                line.scale.z = 5;
+
+            }
+        }
+
+        function cleanIntersected() {
+            while ( intersected.length ) {
+                const object = intersected.pop();
+                object.material.emissive.r = 0;
+            }
+        }
+
+        const geometry = new THREE.BufferGeometry().setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 1 ) ] );
+        const line = new THREE.Line( geometry );
+        line.name = 'line';
+        line.scale.z = 5;
+
+        controller1.add( line.clone() );
+        controller2.add( line.clone() );
+
+        raycaster = new THREE.Raycaster();
+
+        orbitControls.update();                 // Atualiza o controle da câmera
+        animate();
+        function animate(){
+            // Loop usado para VR
+            renderer.setAnimationLoop(render);
+        }
+
+        function render(){
+            orbitControls.update();
+            cleanIntersected();
+            intersectObjects( controller1 );
+            intersectObjects( controller2 );
+
+            // Rotating the mesh selected
+            controls.mesh.rotation.x += controls.rotation;
+            controls.mesh.rotation.y += controls.rotation;
+            controls.mesh.rotation.z += controls.rotation;
+            renderer.render( scene, camera );
+        }
+
+    </script>
+</body>
+
+</html>
