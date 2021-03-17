@@ -78,8 +78,19 @@
         var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
         //camera.lookAt(0, 0, 0);
         camera.position.set(5, 15, 30);;//camera.position.set(5, 15, 30);
+        scene.add(camera);
         //camera.up.set(0, 1, 0);
         //scene.add(camera);
+
+        controls = new THREE.VRControls( camera );
+        effect = new THREE.VREffect( renderer );
+        effect.setSize( window.innerWidth, window.innerHeight );
+
+        // This helps move the camera
+        dolly = new THREE.Group();
+        dolly.position.set( 0, 0, 0 );
+        scene.add( dolly );
+        dolly.add( camera );
         
         var light = initDefaultLighting(scene, new THREE.Vector3(25, 30, 20)); // Use default light
 
@@ -270,6 +281,7 @@
         }
 
         renderer.xr.enabled = true;     //tell your instance of WebGLRenderer to enable XR rendering
+        renderer.xr.setReferenceSpaceType( 'local' );   // Posicionamento local
         container.appendChild( renderer.domElement );
 
         // Adiciona o renderer no elemento de VR
@@ -286,16 +298,18 @@
         controller1.addEventListener( 'selectend', onSelectEnd );
         scene.add( controller1 );
 
-        controller1.position.y = 10;
+        //controller1.position.y = 10;
 
         console.log(controller1);
+
+        //console.log(controller1);
 
         controller2 = renderer.xr.getController( 1 );
         controller2.addEventListener( 'selectstart', onSelectStart );
         controller2.addEventListener( 'selectend', onSelectEnd );
         scene.add( controller2 );
 
-        controller2.position.y = 10;
+        //controller2.position.y = 10;
 
         const controllerModelFactory = new XRControllerModelFactory();
 
