@@ -80,18 +80,11 @@
         //camera.position.set(5, 15, 30);;//camera.position.set(5, 15, 30);
         camera.position.set(0,0,0);
         camera.position.y = 1.6;
-        //scene.add(camera);
-        //camera.up.set(0, 1, 0);
-        //scene.add(camera);
-
-        /*controls = new THREE.VRControls( camera );
-        effect = new THREE.VREffect( renderer );
-        effect.setSize( window.innerWidth, window.innerHeight );*/
 
         // This helps move the camera
         let dolly = new THREE.Group();
         
-        dolly.position.set( 5, 15, 30);
+        dolly.position.set( 5, 10, 20);
         scene.add( dolly );
         dolly.add( camera );
         
