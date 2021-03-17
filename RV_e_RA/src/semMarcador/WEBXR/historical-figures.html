@@ -286,10 +286,16 @@
         controller1.addEventListener( 'selectend', onSelectEnd );
         scene.add( controller1 );
 
+        controller1.position.y = 10;
+
+        console.log(controller1);
+
         controller2 = renderer.xr.getController( 1 );
         controller2.addEventListener( 'selectstart', onSelectStart );
         controller2.addEventListener( 'selectend', onSelectEnd );
         scene.add( controller2 );
+
+        controller2.position.y = 10;
 
         const controllerModelFactory = new XRControllerModelFactory();
 
