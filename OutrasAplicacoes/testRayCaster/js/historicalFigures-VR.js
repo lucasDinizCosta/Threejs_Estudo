@@ -39,17 +39,17 @@ function main(language) {
     var defaultCamera = rotationCamera;
 
     //renderer.setClearColor("rgb(30, 30, 40)");
-    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    var cameraVR = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     //camera.lookAt(0, 0, 0);
-    //camera.position.set(5, 15, 30);;//camera.position.set(5, 15, 30);
-    camera.position.set(0, 0, 0);
-    camera.position.y = 1.6;
+    cameraVR.position.set(0, 0, 0); //camera.position.set(5, 15, 30);
+    cameraVR.position.y = 1.6;
 
+    console.log(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
     // This helps move the camera
     let dolly = new THREE.Group();
     dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
     scene.add( dolly );
-    dolly.add( camera );
+    dolly.add( cameraVR );
 
     // Enable mouse rotation, pan, zoom etc.
     /* var orbitControls = new THREE.OrbitControls(rotationCamera, renderer.domElement);
@@ -1111,7 +1111,7 @@ function main(language) {
             case 2:         // Loose
                 break;
         }
-        renderer.render(scene, defaultCamera);
+        renderer.render(scene, cameraVR);//(scene, defaultCamera);
         timeAfter = t;
         requestAnimationFrame(render);
     }
