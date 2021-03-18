@@ -1,3 +1,10 @@
+// Importando módulos
+import * as THREE from '../../../libs/build/three.module.js';
+import { BoxLineGeometry } from '../../../libs/three/jsm/geometries/BoxLineGeometry.js';
+import { VRButton } from '../../../libs/three/jsm/webxr/VRButton.js';
+import { OrbitControls } from '../../../libs/three/jsm/controls/OrbitControls.js';
+import { XRControllerModelFactory } from '../../../libs/three/jsm/webxr/XRControllerModelFactory.js';
+
 function main(language) {
     var scene = new THREE.Scene();
     //var stats = new Stats();
@@ -16,6 +23,8 @@ function main(language) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
     document.getElementById("webgl-output").appendChild(renderer.domElement);
+    renderer.xr.enabled = true;     //tell your instance of WebGLRenderer to enable XR rendering
+
     var rotationCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
     rotationCamera.up.set(0, 1, 0);
     rotationCamera.position.set(0, 15, 31);
@@ -28,11 +37,25 @@ function main(language) {
     pictureCamera.up.set(0, 1, 0);
     pictureCamera.lookAt(0, 10.7, -12);
     var defaultCamera = rotationCamera;
+
+    //renderer.setClearColor("rgb(30, 30, 40)");
+    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    //camera.lookAt(0, 0, 0);
+    //camera.position.set(5, 15, 30);;//camera.position.set(5, 15, 30);
+    camera.position.set(0, 0, 0);
+    camera.position.y = 1.6;
+
+    // This helps move the camera
+    let dolly = new THREE.Group();
+    dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+    scene.add( dolly );
+    dolly.add( camera );
+
     // Enable mouse rotation, pan, zoom etc.
-    var orbitControls = new THREE.OrbitControls(rotationCamera, renderer.domElement);
+    /* var orbitControls = new THREE.OrbitControls(rotationCamera, renderer.domElement);
     orbitControls.target.set(0, 8, 10);
     orbitControls.minDistance = 10;
-    orbitControls.maxDistance = 60;
+    orbitControls.maxDistance = 60;*/
 
     // Time controlling
     var timeAfter = 0;
@@ -51,6 +74,7 @@ function main(language) {
     let objectRaycaster = [], objectRaycasterClonePictures = [];
     let objectLooked = null, objectImagePlane = null, selectedImage = null;
     let dragControls;
+    let pictureLooked = null;
 
     // Controls of sidebar
     var controls = new function() {
@@ -600,16 +624,16 @@ function main(language) {
             objectRaycasterClonePictures = [];
 
             // Recreate DragControls
-            dragControls = new THREE.DragControls([controls.imageClone], rotationCamera, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
+            //dragControls = new THREE.DragControls([controls.imageClone], rotationCamera, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
             //dragControls.addEventListener( 'dragstart', function ( event ) {  console.log("dragstart");});
             //dragControls.addEventListener( 'dragend', function ( event ) { console.log('drag end');});
-            dragControls.addEventListener ( 'drag', function( event ){
+            /*dragControls.addEventListener ( 'drag', function( event ){
                 //console.log('drag');
                 if(event.object.position.y < 1){        // Stay about the page
                     event.object.position.y = 1.45;
                 }
                 event.object.position.z = -3.35; // This will prevent moving z axis, but will be on -3.35 line. change this to your object position of z axis.
-            });
+            });*/
 
             // Pages of book
             for (let i = 0; i < this.book.children.length; i++) {
@@ -929,19 +953,14 @@ function main(language) {
         let intersects = raycaster.intersectObjects(objectRaycaster);
         if(intersects.length > 0){
             objectLooked = intersects[0].object;
-            pointCollisionRayCaster = intersects[0].point;
             if(!objectLooked.visible){ // Object is not visible
                 objectLooked = null;
-                pointCollisionRayCaster = null;   
             }
         }
         else{
             objectLooked = null;
-            pointCollisionRayCaster = null;
         }
     }
-
-    
 
     //Only verify if has a collision with the pictures
     function checkRaycasterClonePictures(){        
@@ -973,12 +992,110 @@ function main(language) {
         }
     }
 
+
+    // Adiciona o renderer no elemento de VR
+    document.body.appendChild(VRButton.createButton( renderer ));
+
+    /************************************************
+     * 
+     * CONTROLADOR DO VR
+     * 
+     ************************************************/
+    
+    let controller1 = renderer.xr.getController( 0 );
+    controller1.addEventListener( 'selectstart', onSelectStart );
+    controller1.addEventListener( 'selectend', onSelectEnd );
+    scene.add( controller1 );
+
+    let controller2 = renderer.xr.getController( 1 );
+    controller2.addEventListener( 'selectstart', onSelectStart );
+    controller2.addEventListener( 'selectend', onSelectEnd );
+    scene.add( controller2 );
+
+    const controllerModelFactory = new XRControllerModelFactory();
+
+    let controllerGrip1 = renderer.xr.getControllerGrip( 0 );
+    controllerGrip1.add( controllerModelFactory.createControllerModel( controllerGrip1 ) );
+    scene.add( controllerGrip1 );
+
+    let controllerGrip2 = renderer.xr.getControllerGrip( 1 );
+    controllerGrip2.add( controllerModelFactory.createControllerModel( controllerGrip2 ) );
+    scene.add( controllerGrip2 );
+
+    function onSelectStart( event ) {
+        const controller = event.target;
+        const intersections = getIntersections( controller );
+        if ( intersections.length > 0 ) {
+            const intersection = intersections[ 0 ];
+            const object = intersection.object;
+            object.material.emissive.b = 1;
+            controller.attach( object );
+            controller.userData.selected = object;
+        }
+    }
+
+    function onSelectEnd( event ) {
+        const controller = event.target;
+        if ( controller.userData.selected !== undefined ) {
+            const object = controller.userData.selected;
+            object.material.emissive.b = 0;
+            group.attach( object );
+            controller.userData.selected = undefined;
+        }
+    }
+
+    function getIntersections( controller ) {
+        tempMatrix.identity().extractRotation( controller.matrixWorld );
+        raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
+        raycaster.ray.direction.set( 0, 0, - 1 ).applyMatrix4( tempMatrix );
+        return raycaster.intersectObjects( group.children );
+    }
+
+    function intersectObjects( controller ) {
+        // Do not highlight when already selected
+        if ( controller.userData.selected !== undefined ) return;
+
+        const line = controller.getObjectByName( 'line' );
+        const intersections = getIntersections( controller );
+
+        if ( intersections.length > 0 ) {
+
+            const intersection = intersections[ 0 ];
+
+            const object = intersection.object;
+            object.material.emissive.r = 1;
+            intersected.push( object );
+
+            line.scale.z = intersection.distance;
+
+        } else {
+
+            line.scale.z = 5;
+
+        }
+    }
+
+    function cleanIntersected() {
+        while ( intersected.length ) {
+            const object = intersected.pop();
+            object.material.emissive.r = 0;
+        }
+    }
+
+    const geometry = new THREE.BufferGeometry().setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 1 ) ] );
+    const line = new THREE.Line( geometry );
+    line.name = 'line';
+    line.scale.z = 5;
+
+    controller1.add( line.clone() );
+    controller2.add( line.clone() );
+
     requestAnimationFrame(render);
 
     function render(t) {
         dt = (t - timeAfter) / 1000;
         //stats.update();
-        orbitControls.update(clock.getDelta());
+        //orbitControls.update(clock.getDelta());
         checkRaycaster();
         controls.animationScenary();
         switch(controls.state){
@@ -1004,14 +1121,14 @@ function main(language) {
         // create the ground plane
         var planeGeometry = new THREE.PlaneGeometry(width, height, 10, 10);
         var planeMaterial = new THREE.MeshStandardMaterial({
-            //color:"rgb(200,200,200)",
             map: textureLoader.load("../assets/general/floor-wood.jpg"),
             side:THREE.DoubleSide, 
-            //transparent: true,
-            //opacity: 0.5
         });
         var plane = new THREE.Mesh(planeGeometry, planeMaterial);
         plane.receiveShadow = true;
         return plane;
     }
 }
+
+// Exportando métodos e variáveis que serão vísiveis no módulo
+export {main}

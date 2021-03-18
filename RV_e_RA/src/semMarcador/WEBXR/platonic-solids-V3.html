@@ -75,11 +75,18 @@
         const tempMatrix = new THREE.Matrix4();
 
         //renderer.setClearColor("rgb(30, 30, 40)");
-        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
         //camera.lookAt(0, 0, 0);
-        camera.position.set(5, 15, 30);;//camera.position.set(5, 15, 30);
-        //camera.up.set(0, 1, 0);
-        //scene.add(camera);
+        //camera.position.set(5, 15, 30);;//camera.position.set(5, 15, 30);
+        camera.position.set(0,0,0);
+        camera.position.y = 1.6;
+
+        // This helps move the camera
+        let dolly = new THREE.Group();
+        
+        dolly.position.set( 5, 10, 20);
+        scene.add( dolly );
+        dolly.add( camera );
         
         var light = initDefaultLighting(scene, new THREE.Vector3(25, 30, 20)); // Use default light
 

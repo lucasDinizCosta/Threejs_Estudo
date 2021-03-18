@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--
     <script type="text/javascript" charset="UTF-8" src="../../libs/three/three.js"></script>
     <script type="text/javascript" charset="UTF-8" src="../../libs/three/controls/OrbitControls.js"></script>
     <script type="text/javascript" charset="UTF-8" src="../../libs/three/controls/DragControls.js"></script>
-    <script type="text/javascript" src="../../libs/util/Stats.js"></script>
+    <script type="module" src="./js/historicalFigures-VR.js"></script>
+    -->
     <link rel="stylesheet" href="../../libs/css/default.css">
-    <script type="text/javascript" src="./js/historicalFigures.js"></script>
+
     <title>Historical Figures</title>
-
-
 </head>
 <body>
     <div id="webgl-output"></div>
-    <script type="text/javascript">
+    <script type="module">
+        import * as MAIN from "./js/historicalFigures-VR.js";    //Importação do módulo do exemplo
         var language = "en-US";     // "pt-BR", "en-US"
-        main(language);
+        MAIN.main(language);
     </script>
 </body>
 </html>
