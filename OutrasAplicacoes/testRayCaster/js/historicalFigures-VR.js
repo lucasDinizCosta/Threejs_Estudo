@@ -1090,7 +1090,9 @@ function main(language) {
     controller1.add( line.clone() );
     controller2.add( line.clone() );
 
-    requestAnimationFrame(render);
+    //requestAnimationFrame(render);
+
+    renderer.setAnimationLoop(render);
 
     function render(t) {
         dt = (t - timeAfter) / 1000;
