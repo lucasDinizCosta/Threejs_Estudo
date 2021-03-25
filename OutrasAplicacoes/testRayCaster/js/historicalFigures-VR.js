@@ -51,7 +51,12 @@ function main(language) {
     scene.add( dolly );
     dolly.add( cameraVR );
 
-    /// RAYCASTER QUE ATINGE OS OBJETOS DA CENA
+    let geometryMarker = new THREE.CircleGeometry(0.005, 180);
+    let materialMarker = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+    let circleMarker = new THREE.Mesh(geometryMarker, materialMarker );
+    cameraVR.add(circleMarker);
+    circleMarker.position.set(0,0,-0.5);
+    //scene.add( circleMarker );
 
     //let raycaster;
     let group;
