@@ -1041,11 +1041,14 @@ function main(language) {
     controller1.addEventListener( 'selectstart', onSelectStart );
     controller1.addEventListener( 'selectend', onSelectEnd );
     scene.add( controller1 );
+    console.log(controller1);
+    controller1.position.set(cameraVR.position.x, cameraVR.position.y, cameraVR.position.z);
 
     let controller2 = renderer.xr.getController( 1 );
     controller2.addEventListener( 'selectstart', onSelectStart );
     controller2.addEventListener( 'selectend', onSelectEnd );
     scene.add( controller2 );
+    controller2.position.set(cameraVR.position.x, cameraVR.position.y, cameraVR.position.z);
 
     const controllerModelFactory = new XRControllerModelFactory();
 
