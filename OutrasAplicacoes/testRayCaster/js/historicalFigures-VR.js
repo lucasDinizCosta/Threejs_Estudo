@@ -54,8 +54,9 @@ function main(language) {
     let geometryMarker = new THREE.CircleGeometry(0.005, 180);
     let materialMarker = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
     let circleMarker = new THREE.Mesh(geometryMarker, materialMarker );
-    cameraVR.add(circleMarker);
-    circleMarker.position.set(0,0,-0.5);
+    //cameraVR.add(circleMarker);
+    dolly.add(circleMarker);
+    circleMarker.position.set(0,1.6,-1);
     //scene.add( circleMarker );
 
     //let raycaster;
