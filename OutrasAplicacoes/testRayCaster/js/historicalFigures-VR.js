@@ -57,7 +57,7 @@ function main(language) {
     //cameraVR.add(circleMarker);
     //dolly.add(circleMarker);
     cameraVR.add(circleMarker);
-    circleMarker.position.set(0, 0, -0.1);
+    circleMarker.position.set(0, 0, -0.2);
     //circleMarker.position.set(0,1.6,-1);
     //scene.add( circleMarker );
 
