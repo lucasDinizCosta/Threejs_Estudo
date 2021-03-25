@@ -1085,9 +1085,22 @@ function main(language) {
     }
 
     function getIntersections( controller ) {
-        tempMatrix.identity().extractRotation( controller.matrixWorld );
+        /*tempMatrix.identity().extractRotation( controller.matrixWorld );
         raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
-        raycaster.ray.direction.set( 0, 0, - 1 ).applyMatrix4( tempMatrix );
+        raycaster.ray.direction.set( 0, 0, - 1 ).applyMatrix4( tempMatrix );*/
+        // update the picking ray with the camera and mouse position
+        raycaster.setFromCamera({x: circleMarker.position.x, y: circleMarker.position.y}, cameraVR);
+        /*let intersects = raycaster.intersectObjects(objectRaycaster);
+        if(intersects.length > 0){
+            objectLooked = intersects[0].object;
+            if(!objectLooked.visible){ // Object is not visible
+                objectLooked = null;
+            }
+        }
+        else{
+            objectLooked = null;
+        }*/
+        //raycaster.position.set(cameraVR.x, cameraVR.y, cameraVR.z);
         return raycaster.intersectObjects( group.children );
     }
 
