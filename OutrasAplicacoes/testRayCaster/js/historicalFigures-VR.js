@@ -233,7 +233,7 @@ function main(language) {
         },
         this.createBook = function(){
             for (let index = 0; index < this.pictures.length; index++) {
-                this.createPage(this.orderPicturesBook[index]);  
+                this.createPage(this.orderPicturesBook[index]); 
             }
             scene.add(this.book);
         },
@@ -242,6 +242,7 @@ function main(language) {
             let readButtonMaterial = new THREE.MeshBasicMaterial({map: textureLoader.load("../assets/icons/read.png"), side: THREE.DoubleSide});
             let readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
             readButton.position.set(-this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + this.lengthPage/2 + 0.25 + this.sizeButton/2); //readButton.position.set(0, this.book.position.y + 5, 0); 
+            group.add(readButton);
             this.buttons.push(readButton);
             this.buttons[0].objectType = 3;
             this.buttons[0].visible = false;
@@ -367,6 +368,7 @@ function main(language) {
                 page.objectType = 0;               // Page type
                 page.indexPicture = indexPicture;
 
+
                 // Image plane
                 let imageGeometry = new THREE.PlaneGeometry(9, 4.5, 0.1, 0.1);
                 let imageMaterial = new THREE.MeshBasicMaterial({color:"rgb(255, 255, 255)", side: THREE.DoubleSide});
@@ -390,6 +392,7 @@ function main(language) {
                 informationPlane.name = "informationBlock-Page_"+this.amountPages;
                 informationPlane.position.set(0, -this.lengthPage/5, 0.025); //0.01
                 page.add(informationPlane);
+                group.add(page);
                 this.amountSheets++;
                 this.book.add(sheet);       // Added sheet with page on the book
                 sheet.angleBegin = this.angleBeginPage;
@@ -450,6 +453,8 @@ function main(language) {
                 informationPlane.position.set(0, -this.lengthPage/5, -0.025); // -0.01
                 informationPlane.rotateY(THREE.Math.degToRad(180));
                 page.add(informationPlane);
+
+                group.add(page);
                 this.book.add(sheet);       // Added sheet with page on the book
             }
             this.amountPages++;
@@ -692,6 +697,7 @@ function main(language) {
             // Buttons
             for(let i = 0; i < this.buttons.length; i++){
                 objectRaycaster.push(this.buttons[i]);
+                group.add(this.buttons[i]);
             }
 
             // Raycaster and mouse Controllers 
@@ -1069,8 +1075,128 @@ function main(language) {
             const object = intersection.object;
             //object.material.emissive.b = 1;
             object.material.color = new THREE.Color("rgb(180,0,0)");
-            controller.attach( object );
-            controller.userData.selected = object;
+            switch(controls.cameraOption){
+                case 0:
+                {
+                    switch(object.objectType){
+                        case 0:
+                            if(object.sheet.animationAngle == 0){     //Don't rotate if the page is moving
+                                if(object.sheet.sideOption == 0){
+                                    object.sheet.sideOption = 1;
+                                    controls.currentSheet++;
+                                }
+                                else{
+                                    object.sheet.sideOption  = 0;
+                                    controls.currentSheet--;
+                                }
+                                controls.adjustbuttons();
+                                animationList.push(object.sheet);
+                            }
+                            break;
+                        case 1:     // Collide with image
+                            /*selectedImage = objectLooked;
+                            selectedImage.visible = false;
+                            controls.imageClone.position.x = pointCollisionRayCaster.x;
+                            controls.imageClone.position.y = pointCollisionRayCaster.y;
+                            controls.imageClone.position.z = -3.35; //pointCollisionRayCaster.z;  
+                            controls.imageClone.rotateX(THREE.Math.degToRad(-90));*/
+                            //controls.imageClone.position.copy(pointCollisionRayCaster);
+                            controller.attach( object );
+                            controller.userData.selected = object;
+                            break;
+                        case 2:     // Collide with imagePlane on Page 
+                            //
+                            //
+                            break;
+                        case 3:     // Read Left page Button
+                            controls.cameraOption = 1;      // Turn camera option
+                            defaultCamera = bookCamera;
+                            dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                            controls.adjustbuttons();
+                            controls.buttons[2].visible = true;
+                            defaultCamera.position.set(-controls.widthPage/2, 17, 0);   // Y = 25
+                            controls.buttons[2].position.set(-controls.widthPage - controls.sizeButton/2, controls.buttons[2].position.y, 0);   
+                            break;
+                        case 4:     // Read Right page Button
+                            controls.cameraOption = 1;      // Turn camera option
+                            defaultCamera = bookCamera;
+                            dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                            controls.adjustbuttons();
+                            controls.buttons[2].visible = true;
+                            bookCamera.position.set(controls.widthPage/2, 17, 0);
+                            controls.buttons[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttons[2].position.y, 0);   
+                            break;
+                        case 6:     // Zoom In
+                            controls.cameraOption = 2;
+                            defaultCamera = pictureCamera;
+                            dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                            controls.buttons[3].position.z = -11.9;
+                            controls.buttons[4].position.z = -11.8;
+                            controls.buttons[3].visible = false;
+                            controls.buttons[4].visible = true;
+                            break;
+                        case 8:     // Retry Button
+                            controls.emptyScene();
+                            controls.createScenary();
+                            break;
+                    }
+                }
+                    break;
+                case 1:
+                {
+                    switch(objectLooked.objectType){
+                        case 4:     // Read Right page Button
+                            controls.cameraOption = 1;      // Turn camera option
+                            defaultCamera = bookCamera;
+                            controls.adjustbuttons();
+                            controls.buttons[2].visible = true;
+                            defaultCamera.position.set(controls.widthPage/2, 17, 0);
+                            controls.buttons[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttons[2].position.y, 0);   
+                            dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                            break;
+                        case 5:     // Exit Button
+                            controls.cameraOption = 0;
+                            defaultCamera = rotationCamera;
+                            controls.adjustbuttons();
+                            dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                            controls.buttons[2].visible = false;
+                            break;
+                    }
+                }
+                    break;
+                case 2:
+                {
+                    orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
+                    switch(objectLooked.objectType){
+                        case 6:     // Zoom In
+                            controls.cameraOption = 2;
+                            defaultCamera = pictureCamera;
+                            dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                            controls.buttons[3].position.z = -11.9;
+                            controls.buttons[4].position.z = -11.8;
+                            controls.buttons[3].visible = false;
+                            controls.buttons[4].visible = true;
+                            break;
+                        case 7:     // Zoom Out
+                            controls.cameraOption = 0;
+                            defaultCamera = rotationCamera;
+                            dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                            controls.buttons[3].position.z = -11.8;
+                            controls.buttons[4].position.z = -11.9;
+                            controls.buttons[3].visible = true;
+                            controls.buttons[4].visible = false;
+                            break;
+                        case 8:     // Retry Button
+                            controls.emptyScene();
+                            controls.cameraOption = 0;
+                            defaultCamera = rotationCamera;
+                            dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                            controls.createScenary();
+                            break;
+                    }
+                }
+                    break;
+            }
         }
     }
 
