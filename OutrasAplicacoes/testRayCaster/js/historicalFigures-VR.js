@@ -2,7 +2,7 @@
 import * as THREE from '../../../libs/build/three.module.js';
 import { BoxLineGeometry } from '../../../libs/three/jsm/geometries/BoxLineGeometry.js';
 import { VRButton } from '../../../libs/three/jsm/webxr/VRButton.js';
-import { OrbitControls } from '../../../libs/three/jsm/controls/OrbitControls.js';
+//import { OrbitControls } from '../../../libs/three/jsm/controls/OrbitControls.js';
 import { XRControllerModelFactory } from '../../../libs/three/jsm/webxr/XRControllerModelFactory.js';
 
 function main(language) {
@@ -51,10 +51,30 @@ function main(language) {
     scene.add( dolly );
     dolly.add( cameraVR );
 
+    /// RAYCASTER QUE ATINGE OS OBJETOS DA CENA
+
+    //let raycaster;
+    let group;
+    const intersected = [];
+    const tempMatrix = new THREE.Matrix4();
+    group = new THREE.Group();
+    group.position.set(0,0,0);
+
+    // Container para o orbitControls
+    /*let container = document.createElement( 'div' );
+    document.body.appendChild( container );
+
     // Enable mouse rotation, pan, zoom etc.
-    /* var orbitControls = new THREE.OrbitControls(rotationCamera, renderer.domElement);
-    orbitControls.target.set(0, 8, 10);
-    orbitControls.minDistance = 10;
+    var orbitControls = new OrbitControls(dolly, container);//(camera, renderer.domElement);
+    orbitControls.target.set(0, 0, -1);//set(0, 0, -1);
+    orbitControls.update();
+
+    container.appendChild( renderer.domElement );
+
+    // Enable mouse rotation, pan, zoom etc.
+    var orbitControls = new OrbitControls(cameraVR, renderer.domElement);
+    //orbitControls.target.set(0, 8, 10);
+    /*orbitControls.minDistance = 10;
     orbitControls.maxDistance = 60;*/
 
     // Time controlling
@@ -452,7 +472,10 @@ function main(language) {
             picture.objectType = 1;          //Image type
             picture.indexPicture = 1;
             picture.name = "picture_01";
-            scene.add(picture);
+            console.log(group);
+            group.add( picture );
+            console.log(group);
+            //scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             let nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -467,7 +490,8 @@ function main(language) {
             picture.position.set(0, 4.5, -12);
             picture.objectType = 1;          //Image type
             picture.indexPicture = 2;
-            scene.add(picture);
+            //scene.add(picture);
+            group.add( picture );
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -623,6 +647,8 @@ function main(language) {
             objectRaycaster = [];
             objectRaycasterClonePictures = [];
 
+            scene.add(group);
+
             // Recreate DragControls
             //dragControls = new THREE.DragControls([controls.imageClone], rotationCamera, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
             //dragControls.addEventListener( 'dragstart', function ( event ) {  console.log("dragstart");});
@@ -763,7 +789,7 @@ function main(language) {
 
     window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
 
-    clearPickPosition();
+    /*clearPickPosition();
     // Se o mouse sai da tela
     function clearPickPosition() {
         // unlike the mouse which always has a position
@@ -818,7 +844,7 @@ function main(language) {
                     controls.imageClone.rotateX(THREE.Math.degToRad(90));
                 }
                 selectedImage = null;
-                orbitControls.enableRotate = true;      // Enable rotation on camera
+                //orbitControls.enableRotate = true;      // Enable rotation on camera
             }
         }
     });
@@ -991,6 +1017,7 @@ function main(language) {
             }
         }
     }
+    */
 
 
     // Adiciona o renderer no elemento de VR
@@ -1028,7 +1055,8 @@ function main(language) {
         if ( intersections.length > 0 ) {
             const intersection = intersections[ 0 ];
             const object = intersection.object;
-            object.material.emissive.b = 1;
+            //object.material.emissive.b = 1;
+            object.material.color = new THREE.Color("rgb(180,0,0)");
             controller.attach( object );
             controller.userData.selected = object;
         }
@@ -1038,7 +1066,8 @@ function main(language) {
         const controller = event.target;
         if ( controller.userData.selected !== undefined ) {
             const object = controller.userData.selected;
-            object.material.emissive.b = 0;
+            //object.material.emissive.b = 0;
+            object.material.color = new THREE.Color("rgb(255,255,255)");
             group.attach( object );
             controller.userData.selected = undefined;
         }
@@ -1063,7 +1092,9 @@ function main(language) {
             const intersection = intersections[ 0 ];
 
             const object = intersection.object;
-            object.material.emissive.r = 1;
+            //console.log(object.material.color);
+            //object.material.color = "rgb(180,0,0)";
+            object.material.color = new THREE.Color("rgb(180,0,0)");
             intersected.push( object );
 
             line.scale.z = intersection.distance;
@@ -1078,7 +1109,9 @@ function main(language) {
     function cleanIntersected() {
         while ( intersected.length ) {
             const object = intersected.pop();
-            object.material.emissive.r = 0;
+            //object.material.emissive.r = 0;
+            
+            object.material.color = new THREE.Color("rgb(255,255,255)");
         }
     }
 
@@ -1098,14 +1131,20 @@ function main(language) {
         dt = (t - timeAfter) / 1000;
         //stats.update();
         //orbitControls.update(clock.getDelta());
-        checkRaycaster();
+        //orbitControls.update();
+        //checkRaycaster();
+        cleanIntersected();
+
+        intersectObjects( controller1 );
+        intersectObjects( controller2 );
+
         controls.animationScenary();
         switch(controls.state){
             case 0:         // Game Running
                 controls.timer.updateTime(dt);
                 if(controls.cameraOption == 0){
-                    checkRaycasterOnImageAtPages();
-                    checkRaycasterClonePictures();
+                    //checkRaycasterOnImageAtPages();
+                    //checkRaycasterClonePictures();
                 }
                 break;
             case 1:         // Victory
