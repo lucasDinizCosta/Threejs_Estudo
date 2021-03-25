@@ -480,9 +480,7 @@ function main(language) {
             picture.objectType = 1;          //Image type
             picture.indexPicture = 1;
             picture.name = "picture_01";
-            console.log(group);
             group.add( picture );
-            console.log(group);
             //scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
@@ -514,7 +512,8 @@ function main(language) {
             picture.objectType = 1;          //Image type
             picture.indexPicture = 3;
             picture.name = "picture_03";
-            scene.add(picture);
+            //scene.add(picture);
+            group.add( picture );
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -529,7 +528,8 @@ function main(language) {
             picture.objectType = 1;          //Image type
             picture.indexPicture = 4;
             picture.name = "picture_04";
-            scene.add(picture);
+            //scene.add(picture);
+            group.add( picture );
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -546,7 +546,8 @@ function main(language) {
             picture.position.set(0, 10.5, -12);
             picture.objectType = 1;          //Image type
             picture.indexPicture = 5;
-            scene.add(picture);
+            //scene.add(picture);
+            group.add( picture );
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -561,7 +562,8 @@ function main(language) {
             picture.objectType = 1;          //Image type
             picture.indexPicture = 6;
             picture.name = "picture_06";
-            scene.add(picture);
+            //scene.add(picture);
+            group.add( picture );
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -578,7 +580,8 @@ function main(language) {
             picture.objectType = 1;          //Image type
             picture.indexPicture = 7;
             picture.name = "picture_07";
-            scene.add(picture);
+            //scene.add(picture);
+            group.add( picture );
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -593,7 +596,8 @@ function main(language) {
             picture.position.set(0, 16.5, -12);
             picture.objectType = 1;          //Image type
             picture.indexPicture = 8;
-            scene.add(picture);
+            //scene.add(picture);
+            group.add( picture );
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -608,7 +612,8 @@ function main(language) {
             picture.objectType = 1;          //Image type
             picture.indexPicture = 9;
             picture.name = "picture_09";
-            scene.add(picture);
+            //scene.add(picture);
+            group.add( picture );
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -1040,15 +1045,11 @@ function main(language) {
     let controller1 = renderer.xr.getController( 0 );
     controller1.addEventListener( 'selectstart', onSelectStart );
     controller1.addEventListener( 'selectend', onSelectEnd );
-    scene.add( controller1 );
-    console.log(controller1);
-    controller1.position.set(cameraVR.position.x, cameraVR.position.y, cameraVR.position.z);
 
     let controller2 = renderer.xr.getController( 1 );
     controller2.addEventListener( 'selectstart', onSelectStart );
     controller2.addEventListener( 'selectend', onSelectEnd );
     scene.add( controller2 );
-    controller2.position.set(cameraVR.position.x, cameraVR.position.y, cameraVR.position.z);
 
     const controllerModelFactory = new XRControllerModelFactory();
 
