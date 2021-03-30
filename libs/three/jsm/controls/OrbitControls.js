@@ -7,7 +7,7 @@
  * @author ScieCode / http://github.com/sciecode
  */
 
-import {
+ import {
 	EventDispatcher,
 	MOUSE,
 	Quaternion,

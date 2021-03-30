@@ -412,9 +412,9 @@ function main(language) {
             let panelPlane = new THREE.Mesh(painelGeometry, painelMaterial);
             panelPlane.position.set(0, 9.75, -15.1);
             scene.add(panelPlane);
-            let skyboxGeometry = new THREE.SphereGeometry(100, 64, 64);
+            let skyboxGeometry = new THREE.SphereGeometry(500, 128, 128);
             let skyboxMaterial = new THREE.MeshBasicMaterial({
-                map: textureLoader.load("../assets/museum.jpg"), side: THREE.DoubleSide   
+                map: textureLoader.load("../assets/museum.jpeg"), side: THREE.DoubleSide   
             });
             let skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
             scene.add(skybox);
@@ -614,6 +614,7 @@ function main(language) {
             // Pages of book
             for (let i = 0; i < this.book.children.length; i++) {
                 let pageGroupRotation = this.book.children[i];
+                console.log(pageGroupRotation);
                 for(let j = 0; j < pageGroupRotation.children.length; j++){
                     objectRaycaster.push(pageGroupRotation.children[j]);        //Put inside only page without the group rotation
                     objectRaycaster.push(pageGroupRotation.children[j].children[0]);        // Image Block

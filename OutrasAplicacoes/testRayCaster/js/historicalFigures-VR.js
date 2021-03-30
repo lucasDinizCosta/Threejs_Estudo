@@ -1,6 +1,5 @@
 // Importando módulos
 import * as THREE from '../../../libs/build/three.module.js';
-import { BoxLineGeometry } from '../../../libs/three/jsm/geometries/BoxLineGeometry.js';
 import { VRButton } from '../../../libs/three/jsm/webxr/VRButton.js';
 //import { OrbitControls } from '../../../libs/three/jsm/controls/OrbitControls.js';
 import { XRControllerModelFactory } from '../../../libs/three/jsm/webxr/XRControllerModelFactory.js';
@@ -38,16 +37,11 @@ function main(language) {
     pictureCamera.lookAt(0, 10.7, -12);
     var defaultCamera = rotationCamera;
 
-    //renderer.setClearColor("rgb(30, 30, 40)");
-    var cameraVR = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    //camera.lookAt(0, 0, 0);
-    cameraVR.position.set(0, 0, 0); //camera.position.set(5, 15, 30);
-    cameraVR.position.y = 1.6;
-
-    console.log(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
-    // This helps move the camera
-    let dolly = new THREE.Group();
-    dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+    var cameraVR = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1500);
+    cameraVR.position.set(0, 1.6, 0);
+    let dolly = new THREE.Group(); // This helps move the camera
+    //dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+    dolly.position.set(0, 15, 50);
     scene.add( dolly );
     dolly.add( cameraVR );
 
@@ -62,28 +56,31 @@ function main(language) {
     //scene.add( circleMarker );
 
     //let raycaster;
-    let group;
+    let groupIntersections;
     const intersected = [];
     const tempMatrix = new THREE.Matrix4();
-    group = new THREE.Group();
-    group.position.set(0,0,0);
+    groupIntersections = new THREE.Group();
+    groupIntersections.position.set(0,0,0);
 
     // Container para o orbitControls
+    //let container = document.createElement( 'div' );
+    //document.body.appendChild( container );
+
+    // Enable mouse rotation, pan, zoom etc.
+    //var orbitControls = new OrbitControls(dolly, container);//(camera, renderer.domElement);
+    //orbitControls.target.set(0, 0, -1);//set(0, 0, -1);
+    //orbitControls.update();
+
+    //container.appendChild( renderer.domElement );
+
+    // Enable mouse rotation, pan, zoom etc.
     /*let container = document.createElement( 'div' );
-    document.body.appendChild( container );
-
-    // Enable mouse rotation, pan, zoom etc.
-    var orbitControls = new OrbitControls(dolly, container);//(camera, renderer.domElement);
-    orbitControls.target.set(0, 0, -1);//set(0, 0, -1);
-    orbitControls.update();
-
-    container.appendChild( renderer.domElement );
-
-    // Enable mouse rotation, pan, zoom etc.
     var orbitControls = new OrbitControls(cameraVR, renderer.domElement);
-    //orbitControls.target.set(0, 8, 10);
-    /*orbitControls.minDistance = 10;
-    orbitControls.maxDistance = 60;*/
+    orbitControls.target.set(0, 8, 10);
+    orbitControls.update();
+    orbitControls.minDistance = 10;
+    orbitControls.maxDistance = 60;
+    container.appendChild( renderer.domElement );*/
 
     // Time controlling
     var timeAfter = 0;
@@ -242,7 +239,6 @@ function main(language) {
             let readButtonMaterial = new THREE.MeshBasicMaterial({map: textureLoader.load("../assets/icons/read.png"), side: THREE.DoubleSide});
             let readButton = new THREE.Mesh(readButtonGeometry, readButtonMaterial);
             readButton.position.set(-this.widthPage/2, this.book.position.y + 0.5, this.book.position.z + this.lengthPage/2 + 0.25 + this.sizeButton/2); //readButton.position.set(0, this.book.position.y + 5, 0); 
-            group.add(readButton);
             this.buttons.push(readButton);
             this.buttons[0].objectType = 3;
             this.buttons[0].visible = false;
@@ -335,6 +331,126 @@ function main(language) {
             this.messageLoose.visible = false;
             scene.add(this.messageLoose); 
         },
+        /*this.createPage = function (indexPicture){
+            if(this.amountPages % 2 == 0){   //Pair pages on the book
+                // Adjust of rotation of the sheets inside of book
+                for(let i = 0; i < this.book.children.length; i++){
+                    let sheetAux = this.book.children[i];
+                    sheetAux.angleBegin = sheetAux.angleBegin + this.angleRatePage;
+                    sheetAux.angleFinish = 180 - i * this.angleRatePage; //- sheetAux.angleBegin;     //this.angleBeginPage;
+                    sheetAux.rotateZ(THREE.Math.degToRad(this.angleRatePage));  // rotation default of page
+                }
+
+                let sheet = new THREE.Group();          // Support the elements -- Center of rotation page
+                sheet.name = "sheet_"+this.amountSheets;
+
+                // Page Background
+                let pageGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
+                let pageMaterial = new THREE.MeshBasicMaterial({
+                    transparent: true, //opacity: 0.5,
+                    map: textureLoader.load("../assets/parchment_alpha.png"), 
+                    side: THREE.DoubleSide,
+                });
+                let page = new THREE.Mesh(pageGeometry, pageMaterial);
+                page.name = "page_" + this.amountPages;
+                page.position.set(this.widthPage / 2, 0, 0);
+                page.rotateX(THREE.Math.degToRad(-90));
+                sheet.add(page);
+                sheet.position.set(0, this.heightBook, 0);
+                sheet.sideOption = 0;              //0 => Right, 1 => Left
+                page.sheet = sheet;
+                page.objectType = 0;               // Page type
+                page.indexPicture = indexPicture;
+
+                // Image plane
+                let imageGeometry = new THREE.PlaneGeometry(9, 4.5, 0.1, 0.1);
+                let imageMaterial = new THREE.MeshBasicMaterial({color:"rgb(255, 255, 255)", side: THREE.DoubleSide});
+                let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
+                imagePlane.position.set(0, this.lengthPage/4.5, 0.01);
+                imagePlane.objectType = 2;
+                imagePlane.name = "imageBlock-Page_"+this.amountPages;
+                page.add(imagePlane);
+                imagePlane.indexPicture = indexPicture;
+
+                // Informations block
+                let informationGeometry = new THREE.PlaneGeometry(9.6, 6.08, 0.1, 0.1);
+                let informationMaterial = new THREE.MeshBasicMaterial({
+                    transparent: true,
+                    side: THREE.DoubleSide,
+                    map: textureLoader.load("../assets/pictures/information/"+language+"/"+indexPicture+".png"),
+                });
+                let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
+                informationPlane.name = "informationBlock-Page_"+this.amountPages;
+                informationPlane.position.set(0, -this.lengthPage/5, 0.025); //0.01
+                page.add(informationPlane);
+                this.amountSheets++;
+                this.book.add(sheet);       // Added sheet with page on the book
+                sheet.angleBegin = this.angleBeginPage;
+                sheet.angleFinish = this.angleFinishPage;
+                sheet.animationAngle = 0;
+
+                //scene.add(page);
+
+                // Adjust finish angle
+                for(let i = 0; i < this.book.children.length; i++){
+                    let sheetAux = this.book.children[i];
+                    sheetAux.angleFinish = 180 - i * this.angleRatePage - sheetAux.angleBegin;     //this.angleBeginPage;
+                }
+            }
+            else{
+                let sheet = this.book.children[this.book.children.length - 1]; // Take a sheet to insert a page on the book
+                console.log("Paginas impares -- pega a folha e so add mais uma pagina");
+                console.log(sheet);
+                //sheet.name = "sheet_"+this.amountSheets;
+
+                // Page Background
+                let pageGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
+                let pageMaterial = new THREE.MeshBasicMaterial({
+                    transparent: true, //opacity: 0.5,
+                    map: textureLoader.load("../assets/parchment_alpha.png"), 
+                    side: THREE.DoubleSide,//side:THREE.DoubleSide,
+                });
+                let page = new THREE.Mesh(pageGeometry, pageMaterial);
+                page.name = "page_" + this.amountPages;
+                page.position.set(this.widthPage / 2, -0.005, 0);
+                page.rotateX(THREE.Math.degToRad(-90));
+                scene.add(page);
+                sheet.add(page);
+                sheet.position.set(0, this.heightBook, 0);
+                sheet.sideOption = 0;              // 0 => Right, 1 => Left
+                page.sheet = sheet;
+                page.objectType = 0;               // Page type
+                page.indexPicture = indexPicture;
+
+                // Image plane
+                let imageGeometry = new THREE.PlaneGeometry(this.widthPage/1.5, this.lengthPage/3, 0.1, 0.1);
+                let imageMaterial = new THREE.MeshBasicMaterial({color:"rgb(255, 255, 255)", side:THREE.DoubleSide});
+                let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
+                imagePlane.position.set(0, this.lengthPage/4.5, -0.01);
+                imagePlane.rotateY(THREE.Math.degToRad(180));
+                imagePlane.objectType = 2;
+                imagePlane.indexPicture = indexPicture;
+                imagePlane.name = "imageBlock-Page_"+this.amountPages;
+                page.add(imagePlane);
+
+                // Informations block
+                let informationGeometry = new THREE.PlaneGeometry(9.6, 6.08, 0.1, 0.1);
+                let informationMaterial = new THREE.MeshBasicMaterial({
+                    transparent: true, 
+                    side: THREE.DoubleSide,
+                    map: textureLoader.load("../assets/pictures/information/"+language+"/"+indexPicture+".png"),
+                    //depthWrite: false, 
+                    //depthTest: false,
+                });
+                let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
+                informationPlane.name = "informationBlock-Page_"+this.amountPages;
+                informationPlane.position.set(0, -this.lengthPage/5, -0.025); // -0.01
+                informationPlane.rotateY(THREE.Math.degToRad(180));
+                page.add(informationPlane);
+                //this.book.add(sheet);       // Added sheet with page on the book
+            }
+            this.amountPages++;
+        },*/
         this.createPage = function (indexPicture){
             if(this.amountPages % 2 == 0){   //Pair pages on the book
                 // Adjust of rotation of the sheets inside of book
@@ -368,7 +484,6 @@ function main(language) {
                 page.objectType = 0;               // Page type
                 page.indexPicture = indexPicture;
 
-
                 // Image plane
                 let imageGeometry = new THREE.PlaneGeometry(9, 4.5, 0.1, 0.1);
                 let imageMaterial = new THREE.MeshBasicMaterial({color:"rgb(255, 255, 255)", side: THREE.DoubleSide});
@@ -392,7 +507,6 @@ function main(language) {
                 informationPlane.name = "informationBlock-Page_"+this.amountPages;
                 informationPlane.position.set(0, -this.lengthPage/5, 0.025); //0.01
                 page.add(informationPlane);
-                group.add(page);
                 this.amountSheets++;
                 this.book.add(sheet);       // Added sheet with page on the book
                 sheet.angleBegin = this.angleBeginPage;
@@ -453,9 +567,7 @@ function main(language) {
                 informationPlane.position.set(0, -this.lengthPage/5, -0.025); // -0.01
                 informationPlane.rotateY(THREE.Math.degToRad(180));
                 page.add(informationPlane);
-
-                group.add(page);
-                this.book.add(sheet);       // Added sheet with page on the book
+                //this.book.add(sheet);       // Added sheet with page on the book
             }
             this.amountPages++;
         },
@@ -469,9 +581,9 @@ function main(language) {
             let panelPlane = new THREE.Mesh(painelGeometry, painelMaterial);
             panelPlane.position.set(0, 9.75, -15.1);
             scene.add(panelPlane);
-            let skyboxGeometry = new THREE.SphereGeometry(100, 64, 64);
+            let skyboxGeometry = new THREE.SphereGeometry(500, 128, 128);
             let skyboxMaterial = new THREE.MeshBasicMaterial({
-                map: textureLoader.load("../assets/museum.jpg"), side: THREE.DoubleSide   
+                map: textureLoader.load("../assets/museum.jpeg"), side: THREE.DoubleSide   
             });
             let skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
             scene.add(skybox);
@@ -485,8 +597,7 @@ function main(language) {
             picture.objectType = 1;          //Image type
             picture.indexPicture = 1;
             picture.name = "picture_01";
-            group.add( picture );
-            //scene.add(picture);
+            scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             let nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -501,8 +612,7 @@ function main(language) {
             picture.position.set(0, 4.5, -12);
             picture.objectType = 1;          //Image type
             picture.indexPicture = 2;
-            //scene.add(picture);
-            group.add( picture );
+            scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -517,8 +627,7 @@ function main(language) {
             picture.objectType = 1;          //Image type
             picture.indexPicture = 3;
             picture.name = "picture_03";
-            //scene.add(picture);
-            group.add( picture );
+            scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -533,8 +642,7 @@ function main(language) {
             picture.objectType = 1;          //Image type
             picture.indexPicture = 4;
             picture.name = "picture_04";
-            //scene.add(picture);
-            group.add( picture );
+            scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -551,8 +659,7 @@ function main(language) {
             picture.position.set(0, 10.5, -12);
             picture.objectType = 1;          //Image type
             picture.indexPicture = 5;
-            //scene.add(picture);
-            group.add( picture );
+            scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -567,8 +674,7 @@ function main(language) {
             picture.objectType = 1;          //Image type
             picture.indexPicture = 6;
             picture.name = "picture_06";
-            //scene.add(picture);
-            group.add( picture );
+            scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -585,8 +691,7 @@ function main(language) {
             picture.objectType = 1;          //Image type
             picture.indexPicture = 7;
             picture.name = "picture_07";
-            //scene.add(picture);
-            group.add( picture );
+            scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -601,8 +706,7 @@ function main(language) {
             picture.position.set(0, 16.5, -12);
             picture.objectType = 1;          //Image type
             picture.indexPicture = 8;
-            //scene.add(picture);
-            group.add( picture );
+            scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -617,8 +721,7 @@ function main(language) {
             picture.objectType = 1;          //Image type
             picture.indexPicture = 9;
             picture.name = "picture_09";
-            //scene.add(picture);
-            group.add( picture );
+            scene.add(picture);
             this.pictures.push(picture);
             this.orderPicturesBook.push(picture.indexPicture);
             nameBoxGeometry = new THREE.PlaneGeometry(8, 1, 0.1, 0.1);
@@ -665,8 +768,6 @@ function main(language) {
             objectRaycaster = [];
             objectRaycasterClonePictures = [];
 
-            scene.add(group);
-
             // Recreate DragControls
             //dragControls = new THREE.DragControls([controls.imageClone], rotationCamera, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
             //dragControls.addEventListener( 'dragstart', function ( event ) {  console.log("dragstart");});
@@ -678,7 +779,6 @@ function main(language) {
                 }
                 event.object.position.z = -3.35; // This will prevent moving z axis, but will be on -3.35 line. change this to your object position of z axis.
             });*/
-
             // Pages of book
             for (let i = 0; i < this.book.children.length; i++) {
                 let pageGroupRotation = this.book.children[i];
@@ -692,13 +792,16 @@ function main(language) {
             for(let i = 0; i < this.pictures.length; i++){
                 objectRaycaster.push(this.pictures[i]);
                 objectRaycasterClonePictures.push(this.pictures[i]);
+                //groupIntersections.add(this.pictures[i]);
             }
 
             // Buttons
             for(let i = 0; i < this.buttons.length; i++){
                 objectRaycaster.push(this.buttons[i]);
-                group.add(this.buttons[i]);
+               // groupIntersections.add(this.buttons[i]);
             }
+
+            //scene.add(groupIntersections);
 
             // Raycaster and mouse Controllers 
             objectLooked = null;
@@ -1206,7 +1309,7 @@ function main(language) {
             const object = controller.userData.selected;
             //object.material.emissive.b = 0;
             object.material.color = new THREE.Color("rgb(255,255,255)");
-            group.attach( object );
+            //groupIntersections.attach( object );
             controller.userData.selected = undefined;
         }
     }
@@ -1228,7 +1331,7 @@ function main(language) {
             objectLooked = null;
         }*/
         //raycaster.position.set(cameraVR.x, cameraVR.y, cameraVR.z);
-        return raycaster.intersectObjects( group.children );
+        return raycaster.intersectObjects(objectRaycaster); //raycaster.intersectObjects( groupIntersections.children );
     }
 
     function intersectObjects( controller ) {
