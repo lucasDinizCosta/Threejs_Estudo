@@ -26,7 +26,7 @@ function main(language) {
 
     var rotationCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
     rotationCamera.up.set(0, 1, 0);
-    rotationCamera.position.set(0, 15, 31);
+    rotationCamera.position.set(0, 15, 18);
     var bookCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
     bookCamera.position.set(0, 15, 0);
     bookCamera.up.set(0, 1, 0);
@@ -37,7 +37,7 @@ function main(language) {
     pictureCamera.lookAt(0, 10.7, -12);
     var defaultCamera = rotationCamera;
 
-    var cameraVR = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1500);
+    var cameraVR = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     cameraVR.position.set(0, 1.6, 0);
     let dolly = new THREE.Group(); // This helps move the camera
     dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
@@ -742,10 +742,10 @@ function main(language) {
             scene.add(ambientLight);
 
             // Show axes (parameter is size of each axis)
-            /*var axes = new THREE.AxesHelper(24);
+            var axes = new THREE.AxesHelper(24);
             axes.name = "AXES";
             axes.visible = true;
-            scene.add(axes);*/
+            scene.add(axes);
 
             var groundPlane = createGroundPlane(30, 30); // width and height
             groundPlane.rotateX(THREE.Math.degToRad(-90));
