@@ -28,7 +28,7 @@ function main(language) {
     rotationCamera.up.set(0, 1, 0);
     rotationCamera.position.set(0, 10.7, 12);
     var bookCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
-    bookCamera.position.set(0, 15, 0);
+    bookCamera.position.set(0, 10.7, 0);
     bookCamera.up.set(0, 1, 0);
     bookCamera.lookAt(0, 0, 0);
     var pictureCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
