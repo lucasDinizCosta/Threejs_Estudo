@@ -28,11 +28,11 @@ function main(language) {
     rotationCamera.up.set(0, 1, 0);
     rotationCamera.position.set(0, 15, 31);
     var bookCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
-    bookCamera.position.set(0, 25, 0);
+    bookCamera.position.set(0, 15, 0);
     bookCamera.up.set(0, 1, 0);
     bookCamera.lookAt(0, 0, 0);
     var pictureCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
-    pictureCamera.position.set(0, 10.7, 15);
+    pictureCamera.position.set(0, 10.7, 10);
     pictureCamera.up.set(0, 1, 0);
     pictureCamera.lookAt(0, 10.7, -12);
     var defaultCamera = rotationCamera;
@@ -40,8 +40,8 @@ function main(language) {
     var cameraVR = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1500);
     cameraVR.position.set(0, 1.6, 0);
     let dolly = new THREE.Group(); // This helps move the camera
-    //dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
-    dolly.position.set(0, 15, 50);
+    dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+    //dolly.position.set(0, 15, 50);
     scene.add( dolly );
     dolly.add( cameraVR );
 
@@ -55,12 +55,8 @@ function main(language) {
     //circleMarker.position.set(0,1.6,-1);
     //scene.add( circleMarker );
 
-    //let raycaster;
-    let groupIntersections;
     const intersected = [];
     const tempMatrix = new THREE.Matrix4();
-    groupIntersections = new THREE.Group();
-    groupIntersections.position.set(0,0,0);
 
     // Container para o orbitControls
     //let container = document.createElement( 'div' );
