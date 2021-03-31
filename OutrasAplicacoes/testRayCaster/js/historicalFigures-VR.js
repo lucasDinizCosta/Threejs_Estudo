@@ -1,6 +1,7 @@
 // Importando módulos
 import * as THREE from '../../../libs/build/three.module.js';
 import { VRButton } from '../../../libs/three/jsm/webxr/VRButton.js';
+import { DragControls } from '../../../libs/three/jsm/controls/DragControls.js';
 //import { OrbitControls } from '../../../libs/three/jsm/controls/OrbitControls.js';
 import { XRControllerModelFactory } from '../../../libs/three/jsm/webxr/XRControllerModelFactory.js';
 
@@ -26,7 +27,7 @@ function main(language) {
 
     var rotationCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
     rotationCamera.up.set(0, 1, 0);
-    rotationCamera.position.set(0, 10.7, 12);
+    rotationCamera.position.set(0, 10.7, 9);
     var bookCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
     bookCamera.position.set(0, 10.7, 0);
     bookCamera.up.set(0, 1, 0);
@@ -48,37 +49,13 @@ function main(language) {
     let geometryMarker = new THREE.CircleGeometry(0.0005, 180);
     let materialMarker = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
     let circleMarker = new THREE.Mesh(geometryMarker, materialMarker );
-    //cameraVR.add(circleMarker);
-    //dolly.add(circleMarker);
     cameraVR.add(circleMarker);
     circleMarker.position.set(0, 0, -0.2);
-    //circleMarker.position.set(0,1.6,-1);
-    //scene.add( circleMarker );
 
     const intersected = [];
     const tempMatrix = new THREE.Matrix4();
 
-    // Container para o orbitControls
-    //let container = document.createElement( 'div' );
-    //document.body.appendChild( container );
-
-    // Enable mouse rotation, pan, zoom etc.
-    //var orbitControls = new OrbitControls(dolly, container);//(camera, renderer.domElement);
-    //orbitControls.target.set(0, 0, -1);//set(0, 0, -1);
-    //orbitControls.update();
-
-    //container.appendChild( renderer.domElement );
-
-    // Enable mouse rotation, pan, zoom etc.
-    /*let container = document.createElement( 'div' );
-    var orbitControls = new OrbitControls(cameraVR, renderer.domElement);
-    orbitControls.target.set(0, 8, 10);
-    orbitControls.update();
-    orbitControls.minDistance = 10;
-    orbitControls.maxDistance = 60;
-    container.appendChild( renderer.domElement );*/
-
-    // Time controlling
+    // Time controller
     var timeAfter = 0;
     var dt = 0;
 
@@ -93,7 +70,7 @@ function main(language) {
 
     // Raycaster and mouse Controllers 
     let objectRaycaster = [], objectRaycasterClonePictures = [];
-    let objectLooked = null, objectImagePlane = null, selectedImage = null;
+    let objectLooked = null, objectImagePlane = null, selectedImage = null, pointCollisionRayCaster = null;
     let dragControls;
     let pictureLooked = null;
 
@@ -327,126 +304,6 @@ function main(language) {
             this.messageLoose.visible = false;
             scene.add(this.messageLoose); 
         },
-        /*this.createPage = function (indexPicture){
-            if(this.amountPages % 2 == 0){   //Pair pages on the book
-                // Adjust of rotation of the sheets inside of book
-                for(let i = 0; i < this.book.children.length; i++){
-                    let sheetAux = this.book.children[i];
-                    sheetAux.angleBegin = sheetAux.angleBegin + this.angleRatePage;
-                    sheetAux.angleFinish = 180 - i * this.angleRatePage; //- sheetAux.angleBegin;     //this.angleBeginPage;
-                    sheetAux.rotateZ(THREE.Math.degToRad(this.angleRatePage));  // rotation default of page
-                }
-
-                let sheet = new THREE.Group();          // Support the elements -- Center of rotation page
-                sheet.name = "sheet_"+this.amountSheets;
-
-                // Page Background
-                let pageGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
-                let pageMaterial = new THREE.MeshBasicMaterial({
-                    transparent: true, //opacity: 0.5,
-                    map: textureLoader.load("../assets/parchment_alpha.png"), 
-                    side: THREE.DoubleSide,
-                });
-                let page = new THREE.Mesh(pageGeometry, pageMaterial);
-                page.name = "page_" + this.amountPages;
-                page.position.set(this.widthPage / 2, 0, 0);
-                page.rotateX(THREE.Math.degToRad(-90));
-                sheet.add(page);
-                sheet.position.set(0, this.heightBook, 0);
-                sheet.sideOption = 0;              //0 => Right, 1 => Left
-                page.sheet = sheet;
-                page.objectType = 0;               // Page type
-                page.indexPicture = indexPicture;
-
-                // Image plane
-                let imageGeometry = new THREE.PlaneGeometry(9, 4.5, 0.1, 0.1);
-                let imageMaterial = new THREE.MeshBasicMaterial({color:"rgb(255, 255, 255)", side: THREE.DoubleSide});
-                let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
-                imagePlane.position.set(0, this.lengthPage/4.5, 0.01);
-                imagePlane.objectType = 2;
-                imagePlane.name = "imageBlock-Page_"+this.amountPages;
-                page.add(imagePlane);
-                imagePlane.indexPicture = indexPicture;
-
-                // Informations block
-                let informationGeometry = new THREE.PlaneGeometry(9.6, 6.08, 0.1, 0.1);
-                let informationMaterial = new THREE.MeshBasicMaterial({
-                    transparent: true,
-                    side: THREE.DoubleSide,
-                    map: textureLoader.load("../assets/pictures/information/"+language+"/"+indexPicture+".png"),
-                });
-                let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
-                informationPlane.name = "informationBlock-Page_"+this.amountPages;
-                informationPlane.position.set(0, -this.lengthPage/5, 0.025); //0.01
-                page.add(informationPlane);
-                this.amountSheets++;
-                this.book.add(sheet);       // Added sheet with page on the book
-                sheet.angleBegin = this.angleBeginPage;
-                sheet.angleFinish = this.angleFinishPage;
-                sheet.animationAngle = 0;
-
-                //scene.add(page);
-
-                // Adjust finish angle
-                for(let i = 0; i < this.book.children.length; i++){
-                    let sheetAux = this.book.children[i];
-                    sheetAux.angleFinish = 180 - i * this.angleRatePage - sheetAux.angleBegin;     //this.angleBeginPage;
-                }
-            }
-            else{
-                let sheet = this.book.children[this.book.children.length - 1]; // Take a sheet to insert a page on the book
-                console.log("Paginas impares -- pega a folha e so add mais uma pagina");
-                console.log(sheet);
-                //sheet.name = "sheet_"+this.amountSheets;
-
-                // Page Background
-                let pageGeometry = new THREE.PlaneGeometry(this.widthPage, this.lengthPage, 0.1, 0.1);
-                let pageMaterial = new THREE.MeshBasicMaterial({
-                    transparent: true, //opacity: 0.5,
-                    map: textureLoader.load("../assets/parchment_alpha.png"), 
-                    side: THREE.DoubleSide,//side:THREE.DoubleSide,
-                });
-                let page = new THREE.Mesh(pageGeometry, pageMaterial);
-                page.name = "page_" + this.amountPages;
-                page.position.set(this.widthPage / 2, -0.005, 0);
-                page.rotateX(THREE.Math.degToRad(-90));
-                scene.add(page);
-                sheet.add(page);
-                sheet.position.set(0, this.heightBook, 0);
-                sheet.sideOption = 0;              // 0 => Right, 1 => Left
-                page.sheet = sheet;
-                page.objectType = 0;               // Page type
-                page.indexPicture = indexPicture;
-
-                // Image plane
-                let imageGeometry = new THREE.PlaneGeometry(this.widthPage/1.5, this.lengthPage/3, 0.1, 0.1);
-                let imageMaterial = new THREE.MeshBasicMaterial({color:"rgb(255, 255, 255)", side:THREE.DoubleSide});
-                let imagePlane = new THREE.Mesh(imageGeometry, imageMaterial);
-                imagePlane.position.set(0, this.lengthPage/4.5, -0.01);
-                imagePlane.rotateY(THREE.Math.degToRad(180));
-                imagePlane.objectType = 2;
-                imagePlane.indexPicture = indexPicture;
-                imagePlane.name = "imageBlock-Page_"+this.amountPages;
-                page.add(imagePlane);
-
-                // Informations block
-                let informationGeometry = new THREE.PlaneGeometry(9.6, 6.08, 0.1, 0.1);
-                let informationMaterial = new THREE.MeshBasicMaterial({
-                    transparent: true, 
-                    side: THREE.DoubleSide,
-                    map: textureLoader.load("../assets/pictures/information/"+language+"/"+indexPicture+".png"),
-                    //depthWrite: false, 
-                    //depthTest: false,
-                });
-                let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
-                informationPlane.name = "informationBlock-Page_"+this.amountPages;
-                informationPlane.position.set(0, -this.lengthPage/5, -0.025); // -0.01
-                informationPlane.rotateY(THREE.Math.degToRad(180));
-                page.add(informationPlane);
-                //this.book.add(sheet);       // Added sheet with page on the book
-            }
-            this.amountPages++;
-        },*/
         this.createPage = function (indexPicture){
             if(this.amountPages % 2 == 0){   //Pair pages on the book
                 // Adjust of rotation of the sheets inside of book
@@ -464,11 +321,8 @@ function main(language) {
                 let pageMaterial = new THREE.MeshBasicMaterial({
                     transparent: true, //opacity: 0.5,
                     map: textureLoader.load("../assets/parchment_alpha.png"), 
-                    side: THREE.DoubleSide,//THREE.DoubleSide,
-                    //depthWrite: false,
-                    //depthWrite: false, depthTest: false,
+                    side: THREE.DoubleSide,
                 });
-                //pageMaterial.depthWrite = false;            // FIX the bug of transparency  --- https://github.com/mrdoob/three.js/issues/9977
                 let page = new THREE.Mesh(pageGeometry, pageMaterial);
                 page.name = "page_" + this.amountPages;
                 page.position.set(this.widthPage / 2, 0, 0);
@@ -496,8 +350,6 @@ function main(language) {
                     transparent: true,
                     side: THREE.DoubleSide,
                     map: textureLoader.load("../assets/pictures/information/"+language+"/"+indexPicture+".png"),
-                    //depthWrite: false, 
-                    //depthTest: false,
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.name = "informationBlock-Page_"+this.amountPages;
@@ -524,8 +376,6 @@ function main(language) {
                     transparent: true, //opacity: 0.5,
                     map: textureLoader.load("../assets/parchment_alpha.png"), 
                     side: THREE.DoubleSide,//side:THREE.DoubleSide,
-                    //depthWrite: false, 
-                    //depthTest: false,
                 });
                 let page = new THREE.Mesh(pageGeometry, pageMaterial);
                 page.name = "page_" + this.amountPages;
@@ -555,8 +405,6 @@ function main(language) {
                     transparent: true, /*opacity: 0.9,*/
                     side: THREE.DoubleSide,
                     map: textureLoader.load("../assets/pictures/information/"+language+"/"+indexPicture+".png"),
-                    //depthWrite: false, 
-                    //depthTest: false,
                 });
                 let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
                 informationPlane.name = "informationBlock-Page_"+this.amountPages;
@@ -765,16 +613,16 @@ function main(language) {
             objectRaycasterClonePictures = [];
 
             // Recreate DragControls
-            //dragControls = new THREE.DragControls([controls.imageClone], rotationCamera, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
+            dragControls = new DragControls([controls.imageClone], rotationCamera, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
             //dragControls.addEventListener( 'dragstart', function ( event ) {  console.log("dragstart");});
             //dragControls.addEventListener( 'dragend', function ( event ) { console.log('drag end');});
-            /*dragControls.addEventListener ( 'drag', function( event ){
+            dragControls.addEventListener ( 'drag', function( event ){
                 //console.log('drag');
                 if(event.object.position.y < 1){        // Stay about the page
                     event.object.position.y = 1.45;
                 }
                 event.object.position.z = -3.35; // This will prevent moving z axis, but will be on -3.35 line. change this to your object position of z axis.
-            });*/
+            });
             // Pages of book
             for (let i = 0; i < this.book.children.length; i++) {
                 let pageGroupRotation = this.book.children[i];
@@ -788,16 +636,12 @@ function main(language) {
             for(let i = 0; i < this.pictures.length; i++){
                 objectRaycaster.push(this.pictures[i]);
                 objectRaycasterClonePictures.push(this.pictures[i]);
-                //groupIntersections.add(this.pictures[i]);
             }
 
             // Buttons
             for(let i = 0; i < this.buttons.length; i++){
                 objectRaycaster.push(this.buttons[i]);
-               // groupIntersections.add(this.buttons[i]);
             }
-
-            //scene.add(groupIntersections);
 
             // Raycaster and mouse Controllers 
             objectLooked = null;
@@ -907,7 +751,7 @@ function main(language) {
 
     window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
 
-    /*clearPickPosition();
+   /* clearPickPosition();
     // Se o mouse sai da tela
     function clearPickPosition() {
         // unlike the mouse which always has a position
@@ -965,133 +809,9 @@ function main(language) {
                 //orbitControls.enableRotate = true;      // Enable rotation on camera
             }
         }
-    });
-    window.addEventListener('mouseout', clearPickPosition);       // Mouse sai da tela
-    window.addEventListener('mouseleave', clearPickPosition);
-    window.addEventListener('mousedown', raycasterController);
-    function raycasterController(event){
-        //console.log(event);
-        if(event.button == 0){              // Left Button
-            if(objectLooked != null){
-                switch(controls.cameraOption){
-                    case 0:
-                    {
-                        orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
-                        switch(objectLooked.objectType){
-                            case 0:
-                                if(objectLooked.sheet.animationAngle == 0){     //Don't rotate if the page is moving
-                                    if(objectLooked.sheet.sideOption == 0){
-                                        objectLooked.sheet.sideOption = 1;
-                                        controls.currentSheet++;
-                                    }
-                                    else{
-                                        objectLooked.sheet.sideOption  = 0;
-                                        controls.currentSheet--;
-                                    }
-                                    controls.adjustbuttons();
-                                    animationList.push(objectLooked.sheet);
-                                }
-                                break;
-                            case 1:     // Collide with image
-                                selectedImage = objectLooked;
-                                selectedImage.visible = false;
-                                controls.imageClone.position.x = pointCollisionRayCaster.x;
-                                controls.imageClone.position.y = pointCollisionRayCaster.y;
-                                controls.imageClone.position.z = -3.35; //pointCollisionRayCaster.z;  
-                                controls.imageClone.rotateX(THREE.Math.degToRad(-90));
-                                //controls.imageClone.position.copy(pointCollisionRayCaster);
-                                break;
-                            case 2:     // Collide with imagePlane on Page 
-                                //
-                                //
-                                break;
-                            case 3:     // Read Left page Button
-                                controls.cameraOption = 1;      // Turn camera option
-                                defaultCamera = bookCamera;
-                                controls.adjustbuttons();
-                                controls.buttons[2].visible = true;
-                                defaultCamera.position.set(-controls.widthPage/2, 17, 0);   // Y = 25
-                                controls.buttons[2].position.set(-controls.widthPage - controls.sizeButton/2, controls.buttons[2].position.y, 0);   
-                                break;
-                            case 4:     // Read Right page Button
-                                controls.cameraOption = 1;      // Turn camera option
-                                defaultCamera = bookCamera;
-                                controls.adjustbuttons();
-                                controls.buttons[2].visible = true;
-                                bookCamera.position.set(controls.widthPage/2, 17, 0);
-                                controls.buttons[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttons[2].position.y, 0);   
-                                break;
-                            case 6:     // Zoom In
-                                controls.cameraOption = 2;
-                                defaultCamera = pictureCamera;
-                                controls.buttons[3].position.z = -11.9;
-                                controls.buttons[4].position.z = -11.8;
-                                controls.buttons[3].visible = false;
-                                controls.buttons[4].visible = true;
-                                break;
-                            case 8:     // Retry Button
-                                controls.emptyScene();
-                                controls.createScenary();
-                                break;
-                        }
-                    }
-                        break;
-                    case 1:
-                    {
-                        orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
-                        switch(objectLooked.objectType){
-                            case 4:     // Read Right page Button
-                                controls.cameraOption = 1;      // Turn camera option
-                                defaultCamera = bookCamera;
-                                controls.adjustbuttons();
-                                controls.buttons[2].visible = true;
-                                defaultCamera.position.set(controls.widthPage/2, 17, 0);
-                                controls.buttons[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttons[2].position.y, 0);   
-                                break;
-                            case 5:     // Exit Button
-                                controls.cameraOption = 0;
-                                defaultCamera = rotationCamera;
-                                controls.adjustbuttons();
-                                controls.buttons[2].visible = false;
-                                break;
-                        }
-                    }
-                        break;
-                    case 2:
-                    {
-                        orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
-                        switch(objectLooked.objectType){
-                            case 6:     // Zoom In
-                                controls.cameraOption = 2;
-                                defaultCamera = pictureCamera;
-                                controls.buttons[3].position.z = -11.9;
-                                controls.buttons[4].position.z = -11.8;
-                                controls.buttons[3].visible = false;
-                                controls.buttons[4].visible = true;
-                                break;
-                            case 7:     // Zoom Out
-                                controls.cameraOption = 0;
-                                defaultCamera = rotationCamera;
-                                controls.buttons[3].position.z = -11.8;
-                                controls.buttons[4].position.z = -11.9;
-                                controls.buttons[3].visible = true;
-                                controls.buttons[4].visible = false;
-                                break;
-                            case 8:     // Retry Button
-                                controls.emptyScene();
-                                controls.cameraOption = 0;
-                                defaultCamera = rotationCamera;
-                                controls.createScenary();
-                                break;
-                        }
-                    }
-                        break;
-                }
-            }
-        }
-    }    
+    });*/
 
-    function checkRaycaster(){
+    /*function checkRaycaster(){
         // update the picking ray with the camera and mouse position
         raycaster.setFromCamera(mouse, defaultCamera);
         let intersects = raycaster.intersectObjects(objectRaycaster);
@@ -1104,7 +824,7 @@ function main(language) {
         else{
             objectLooked = null;
         }
-    }
+    }*/
 
     //Only verify if has a collision with the pictures
     function checkRaycasterClonePictures(){        
@@ -1135,7 +855,6 @@ function main(language) {
             }
         }
     }
-    */
 
 
     // Adiciona o renderer no elemento de VR
@@ -1169,9 +888,9 @@ function main(language) {
     function onSelectStart( event ) {
         const controller = event.target;
         const intersections = getIntersections( controller );
-        if ( intersections.length > 0 ) {
+        if (intersections.length > 0 ) {
             const intersection = intersections[ 0 ];
-            const object = intersection.object;
+            objectLooked = intersection.object;
             //object.material.emissive.b = 1;
             object.material.color = new THREE.Color("rgb(180,0,0)");
             switch(controls.cameraOption){
@@ -1193,15 +912,14 @@ function main(language) {
                             }
                             break;
                         case 1:     // Collide with image
-                            /*selectedImage = objectLooked;
+                            selectedImage = objectLooked;
                             selectedImage.visible = false;
                             controls.imageClone.position.x = pointCollisionRayCaster.x;
                             controls.imageClone.position.y = pointCollisionRayCaster.y;
                             controls.imageClone.position.z = -3.35; //pointCollisionRayCaster.z;  
-                            controls.imageClone.rotateX(THREE.Math.degToRad(-90));*/
-                            //controls.imageClone.position.copy(pointCollisionRayCaster);
-                            controller.attach( object );
-                            controller.userData.selected = object;
+                            controls.imageClone.rotateX(THREE.Math.degToRad(-90));
+                            //controller.attach( object );
+                            //controller.userData.selected = object;
                             break;
                         case 2:     // Collide with imagePlane on Page 
                             //
@@ -1243,7 +961,7 @@ function main(language) {
                     break;
                 case 1:
                 {
-                    switch(objectLooked.objectType){
+                    switch(object.objectType){
                         case 4:     // Read Right page Button
                             controls.cameraOption = 1;      // Turn camera option
                             defaultCamera = bookCamera;
@@ -1265,8 +983,7 @@ function main(language) {
                     break;
                 case 2:
                 {
-                    orbitControls.enableRotate = false;         // Disable the rotation on camera when raycasting detect an object
-                    switch(objectLooked.objectType){
+                    switch(object.objectType){
                         case 6:     // Zoom In
                             controls.cameraOption = 2;
                             defaultCamera = pictureCamera;
@@ -1300,34 +1017,51 @@ function main(language) {
     }
 
     function onSelectEnd( event ) {
-        const controller = event.target;
+        /*const controller = event.target;
         if ( controller.userData.selected !== undefined ) {
             const object = controller.userData.selected;
             //object.material.emissive.b = 0;
             object.material.color = new THREE.Color("rgb(255,255,255)");
             //groupIntersections.attach( object );
             controller.userData.selected = undefined;
+        }*/
+        if(controls.cameraOption == 0){
+            if((objectLooked != null) && (objectLooked.objectType == 2)){
+                if(selectedImage != null){
+                    if(objectLooked.indexPicture == selectedImage.indexPicture){
+                        objectLooked.material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane   
+                        controls.hits++;
+                        controls.removePictureFromWall(selectedImage, objectLooked);   // Remove imagePlane and picture of panel
+                        if(controls.pictures.length == 0){
+                            controls.state = 1;
+                            controls.messageVictory.visible = true;
+                        } 
+                    }
+                    else{
+                        controls.fails++;
+                        if(controls.fails > 2){
+                            controls.state = 2;
+                            //console.log("You lose");
+                            controls.removeAllPictures();
+                            controls.messageLoose.visible = true;
+                        } 
+                    }
+                    objectImagePlane.material.color = new THREE.Color("rgb(255,255,255)");
+                    objectImagePlane = null;
+                }
+            }
+            if(selectedImage != null){       // Drop the picture
+                selectedImage.visible = true;
+                controls.imageClone.position.set(-100, -100, -100);
+                controls.imageClone.rotateX(THREE.Math.degToRad(90));
+            }
+            selectedImage = null;
         }
     }
 
     function getIntersections( controller ) {
-        /*tempMatrix.identity().extractRotation( controller.matrixWorld );
-        raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
-        raycaster.ray.direction.set( 0, 0, - 1 ).applyMatrix4( tempMatrix );*/
-        // update the picking ray with the camera and mouse position
         raycaster.setFromCamera({x: circleMarker.position.x, y: circleMarker.position.y}, cameraVR);
-        /*let intersects = raycaster.intersectObjects(objectRaycaster);
-        if(intersects.length > 0){
-            objectLooked = intersects[0].object;
-            if(!objectLooked.visible){ // Object is not visible
-                objectLooked = null;
-            }
-        }
-        else{
-            objectLooked = null;
-        }*/
-        //raycaster.position.set(cameraVR.x, cameraVR.y, cameraVR.z);
-        return raycaster.intersectObjects(objectRaycaster); //raycaster.intersectObjects( groupIntersections.children );
+        return raycaster.intersectObjects(objectRaycaster); 
     }
 
     function intersectObjects( controller ) {
@@ -1336,26 +1070,23 @@ function main(language) {
 
         const line = controller.getObjectByName( 'line' );
         const intersections = getIntersections( controller );
-
         if ( intersections.length > 0 ) {
-
             const intersection = intersections[ 0 ];
-
-            const object = intersection.object;
-            //console.log(object.material.color);
-            //object.material.color = "rgb(180,0,0)";
-            object.material.color = new THREE.Color("rgb(180,0,0)");
-            intersected.push( object );
-
-            line.scale.z = intersection.distance;
-
+            objectLooked = intersection.object;
+            pointCollisionRayCaster = intersections[0].point; 
+            if(!objectLooked.visible){ // Object is not visible
+                objectLooked = null;
+                pointCollisionRayCaster = null;   
+            }
+            else{
+                objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
+            }
         } else {
-
-            line.scale.z = 5;
-
+            objectLooked = null;
+            pointCollisionRayCaster = null; 
         }
     }
-
+    /*
     function cleanIntersected() {
         while ( intersected.length ) {
             const object = intersected.pop();
@@ -1363,7 +1094,7 @@ function main(language) {
             
             object.material.color = new THREE.Color("rgb(255,255,255)");
         }
-    }
+    }*/
 
     const geometry = new THREE.BufferGeometry().setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 1 ) ] );
     const line = new THREE.Line( geometry );
@@ -1383,18 +1114,17 @@ function main(language) {
         //orbitControls.update(clock.getDelta());
         //orbitControls.update();
         //checkRaycaster();
-        cleanIntersected();
 
         intersectObjects( controller1 );
-        intersectObjects( controller2 );
+        //intersectObjects( controller2 );
 
         controls.animationScenary();
         switch(controls.state){
             case 0:         // Game Running
                 controls.timer.updateTime(dt);
                 if(controls.cameraOption == 0){
-                    //checkRaycasterOnImageAtPages();
-                    //checkRaycasterClonePictures();
+                    checkRaycasterOnImageAtPages();
+                    checkRaycasterClonePictures();
                 }
                 break;
             case 1:         // Victory
