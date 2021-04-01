@@ -896,19 +896,19 @@ function main(language) {
             switch(controls.cameraOption){
                 case 0:
                 {
-                    switch(object.objectType){
+                    switch(objectLooked.objectType){
                         case 0:
-                            if(object.sheet.animationAngle == 0){     //Don't rotate if the page is moving
-                                if(object.sheet.sideOption == 0){
-                                    object.sheet.sideOption = 1;
+                            if(objectLooked.sheet.animationAngle == 0){     //Don't rotate if the page is moving
+                                if(objectLooked.sheet.sideOption == 0){
+                                    objectLooked.sheet.sideOption = 1;
                                     controls.currentSheet++;
                                 }
                                 else{
-                                    object.sheet.sideOption  = 0;
+                                    objectLooked.sheet.sideOption  = 0;
                                     controls.currentSheet--;
                                 }
                                 controls.adjustbuttons();
-                                animationList.push(object.sheet);
+                                animationList.push(objectLooked.sheet);
                             }
                             break;
                         case 1:     // Collide with image
@@ -961,7 +961,7 @@ function main(language) {
                     break;
                 case 1:
                 {
-                    switch(object.objectType){
+                    switch(objectLooked.objectType){
                         case 4:     // Read Right page Button
                             controls.cameraOption = 1;      // Turn camera option
                             defaultCamera = bookCamera;
@@ -983,7 +983,7 @@ function main(language) {
                     break;
                 case 2:
                 {
-                    switch(object.objectType){
+                    switch(objectLooked.objectType){
                         case 6:     // Zoom In
                             controls.cameraOption = 2;
                             defaultCamera = pictureCamera;
@@ -1050,6 +1050,7 @@ function main(language) {
                     objectImagePlane = null;
                 }
             }
+            objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
             if(selectedImage != null){       // Drop the picture
                 selectedImage.visible = true;
                 controls.imageClone.position.set(-100, -100, -100);
