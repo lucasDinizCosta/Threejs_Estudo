@@ -27,13 +27,13 @@ function main(language) {
 
     var rotationCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
     rotationCamera.up.set(0, 1, 0);
-    rotationCamera.position.set(0, 10.7, 9);
+    rotationCamera.position.set(0, 10.7, 10.5);
     var bookCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
     bookCamera.position.set(0, 10.7, 0);
     bookCamera.up.set(0, 1, 0);
     bookCamera.lookAt(0, 0, 0);
     var pictureCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
-    pictureCamera.position.set(0, 10.7, 10);
+    pictureCamera.position.set(0, 10.7, 8);
     pictureCamera.up.set(0, 1, 0);
     pictureCamera.lookAt(0, 10.7, -12);
     var defaultCamera = rotationCamera;
@@ -886,13 +886,14 @@ function main(language) {
     scene.add( controllerGrip2 );
 
     function onSelectStart( event ) {
-        const controller = event.target;
-        const intersections = getIntersections( controller );
-        if (intersections.length > 0 ) {
-            const intersection = intersections[ 0 ];
-            objectLooked = intersection.object;
+        //const controller = event.target;
+        //const intersections = getIntersections( controller );
+        //if(intersections.length > 0 ) {
+        if(objectLooked != null) {
+            //const intersection = intersections[ 0 ];
+            //objectLooked = intersection.object;
             //object.material.emissive.b = 1;
-            object.material.color = new THREE.Color("rgb(180,0,0)");
+            //object.material.color = new THREE.Color("rgb(180,0,0)");
             switch(controls.cameraOption){
                 case 0:
                 {
@@ -1050,7 +1051,7 @@ function main(language) {
                     objectImagePlane = null;
                 }
             }
-            objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
+            //objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
             if(selectedImage != null){       // Drop the picture
                 selectedImage.visible = true;
                 controls.imageClone.position.set(-100, -100, -100);
@@ -1083,6 +1084,7 @@ function main(language) {
                 objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
             }
         } else {
+            objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
             objectLooked = null;
             pointCollisionRayCaster = null; 
         }
