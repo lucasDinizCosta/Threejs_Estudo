@@ -856,7 +856,6 @@ function main(language) {
         }
     }
 
-
     // Adiciona o renderer no elemento de VR
     document.body.appendChild(VRButton.createButton( renderer ));
 
@@ -1084,10 +1083,15 @@ function main(language) {
             else{
                 objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
             }
+
+
+            line.scale.z = intersection.distance;
         } else {
             objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
             objectLooked = null;
             pointCollisionRayCaster = null; 
+
+            line.scale.z = 5;
         }
     }
     
@@ -1126,8 +1130,8 @@ function main(language) {
             case 0:         // Game Running
                 controls.timer.updateTime(dt);
                 if(controls.cameraOption == 0){
-                    checkRaycasterOnImageAtPages();
-                    checkRaycasterClonePictures();
+                    //checkRaycasterOnImageAtPages();
+                    //checkRaycasterClonePictures();
                 }
                 break;
             case 1:         // Victory
