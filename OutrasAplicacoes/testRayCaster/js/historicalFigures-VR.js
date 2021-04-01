@@ -886,11 +886,11 @@ function main(language) {
     scene.add( controllerGrip2 );
 
     function onSelectStart( event ) {
-        //const controller = event.target;
-        //const intersections = getIntersections( controller );
+        const controller = event.target;
+        const intersections = getIntersections( controller );
         //if(intersections.length > 0 ) {
         if(objectLooked != null) {
-            //const intersection = intersections[ 0 ];
+            const intersection = intersections[ 0 ];
             //objectLooked = intersection.object;
             //object.material.emissive.b = 1;
             //object.material.color = new THREE.Color("rgb(180,0,0)");
@@ -1018,14 +1018,14 @@ function main(language) {
     }
 
     function onSelectEnd( event ) {
-        /*const controller = event.target;
+        const controller = event.target;
         if ( controller.userData.selected !== undefined ) {
             const object = controller.userData.selected;
             //object.material.emissive.b = 0;
             object.material.color = new THREE.Color("rgb(255,255,255)");
             //groupIntersections.attach( object );
             controller.userData.selected = undefined;
-        }*/
+        }
         if(controls.cameraOption == 0){
             if((objectLooked != null) && (objectLooked.objectType == 2)){
                 if(selectedImage != null){
