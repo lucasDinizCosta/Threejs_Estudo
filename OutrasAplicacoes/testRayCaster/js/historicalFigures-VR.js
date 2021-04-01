@@ -1119,7 +1119,7 @@ function main(language) {
         //checkRaycaster();
 
         intersectObjects( controller1 );
-        //intersectObjects( controller2 );
+        intersectObjects( controller2 );
 
         controls.animationScenary();
         switch(controls.state){
