@@ -1026,7 +1026,7 @@ function main(language) {
             //groupIntersections.attach( object );
             controller.userData.selected = undefined;
         }
-        if(controls.cameraOption == 0){
+        /*if(controls.cameraOption == 0){
             if((objectLooked != null) && (objectLooked.objectType == 2)){
                 if(selectedImage != null){
                     if(objectLooked.indexPicture == selectedImage.indexPicture){
@@ -1058,7 +1058,7 @@ function main(language) {
                 controls.imageClone.rotateX(THREE.Math.degToRad(90));
             }
             selectedImage = null;
-        }
+        }*/
     }
 
     function getIntersections( controller ) {
@@ -1089,7 +1089,7 @@ function main(language) {
             pointCollisionRayCaster = null; 
         }
     }
-    /*
+    
     function cleanIntersected() {
         while ( intersected.length ) {
             const object = intersected.pop();
@@ -1097,7 +1097,7 @@ function main(language) {
             
             object.material.color = new THREE.Color("rgb(255,255,255)");
         }
-    }*/
+    }
 
     const geometry = new THREE.BufferGeometry().setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 1 ) ] );
     const line = new THREE.Line( geometry );
