@@ -867,7 +867,7 @@ function main(language) {
      * 
      ************************************************/
     
-    /*let controller1 = renderer.xr.getController( 0 );
+    let controller1 = renderer.xr.getController( 0 );
     controller1.addEventListener( 'selectstart', onSelectStart );
     controller1.addEventListener( 'selectend', onSelectEnd );
 
@@ -887,7 +887,7 @@ function main(language) {
     scene.add( controllerGrip2 );
 
     function onSelectStart( event ) {
-        const controller = event.target;
+        /*const controller = event.target;
         const intersections = getIntersections( controller );
         if(intersections.length > 0 ){
             //if(objectLooked != null) {
@@ -1016,11 +1016,11 @@ function main(language) {
                         break;
                 }
             //}
-        }
+        }*/
     }
 
     function onSelectEnd( event ) {
-        const controller = event.target;
+        /*const controller = event.target;
         if ( controller.userData.selected !== undefined ) {
             const object = controller.userData.selected;
             //object.material.emissive.b = 0;
@@ -1028,7 +1028,7 @@ function main(language) {
             //groupIntersections.attach( object );
             controller.userData.selected = undefined;
         }
-        /*if(controls.cameraOption == 0){
+        if(controls.cameraOption == 0){
             if((objectLooked != null) && (objectLooked.objectType == 2)){
                 if(selectedImage != null){
                     if(objectLooked.indexPicture == selectedImage.indexPicture){
@@ -1060,7 +1060,7 @@ function main(language) {
                 controls.imageClone.rotateX(THREE.Math.degToRad(90));
             }
             selectedImage = null;
-        }
+        }*/
     }
 
     function getIntersections( controller ) {
@@ -1098,12 +1098,12 @@ function main(language) {
     }
     
     function cleanIntersected() {
-        while ( intersected.length ) {
+        /*while ( intersected.length ) {
             const object = intersected.pop();
             //object.material.emissive.r = 0;
             
             object.material.color = new THREE.Color("rgb(255,255,255)");
-        }
+        }*/
     }
 
     const geometry = new THREE.BufferGeometry().setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 1 ) ] );
@@ -1113,7 +1113,6 @@ function main(language) {
 
     controller1.add( line.clone() );
     controller2.add( line.clone() );
-*/
 
     renderer.setAnimationLoop(render);
 
@@ -1124,8 +1123,8 @@ function main(language) {
         //orbitControls.update();
         //checkRaycaster();
 
-       // intersectObjects( controller1 );
-        //intersectObjects( controller2 );
+        intersectObjects( controller1 );
+        intersectObjects( controller2 );
 
         controls.animationScenary();
         switch(controls.state){
