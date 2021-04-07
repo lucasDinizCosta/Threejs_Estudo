@@ -867,7 +867,7 @@ function main(language) {
      * 
      ************************************************/
     
-    let controller1 = renderer.xr.getController( 0 );
+    /*let controller1 = renderer.xr.getController( 0 );
     controller1.addEventListener( 'selectstart', onSelectStart );
     controller1.addEventListener( 'selectend', onSelectEnd );
 
@@ -1060,7 +1060,7 @@ function main(language) {
                 controls.imageClone.rotateX(THREE.Math.degToRad(90));
             }
             selectedImage = null;
-        }*/
+        }
     }
 
     function getIntersections( controller ) {
@@ -1113,7 +1113,7 @@ function main(language) {
 
     controller1.add( line.clone() );
     controller2.add( line.clone() );
-
+*/
 
     renderer.setAnimationLoop(render);
 
@@ -1124,8 +1124,8 @@ function main(language) {
         //orbitControls.update();
         //checkRaycaster();
 
-        intersectObjects( controller1 );
-        intersectObjects( controller2 );
+       // intersectObjects( controller1 );
+        //intersectObjects( controller2 );
 
         controls.animationScenary();
         switch(controls.state){
