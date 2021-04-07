@@ -425,11 +425,13 @@ function main(language) {
             let panelPlane = new THREE.Mesh(painelGeometry, painelMaterial);
             panelPlane.position.set(0, 9.75, -15.1);
             scene.add(panelPlane);
-            let skyboxGeometry = new THREE.SphereGeometry(500, 128, 128);
+            let skyboxGeometry = new THREE.SphereGeometry(200, 128, 128);
             let skyboxMaterial = new THREE.MeshBasicMaterial({
-                map: textureLoader.load("../assets/museum.jpeg"), side: THREE.DoubleSide   
+                map: textureLoader.load("../assets/amir-timur-museum.jpeg"), side: THREE.DoubleSide   
             });
             let skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
+            skybox.rotateY(60);
+            skybox.position.set(0,0,50);
             scene.add(skybox);
     
             /** Pictures */
