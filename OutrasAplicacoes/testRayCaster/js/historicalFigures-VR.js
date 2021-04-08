@@ -989,11 +989,6 @@ function main(language) {
         }
     }
 
-    function getIntersections( controller ) {
-        raycaster.setFromCamera({x: circleMarker.position.x, y: circleMarker.position.y}, cameraVR);
-        return raycaster.intersectObjects(objectRaycaster); 
-    }
-
     function intersectObjects( controller ) {
         // Do not highlight when already selected
         if ( controller.userData.selected !== undefined ) return;
@@ -1010,34 +1005,43 @@ function main(language) {
             }
             else{
                 objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
-                const object = intersection.object;
+                /*const object = intersection.object;
                 intersected.push( object );
-                line.scale.z = intersection.distance;
+                line.scale.z = intersection.distance;*/
             }
         } else {
             objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
             objectLooked = null;
             pointCollisionRayCaster = null; 
-            line.scale.z = 5;
-        }
-    }
-    
-    function cleanIntersected() {
-        while ( intersected.length ) {
-            const object = intersected.pop();
-            //object.material.emissive.r = 0;
-            
-            object.material.color = new THREE.Color("rgb(255,255,255)");
+            //line.scale.z = 5;
         }
     }
 
-    /*const geometry = new THREE.BufferGeometry().setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 1 ) ] );
-    const line = new THREE.Line( geometry );
-    line.name = 'line';
-    line.scale.z = 5;
+    function getIntersections(elements) {
+        raycaster.setFromCamera({x: circleMarker.position.x, y: circleMarker.position.y}, cameraVR);
+        return raycaster.intersectObjects(elements); 
+    }
 
-    controller1.add( line.clone() );
-    controller2.add( line.clone() );*/
+    function checkRaycaster(){
+        let intersects = getIntersections(objectRaycaster);
+        if(intersects.length > 0){
+            objectLooked = intersects[0].object;
+            pointCollisionRayCaster = intersects[0].point;
+            if(!objectLooked.visible){ // Object is not visible
+                objectLooked = null;
+                pointCollisionRayCaster = null;   
+            }
+            else{
+                objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
+            }
+        }
+        else{
+            objectLooked = null;
+            pointCollisionRayCaster = null;
+            objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
+        }
+    }
+
 
     renderer.setAnimationLoop(render);
 
@@ -1046,7 +1050,7 @@ function main(language) {
         //stats.update();
         //orbitControls.update(clock.getDelta());
         //orbitControls.update();
-        //checkRaycaster();
+        checkRaycaster();
 
         //intersectObjects( controller1 );
         //intersectObjects( controller2 );
