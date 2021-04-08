@@ -1024,6 +1024,7 @@ function main(language) {
 
     function checkRaycaster(){
         let intersects = getIntersections(objectRaycaster);
+        //console.log(intersects);
         if(intersects.length > 0){
             objectLooked = intersects[0].object;
             pointCollisionRayCaster = intersects[0].point;
@@ -1035,11 +1036,11 @@ function main(language) {
                 objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
             }
         }
-        else{
+        /*else{
             objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
             objectLooked = null;
             pointCollisionRayCaster = null;
-        }
+        }*/
     }
 
 
