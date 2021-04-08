@@ -37,12 +37,11 @@ function main(language) {
     var cameraVR = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
     cameraVR.position.set(0, 1.6, 0);
     let dolly = new THREE.Group(); // This helps move the camera
-    dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
-    //dolly.position.set(0, 15, 50);
+    dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);
     scene.add( dolly );
     dolly.add( cameraVR );
 
-    let geometryMarker = new THREE.RingGeometry( 0.0025, 0.005, 64 );   //new THREE.CircleGeometry(0.005, 180);
+    let geometryMarker = new THREE.RingGeometry( 0.0025, 0.005, 64);
     let materialMarker = new THREE.MeshBasicMaterial( { color: 0xffff00, } );
     let circleMarker = new THREE.Mesh(geometryMarker, materialMarker );
     cameraVR.add(circleMarker);
@@ -59,7 +58,6 @@ function main(language) {
     // Creating raycaster objects
     var raycaster = new THREE.Raycaster();
     var raycasterPictures = new THREE.Raycaster();      // To create a ghost image when the picture is moving from the wall
-    var mouse = new THREE.Vector2();
 
     // Animation pages
     let animationList = [];
@@ -68,7 +66,6 @@ function main(language) {
     // Raycaster and mouse Controllers 
     let objectRaycaster = [], objectRaycasterClonePictures = [];
     let objectLooked = null, objectImagePlane = null, selectedImage = null, pointCollisionRayCaster = null;
-    let dragControls;
     let pictureLooked = null;
 
     // Controls of sidebar
@@ -611,17 +608,6 @@ function main(language) {
             objectRaycaster = [];
             objectRaycasterClonePictures = [];
 
-            // Recreate DragControls
-            //dragControls = new DragControls([controls.imageClone], cameraVR, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
-            //dragControls.addEventListener( 'dragstart', function ( event ) {  console.log("dragstart");});
-            //dragControls.addEventListener( 'dragend', function ( event ) { console.log('drag end');});
-            /*dragControls.addEventListener ( 'drag', function( event ){
-                //console.log('drag');
-                if(event.object.position.y < 1){        // Stay about the page
-                    event.object.position.y = 1.45;
-                }
-                event.object.position.z = -3.35; // This will prevent moving z axis, but will be on -3.35 line. change this to your object position of z axis.
-            });*/
             // Pages of book
             for (let i = 0; i < this.book.children.length; i++) {
                 let pageGroupRotation = this.book.children[i];
@@ -767,14 +753,16 @@ function main(language) {
         }
     }
 
+    // A cor do espaço de imagem na pagina muda pra verde
+
     function checkRaycasterOnImageAtPages(){
         if(objectLooked != null && selectedImage != null && objectLooked.objectType == 2){
             objectImagePlane = objectLooked;
-            //objectImagePlane.material.color = new THREE.Color("rgb(0,180,0)");
+            objectImagePlane.material.color = new THREE.Color("rgb(0,180,0)");
         }
         else{
             if(objectImagePlane != null){
-                //objectImagePlane.material.color = new THREE.Color("rgb(255,255,255)");
+                objectImagePlane.material.color = new THREE.Color("rgb(255,255,255)");
                 objectImagePlane = null;
             }
         }
@@ -857,11 +845,9 @@ function main(language) {
                                 controls.messageLoose.visible = true;
                             } 
                         }
-                        //objectImagePlane.material.color = new THREE.Color("rgb(255,255,255)");
                         objectImagePlane = null;
                     }
                 }
-                //objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
                 if(selectedImage != null){       // Drop the picture
                     selectedImage.visible = true;
                     controls.imageClone.position.set(-100, -100, -100);
@@ -940,15 +926,6 @@ function main(language) {
             case 1:         //  bookCamera
             {
                 switch(objectLooked.objectType){
-                    /*case 4:     // Read Right page Button
-                        controls.cameraOption = 1;      // Turn camera option
-                        defaultCamera = bookCamera;
-                        controls.adjustbuttons();
-                        controls.buttons[2].visible = true;
-                        defaultCamera.position.set(controls.widthPage/2, 17, 0);
-                        controls.buttons[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttons[2].position.y, 0);   
-                        dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
-                        break;*/
                     case 5:     // Exit Button
                         controls.cameraOption = 0;
                         defaultCamera = rotationCamera;
@@ -962,15 +939,6 @@ function main(language) {
             case 2:         // Picture Camera
             {
                 switch(objectLooked.objectType){
-                    /*case 6:     // Zoom In
-                        controls.cameraOption = 2;
-                        defaultCamera = pictureCamera;
-                        dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
-                        controls.buttons[3].position.z = -11.9;
-                        controls.buttons[4].position.z = -11.8;
-                        controls.buttons[3].visible = false;
-                        controls.buttons[4].visible = true;
-                        break;*/
                     case 7:     // Zoom Out
                         controls.cameraOption = 0;
                         defaultCamera = rotationCamera;
@@ -993,34 +961,6 @@ function main(language) {
         }
     }
 
-    /*function intersectObjects( controller ) {
-        // Do not highlight when already selected
-        if ( controller.userData.selected !== undefined ) return;
-
-        const line = controller.getObjectByName( 'line' );
-        const intersections = getIntersections( controller );
-        if ( intersections.length > 0 ) {
-            //const intersection = intersections[ 0 ];
-            objectLooked = intersections[0].object;
-            pointCollisionRayCaster = intersections[0].point; 
-            if(!objectLooked.visible){ // Object is not visible
-                objectLooked = null;
-                pointCollisionRayCaster = null;   
-            }
-            else{
-               // objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
-                const object = intersection.object;
-                intersected.push( object );
-                line.scale.z = intersection.distance;
-            }
-        } else {
-            //objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
-            objectLooked = null;
-            pointCollisionRayCaster = null; 
-            //line.scale.z = 5;
-        }
-    }*/
-
     function getIntersections(elements) {
         raycaster.setFromCamera({x: circleMarker.position.x, y: circleMarker.position.y}, cameraVR);
         return raycaster.intersectObjects(elements); 
@@ -1035,29 +975,22 @@ function main(language) {
                 pointCollisionRayCaster = null;   
             }
             else{
-                //objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
                 pointCollisionRayCaster = intersects[0].point;
             }
         }
         else{
             if(objectLooked != null){
-                //objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
                 objectLooked = null;
                 pointCollisionRayCaster = null;
             }
         }
     }
 
-
     renderer.setAnimationLoop(render);
 
     function render(t) {
         dt = (t - timeAfter) / 1000;
         checkRaycaster();
-
-        //intersectObjects( controller1 );
-        //intersectObjects( controller2 );
-
         controls.animationScenary();
         switch(controls.state){
             case 0:         // Game Running
