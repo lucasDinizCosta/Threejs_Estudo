@@ -996,8 +996,8 @@ function main(language) {
         const line = controller.getObjectByName( 'line' );
         const intersections = getIntersections( controller );
         if ( intersections.length > 0 ) {
-            const intersection = intersections[ 0 ];
-            objectLooked = intersection.object;
+            //const intersection = intersections[ 0 ];
+            objectLooked = intersections[0].object;
             pointCollisionRayCaster = intersections[0].point; 
             if(!objectLooked.visible){ // Object is not visible
                 objectLooked = null;
@@ -1025,7 +1025,7 @@ function main(language) {
     function checkRaycaster(){
         let intersects = getIntersections(objectRaycaster);
         //console.log(intersects);
-        if(intersects.length > 0){
+        /*if(intersects.length > 0){
             objectLooked = intersects[0].object;
             pointCollisionRayCaster = intersects[0].point;
             if(!objectLooked.visible){ // Object is not visible
@@ -1035,7 +1035,7 @@ function main(language) {
             else{
                 objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
             }
-        }
+        }*/
         /*else{
             objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
             objectLooked = null;
