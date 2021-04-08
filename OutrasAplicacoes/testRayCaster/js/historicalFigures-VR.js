@@ -821,8 +821,12 @@ function main(language) {
         if(controls.cameraOption == 0){
             if(selectedImage != null){
                 if(selectedImage.objectType == 1){
-                    controller.attach(selectedImage);
-                    controller.userData.selected = selectedImage;
+                    /*controls.imageClone.position.x = pointCollisionRayCaster.x;
+                    controls.imageClone.position.y = pointCollisionRayCaster.y;
+                    controls.imageClone.position.z = -3.35; //pointCollisionRayCaster.z;  
+                    */
+                    controller.attach(controls.imageClone);
+                    controller.userData.selected = controls.imageClone;
                 }
             }
         }
@@ -831,7 +835,7 @@ function main(language) {
     function onSelectEnd( event ) {
         const controller = event.target;
         if ( controller.userData.selected !== undefined ) {
-            //const object = controller.userData.selected;
+            const object = controller.userData.selected;
             if(controls.cameraOption == 0){
                 if((objectLooked != null) && (objectLooked.objectType == 2)){
                     if(selectedImage != null){
@@ -891,12 +895,7 @@ function main(language) {
                     case 1:     // Collide with image
                         selectedImage = objectLooked;
                         selectedImage.visible = false;
-                        controls.imageClone.position.x = pointCollisionRayCaster.x;
-                        controls.imageClone.position.y = pointCollisionRayCaster.y;
-                        controls.imageClone.position.z = -3.35; //pointCollisionRayCaster.z;  
                         controls.imageClone.rotateX(THREE.Math.degToRad(-90));
-                        //controller.attach( object );
-                        //controller.userData.selected = object;
                         break;
                     case 2:     // Collide with imagePlane on Page 
                         //
