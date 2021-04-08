@@ -757,7 +757,7 @@ function main(language) {
     //Only verify if has a collision with the pictures
     function checkRaycasterClonePictures(){        
         if(selectedImage == null){                       // FIX the bug of change the picture when moving above another picture
-            raycasterPictures.setFromCamera(mouse, defaultCamera);
+            raycasterPictures.setFromCamera({x: circleMarker.position.x, y: circleMarker.position.y}, cameraVR);
             let intersects = raycasterPictures.intersectObjects(objectRaycasterClonePictures);            
             if(intersects.length > 0){
                 let pictureLooked = intersects[0].object;
@@ -915,21 +915,21 @@ function main(language) {
                         break;
                     case 3:     // Read Left page Button
                         controls.cameraOption = 1;      // Turn camera option
-                        defaultCamera = bookCamera;
-                        dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
                         controls.adjustbuttons();
                         controls.buttons[2].visible = true;
-                        defaultCamera.position.set(-controls.widthPage/2, 17, 0);   // Y = 25
                         controls.buttons[2].position.set(-controls.widthPage - controls.sizeButton/2, controls.buttons[2].position.y, 0);   
+                        bookCamera.position.set(-controls.widthPage/2, 17, 0);   // Y = 25
+                        defaultCamera = bookCamera;
+                        dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
                         break;
                     case 4:     // Read Right page Button
                         controls.cameraOption = 1;      // Turn camera option
-                        defaultCamera = bookCamera;
-                        dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
                         controls.adjustbuttons();
                         controls.buttons[2].visible = true;
-                        bookCamera.position.set(controls.widthPage/2, 17, 0);
                         controls.buttons[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttons[2].position.y, 0);   
+                        bookCamera.position.set(controls.widthPage/2, 17, 0);
+                        defaultCamera = bookCamera;
+                        dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
                         break;
                     case 6:     // Zoom In
                         controls.cameraOption = 2;
@@ -1073,8 +1073,8 @@ function main(language) {
             case 0:         // Game Running
                 controls.timer.updateTime(dt);
                 if(controls.cameraOption == 0){
-                    //checkRaycasterOnImageAtPages();
-                    //checkRaycasterClonePictures();
+                    checkRaycasterOnImageAtPages();
+                    checkRaycasterClonePictures();
                 }
                 break;
             case 1:         // Victory
