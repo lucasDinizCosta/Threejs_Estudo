@@ -42,7 +42,7 @@ function main(language) {
     scene.add( dolly );
     dolly.add( cameraVR );
 
-    let geometryMarker = new THREE.RingGeometry( 0.0025, 0.005, 64 );//new THREE.CircleGeometry(0.005, 180);
+    let geometryMarker = new THREE.RingGeometry( 0.0025, 0.005, 64 );   //new THREE.CircleGeometry(0.005, 180);
     let materialMarker = new THREE.MeshBasicMaterial( { color: 0xffff00, } );
     let circleMarker = new THREE.Mesh(geometryMarker, materialMarker );
     cameraVR.add(circleMarker);
@@ -612,16 +612,16 @@ function main(language) {
             objectRaycasterClonePictures = [];
 
             // Recreate DragControls
-            dragControls = new DragControls([controls.imageClone], rotationCamera, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
+            //dragControls = new DragControls([controls.imageClone], cameraVR, renderer.domElement ); //dragControls = new DragControls( objects, camera, renderer.domElement );
             //dragControls.addEventListener( 'dragstart', function ( event ) {  console.log("dragstart");});
             //dragControls.addEventListener( 'dragend', function ( event ) { console.log('drag end');});
-            dragControls.addEventListener ( 'drag', function( event ){
+            /*dragControls.addEventListener ( 'drag', function( event ){
                 //console.log('drag');
                 if(event.object.position.y < 1){        // Stay about the page
                     event.object.position.y = 1.45;
                 }
                 event.object.position.z = -3.35; // This will prevent moving z axis, but will be on -3.35 line. change this to your object position of z axis.
-            });
+            });*/
             // Pages of book
             for (let i = 0; i < this.book.children.length; i++) {
                 let pageGroupRotation = this.book.children[i];
