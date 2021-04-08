@@ -7,10 +7,6 @@ import { XRControllerModelFactory } from '../../../libs/three/jsm/webxr/XRContro
 
 function main(language) {
     var scene = new THREE.Scene();
-    //var stats = new Stats();
-    //stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-    //document.body.appendChild(stats.dom);
-    var clock = new THREE.Clock();
     var textureLoader = new THREE.TextureLoader();
     var renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -882,7 +878,7 @@ function main(language) {
 
     function raycasterController(){
         switch(controls.cameraOption){
-            case 0:
+            case 0:         // rotationCamera
             {
                 switch(objectLooked.objectType){
                     case 0:
@@ -921,6 +917,7 @@ function main(language) {
                         bookCamera.position.set(-controls.widthPage/2, 17, 0);   // Y = 25
                         defaultCamera = bookCamera;
                         dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                        cameraVR.lookAt(0,0,0);
                         break;
                     case 4:     // Read Right page Button
                         controls.cameraOption = 1;      // Turn camera option
@@ -930,6 +927,7 @@ function main(language) {
                         bookCamera.position.set(controls.widthPage/2, 17, 0);
                         defaultCamera = bookCamera;
                         dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                        cameraVR.lookAt(0,0,0);
                         break;
                     case 6:     // Zoom In
                         controls.cameraOption = 2;
@@ -947,10 +945,10 @@ function main(language) {
                 }
             }
                 break;
-            case 1:
+            case 1:         //  bookCamera
             {
                 switch(objectLooked.objectType){
-                    case 4:     // Read Right page Button
+                    /*case 4:     // Read Right page Button
                         controls.cameraOption = 1;      // Turn camera option
                         defaultCamera = bookCamera;
                         controls.adjustbuttons();
@@ -958,7 +956,7 @@ function main(language) {
                         defaultCamera.position.set(controls.widthPage/2, 17, 0);
                         controls.buttons[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttons[2].position.y, 0);   
                         dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
-                        break;
+                        break;*/
                     case 5:     // Exit Button
                         controls.cameraOption = 0;
                         defaultCamera = rotationCamera;
@@ -969,10 +967,10 @@ function main(language) {
                 }
             }
                 break;
-            case 2:
+            case 2:         // Picture Camera
             {
                 switch(objectLooked.objectType){
-                    case 6:     // Zoom In
+                    /*case 6:     // Zoom In
                         controls.cameraOption = 2;
                         defaultCamera = pictureCamera;
                         dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
@@ -980,7 +978,7 @@ function main(language) {
                         controls.buttons[4].position.z = -11.8;
                         controls.buttons[3].visible = false;
                         controls.buttons[4].visible = true;
-                        break;
+                        break;*/
                     case 7:     // Zoom Out
                         controls.cameraOption = 0;
                         defaultCamera = rotationCamera;
