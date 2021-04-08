@@ -791,13 +791,13 @@ function main(language) {
     
     let controller1 = renderer.xr.getController( 0 );
     controller1.addEventListener('select', onSelect);
-    //controller1.addEventListener( 'selectstart', onSelectStart );
-    //controller1.addEventListener( 'selectend', onSelectEnd );
+    controller1.addEventListener( 'selectstart', onSelectStart );
+    controller1.addEventListener( 'selectend', onSelectEnd );
 
     let controller2 = renderer.xr.getController( 1 );
     controller2.addEventListener('select', onSelect);
-    //controller2.addEventListener( 'selectstart', onSelectStart );
-    //controller2.addEventListener( 'selectend', onSelectEnd );
+    controller2.addEventListener( 'selectstart', onSelectStart );
+    controller2.addEventListener( 'selectend', onSelectEnd );
     scene.add( controller2 );
 
     const controllerModelFactory = new XRControllerModelFactory();
@@ -816,65 +816,58 @@ function main(language) {
         }
     }
 
-    /*function onSelect( event ) {
+    function onSelectStart( event ) {
         const controller = event.target;
-
-        if ( intersections.length > 0 ) {
-
-            const intersection = intersections[ 0 ];
-
-            const object = intersection.object;
-            object.material.emissive.b = 1;
-            controller.attach( object );
-
-            controller.userData.selected = object;
-
+        if(controls.cameraOption == 0){
+            if(selectedImage != null){
+                if(selectedImage.objectType == 1){
+                    controller.attach(selectedImage);
+                    controller.userData.selected = selectedImage;
+                }
+            }
         }
     }
 
     function onSelectEnd( event ) {
-        /*const controller = event.target;
+        const controller = event.target;
         if ( controller.userData.selected !== undefined ) {
-            const object = controller.userData.selected;
-            //object.material.emissive.b = 0;
-            object.material.color = new THREE.Color("rgb(255,255,255)");
-            //groupIntersections.attach( object );
-            controller.userData.selected = undefined;
-        }*/
-        /*if(controls.cameraOption == 0){
-            if((objectLooked != null) && (objectLooked.objectType == 2)){
-                if(selectedImage != null){
-                    if(objectLooked.indexPicture == selectedImage.indexPicture){
-                        objectLooked.material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane   
-                        controls.hits++;
-                        controls.removePictureFromWall(selectedImage, objectLooked);   // Remove imagePlane and picture of panel
-                        if(controls.pictures.length == 0){
-                            controls.state = 1;
-                            controls.messageVictory.visible = true;
-                        } 
+            //const object = controller.userData.selected;
+            if(controls.cameraOption == 0){
+                if((objectLooked != null) && (objectLooked.objectType == 2)){
+                    if(selectedImage != null){
+                        if(objectLooked.indexPicture == selectedImage.indexPicture){
+                            objectLooked.material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane   
+                            controls.hits++;
+                            controls.removePictureFromWall(selectedImage, objectLooked);   // Remove imagePlane and picture of panel
+                            if(controls.pictures.length == 0){
+                                controls.state = 1;
+                                controls.messageVictory.visible = true;
+                            } 
+                        }
+                        else{
+                            controls.fails++;
+                            if(controls.fails > 2){
+                                controls.state = 2;
+                                //console.log("You lose");
+                                controls.removeAllPictures();
+                                controls.messageLoose.visible = true;
+                            } 
+                        }
+                        //objectImagePlane.material.color = new THREE.Color("rgb(255,255,255)");
+                        objectImagePlane = null;
                     }
-                    else{
-                        controls.fails++;
-                        if(controls.fails > 2){
-                            controls.state = 2;
-                            //console.log("You lose");
-                            controls.removeAllPictures();
-                            controls.messageLoose.visible = true;
-                        } 
-                    }
-                    objectImagePlane.material.color = new THREE.Color("rgb(255,255,255)");
-                    objectImagePlane = null;
                 }
+                //objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
+                if(selectedImage != null){       // Drop the picture
+                    selectedImage.visible = true;
+                    controls.imageClone.position.set(-100, -100, -100);
+                    controls.imageClone.rotateX(THREE.Math.degToRad(90));
+                }
+                selectedImage = null;
             }
-            objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
-            if(selectedImage != null){       // Drop the picture
-                selectedImage.visible = true;
-                controls.imageClone.position.set(-100, -100, -100);
-                controls.imageClone.rotateX(THREE.Math.degToRad(90));
-            }
-            selectedImage = null;
+            controller.userData.selected = undefined;
         }
-    }*/
+    }
 
     function raycasterController(){
         switch(controls.cameraOption){
