@@ -1036,9 +1036,9 @@ function main(language) {
             }
         }
         else{
+            objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
             objectLooked = null;
             pointCollisionRayCaster = null;
-            objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
         }
     }
 
@@ -1069,7 +1069,7 @@ function main(language) {
             case 2:         // Loose
                 break;
         }
-        renderer.render(scene, cameraVR);//(scene, defaultCamera);
+        renderer.render(scene, cameraVR);
         timeAfter = t;
         requestAnimationFrame(render);
     }
