@@ -1028,8 +1028,8 @@ function main(language) {
         if(intersects.length > 0){
             objectLooked = intersects[0].object;
             //console.log(objectLooked);
-            //pointCollisionRayCaster = intersects[0].point;
-            objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
+            pointCollisionRayCaster = intersects[0].point;
+            //console.log(pointCollisionRayCaster);
             if(!objectLooked.visible){ // Object is not visible
                 objectLooked = null;
                //pointCollisionRayCaster = null;   
@@ -1039,8 +1039,10 @@ function main(language) {
             }
         }
         else{
-            //objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
-            objectLooked = null;
+            if(objectLooked != null){
+                objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
+                objectLooked = null;
+            }
             //pointCollisionRayCaster = null;
         }
     }
