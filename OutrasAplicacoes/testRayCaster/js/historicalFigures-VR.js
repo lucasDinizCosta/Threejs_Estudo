@@ -655,6 +655,15 @@ function main(language) {
             objectRaycasterClonePictures = [];
             this.imageClone = null;
             this.book = new THREE.Group;
+
+            // Recreate VR Camera
+
+            cameraVR = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+            cameraVR.position.set(0, 1.6, 0);
+            dolly = new THREE.Group();      // This helps move the camera
+            dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);
+            scene.add( dolly );
+            dolly.add( cameraVR );
         },
         this.removeEntity = function(object){
             let selected = scene.getObjectByName(object.name);
