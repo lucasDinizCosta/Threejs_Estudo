@@ -1025,22 +1025,24 @@ function main(language) {
     function checkRaycaster(){
         let intersects = getIntersections(objectRaycaster);
         //console.log(intersects);
-        /*if(intersects.length > 0){
+        if(intersects.length > 0){
             objectLooked = intersects[0].object;
-            pointCollisionRayCaster = intersects[0].point;
+            //console.log(objectLooked);
+            //pointCollisionRayCaster = intersects[0].point;
+            objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
             if(!objectLooked.visible){ // Object is not visible
                 objectLooked = null;
-                pointCollisionRayCaster = null;   
+               //pointCollisionRayCaster = null;   
             }
             else{
                 objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
             }
-        }*/
-        /*else{
-            objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
+        }
+        else{
+            //objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
             objectLooked = null;
-            pointCollisionRayCaster = null;
-        }*/
+            //pointCollisionRayCaster = null;
+        }
     }
 
 
