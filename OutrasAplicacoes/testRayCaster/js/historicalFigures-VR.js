@@ -58,6 +58,7 @@ function main(language) {
     // Time controller
     var timeAfter = 0;
     var dt = 0;
+    var timeRaycaster = 0;
 
     // Creating raycaster objects
     var raycaster = new THREE.Raycaster();
@@ -754,7 +755,7 @@ function main(language) {
     window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
 
     //Only verify if has a collision with the pictures
-    /*function checkRaycasterClonePictures(){        
+    function checkRaycasterClonePictures(){        
         if(selectedImage == null){                       // FIX the bug of change the picture when moving above another picture
             raycasterPictures.setFromCamera(mouse, defaultCamera);
             let intersects = raycasterPictures.intersectObjects(objectRaycasterClonePictures);            
@@ -773,15 +774,15 @@ function main(language) {
     function checkRaycasterOnImageAtPages(){
         if(objectLooked != null && selectedImage != null && objectLooked.objectType == 2){
             objectImagePlane = objectLooked;
-            objectImagePlane.material.color = new THREE.Color("rgb(0,180,0)");
+            //objectImagePlane.material.color = new THREE.Color("rgb(0,180,0)");
         }
         else{
             if(objectImagePlane != null){
-                objectImagePlane.material.color = new THREE.Color("rgb(255,255,255)");
+                //objectImagePlane.material.color = new THREE.Color("rgb(255,255,255)");
                 objectImagePlane = null;
             }
         }
-    }*/
+    }
 
     // Adiciona o renderer no elemento de VR
     document.body.appendChild(VRButton.createButton( renderer ));
@@ -792,13 +793,15 @@ function main(language) {
      * 
      ************************************************/
     
-    /*let controller1 = renderer.xr.getController( 0 );
-    controller1.addEventListener( 'selectstart', onSelectStart );
-    controller1.addEventListener( 'selectend', onSelectEnd );
+    let controller1 = renderer.xr.getController( 0 );
+    controller1.addEventListener('select', onSelect);
+    //controller1.addEventListener( 'selectstart', onSelectStart );
+    //controller1.addEventListener( 'selectend', onSelectEnd );
 
     let controller2 = renderer.xr.getController( 1 );
-    controller2.addEventListener( 'selectstart', onSelectStart );
-    controller2.addEventListener( 'selectend', onSelectEnd );
+    controller2.addEventListener('select', onSelect);
+    //controller2.addEventListener( 'selectstart', onSelectStart );
+    //controller2.addEventListener( 'selectend', onSelectEnd );
     scene.add( controller2 );
 
     const controllerModelFactory = new XRControllerModelFactory();
@@ -809,152 +812,40 @@ function main(language) {
 
     let controllerGrip2 = renderer.xr.getControllerGrip( 1 );
     controllerGrip2.add( controllerModelFactory.createControllerModel( controllerGrip2 ) );
-    scene.add( controllerGrip2 );*/
+    scene.add( controllerGrip2 );
 
-    function onSelectStart( event ) {
+    function onSelect(){
+        if(objectLooked != null){
+            raycasterController();
+        }
+    }
+
+    /*function onSelect( event ) {
         const controller = event.target;
-        const intersections = getIntersections( controller );
-        if(intersections.length > 0 ){
-            //if(objectLooked != null) {
-                const intersection = intersections[ 0 ];
-                objectLooked = intersection.object;
-                controller.userData.selected = intersection.object;
-                //object.material.emissive.b = 1;
-                //object.material.color = new THREE.Color("rgb(180,0,0)");
-                switch(controls.cameraOption){
-                    case 0:
-                    {
-                        switch(objectLooked.objectType){
-                            case 0:
-                                if(objectLooked.sheet.animationAngle == 0){     //Don't rotate if the page is moving
-                                    if(objectLooked.sheet.sideOption == 0){
-                                        objectLooked.sheet.sideOption = 1;
-                                        controls.currentSheet++;
-                                    }
-                                    else{
-                                        objectLooked.sheet.sideOption  = 0;
-                                        controls.currentSheet--;
-                                    }
-                                    controls.adjustbuttons();
-                                    animationList.push(objectLooked.sheet);
-                                }
-                                break;
-                            case 1:     // Collide with image
-                                selectedImage = objectLooked;
-                                selectedImage.visible = false;
-                                controls.imageClone.position.x = pointCollisionRayCaster.x;
-                                controls.imageClone.position.y = pointCollisionRayCaster.y;
-                                controls.imageClone.position.z = -3.35; //pointCollisionRayCaster.z;  
-                                controls.imageClone.rotateX(THREE.Math.degToRad(-90));
-                                //controller.attach( object );
-                                //controller.userData.selected = object;
-                                break;
-                            case 2:     // Collide with imagePlane on Page 
-                                //
-                                //
-                                break;
-                            case 3:     // Read Left page Button
-                                controls.cameraOption = 1;      // Turn camera option
-                                defaultCamera = bookCamera;
-                                dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
-                                controls.adjustbuttons();
-                                controls.buttons[2].visible = true;
-                                defaultCamera.position.set(-controls.widthPage/2, 17, 0);   // Y = 25
-                                controls.buttons[2].position.set(-controls.widthPage - controls.sizeButton/2, controls.buttons[2].position.y, 0);   
-                                break;
-                            case 4:     // Read Right page Button
-                                controls.cameraOption = 1;      // Turn camera option
-                                defaultCamera = bookCamera;
-                                dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
-                                controls.adjustbuttons();
-                                controls.buttons[2].visible = true;
-                                bookCamera.position.set(controls.widthPage/2, 17, 0);
-                                controls.buttons[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttons[2].position.y, 0);   
-                                break;
-                            case 6:     // Zoom In
-                                controls.cameraOption = 2;
-                                defaultCamera = pictureCamera;
-                                dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
-                                controls.buttons[3].position.z = -11.9;
-                                controls.buttons[4].position.z = -11.8;
-                                controls.buttons[3].visible = false;
-                                controls.buttons[4].visible = true;
-                                break;
-                            case 8:     // Retry Button
-                                controls.emptyScene();
-                                controls.createScenary();
-                                break;
-                        }
-                    }
-                        break;
-                    case 1:
-                    {
-                        switch(objectLooked.objectType){
-                            case 4:     // Read Right page Button
-                                controls.cameraOption = 1;      // Turn camera option
-                                defaultCamera = bookCamera;
-                                controls.adjustbuttons();
-                                controls.buttons[2].visible = true;
-                                defaultCamera.position.set(controls.widthPage/2, 17, 0);
-                                controls.buttons[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttons[2].position.y, 0);   
-                                dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
-                                break;
-                            case 5:     // Exit Button
-                                controls.cameraOption = 0;
-                                defaultCamera = rotationCamera;
-                                controls.adjustbuttons();
-                                dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
-                                controls.buttons[2].visible = false;
-                                break;
-                        }
-                    }
-                        break;
-                    case 2:
-                    {
-                        switch(objectLooked.objectType){
-                            case 6:     // Zoom In
-                                controls.cameraOption = 2;
-                                defaultCamera = pictureCamera;
-                                dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
-                                controls.buttons[3].position.z = -11.9;
-                                controls.buttons[4].position.z = -11.8;
-                                controls.buttons[3].visible = false;
-                                controls.buttons[4].visible = true;
-                                break;
-                            case 7:     // Zoom Out
-                                controls.cameraOption = 0;
-                                defaultCamera = rotationCamera;
-                                dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
-                                controls.buttons[3].position.z = -11.8;
-                                controls.buttons[4].position.z = -11.9;
-                                controls.buttons[3].visible = true;
-                                controls.buttons[4].visible = false;
-                                break;
-                            case 8:     // Retry Button
-                                controls.emptyScene();
-                                controls.cameraOption = 0;
-                                defaultCamera = rotationCamera;
-                                dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
-                                controls.createScenary();
-                                break;
-                        }
-                    }
-                        break;
-                }
-            //}
+
+        if ( intersections.length > 0 ) {
+
+            const intersection = intersections[ 0 ];
+
+            const object = intersection.object;
+            object.material.emissive.b = 1;
+            controller.attach( object );
+
+            controller.userData.selected = object;
+
         }
     }
 
     function onSelectEnd( event ) {
-        const controller = event.target;
+        /*const controller = event.target;
         if ( controller.userData.selected !== undefined ) {
             const object = controller.userData.selected;
             //object.material.emissive.b = 0;
             object.material.color = new THREE.Color("rgb(255,255,255)");
             //groupIntersections.attach( object );
             controller.userData.selected = undefined;
-        }
-        if(controls.cameraOption == 0){
+        }*/
+        /*if(controls.cameraOption == 0){
             if((objectLooked != null) && (objectLooked.objectType == 2)){
                 if(selectedImage != null){
                     if(objectLooked.indexPicture == selectedImage.indexPicture){
@@ -987,9 +878,132 @@ function main(language) {
             }
             selectedImage = null;
         }
+    }*/
+
+    function raycasterController(){
+        switch(controls.cameraOption){
+            case 0:
+            {
+                switch(objectLooked.objectType){
+                    case 0:
+                        if(objectLooked.sheet.animationAngle == 0){     //Don't rotate if the page is moving
+                            if(objectLooked.sheet.sideOption == 0){
+                                objectLooked.sheet.sideOption = 1;
+                                controls.currentSheet++;
+                            }
+                            else{
+                                objectLooked.sheet.sideOption  = 0;
+                                controls.currentSheet--;
+                            }
+                            controls.adjustbuttons();
+                            animationList.push(objectLooked.sheet);
+                        }
+                        break;
+                    case 1:     // Collide with image
+                        selectedImage = objectLooked;
+                        selectedImage.visible = false;
+                        controls.imageClone.position.x = pointCollisionRayCaster.x;
+                        controls.imageClone.position.y = pointCollisionRayCaster.y;
+                        controls.imageClone.position.z = -3.35; //pointCollisionRayCaster.z;  
+                        controls.imageClone.rotateX(THREE.Math.degToRad(-90));
+                        //controller.attach( object );
+                        //controller.userData.selected = object;
+                        break;
+                    case 2:     // Collide with imagePlane on Page 
+                        //
+                        //
+                        break;
+                    case 3:     // Read Left page Button
+                        controls.cameraOption = 1;      // Turn camera option
+                        defaultCamera = bookCamera;
+                        dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                        controls.adjustbuttons();
+                        controls.buttons[2].visible = true;
+                        defaultCamera.position.set(-controls.widthPage/2, 17, 0);   // Y = 25
+                        controls.buttons[2].position.set(-controls.widthPage - controls.sizeButton/2, controls.buttons[2].position.y, 0);   
+                        break;
+                    case 4:     // Read Right page Button
+                        controls.cameraOption = 1;      // Turn camera option
+                        defaultCamera = bookCamera;
+                        dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                        controls.adjustbuttons();
+                        controls.buttons[2].visible = true;
+                        bookCamera.position.set(controls.widthPage/2, 17, 0);
+                        controls.buttons[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttons[2].position.y, 0);   
+                        break;
+                    case 6:     // Zoom In
+                        controls.cameraOption = 2;
+                        defaultCamera = pictureCamera;
+                        dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                        controls.buttons[3].position.z = -11.9;
+                        controls.buttons[4].position.z = -11.8;
+                        controls.buttons[3].visible = false;
+                        controls.buttons[4].visible = true;
+                        break;
+                    case 8:     // Retry Button
+                        controls.emptyScene();
+                        controls.createScenary();
+                        break;
+                }
+            }
+                break;
+            case 1:
+            {
+                switch(objectLooked.objectType){
+                    case 4:     // Read Right page Button
+                        controls.cameraOption = 1;      // Turn camera option
+                        defaultCamera = bookCamera;
+                        controls.adjustbuttons();
+                        controls.buttons[2].visible = true;
+                        defaultCamera.position.set(controls.widthPage/2, 17, 0);
+                        controls.buttons[2].position.set(controls.widthPage + controls.sizeButton/2, controls.buttons[2].position.y, 0);   
+                        dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                        break;
+                    case 5:     // Exit Button
+                        controls.cameraOption = 0;
+                        defaultCamera = rotationCamera;
+                        controls.adjustbuttons();
+                        dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                        controls.buttons[2].visible = false;
+                        break;
+                }
+            }
+                break;
+            case 2:
+            {
+                switch(objectLooked.objectType){
+                    case 6:     // Zoom In
+                        controls.cameraOption = 2;
+                        defaultCamera = pictureCamera;
+                        dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                        controls.buttons[3].position.z = -11.9;
+                        controls.buttons[4].position.z = -11.8;
+                        controls.buttons[3].visible = false;
+                        controls.buttons[4].visible = true;
+                        break;
+                    case 7:     // Zoom Out
+                        controls.cameraOption = 0;
+                        defaultCamera = rotationCamera;
+                        dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                        controls.buttons[3].position.z = -11.8;
+                        controls.buttons[4].position.z = -11.9;
+                        controls.buttons[3].visible = true;
+                        controls.buttons[4].visible = false;
+                        break;
+                    case 8:     // Retry Button
+                        controls.emptyScene();
+                        controls.cameraOption = 0;
+                        defaultCamera = rotationCamera;
+                        dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);//dolly.position.set(5 , 10, 20);
+                        controls.createScenary();
+                        break;
+                }
+            }
+                break;
+        }
     }
 
-    function intersectObjects( controller ) {
+    /*function intersectObjects( controller ) {
         // Do not highlight when already selected
         if ( controller.userData.selected !== undefined ) return;
 
@@ -1004,18 +1018,18 @@ function main(language) {
                 pointCollisionRayCaster = null;   
             }
             else{
-                objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
-                /*const object = intersection.object;
+               // objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
+                const object = intersection.object;
                 intersected.push( object );
-                line.scale.z = intersection.distance;*/
+                line.scale.z = intersection.distance;
             }
         } else {
-            objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
+            //objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
             objectLooked = null;
             pointCollisionRayCaster = null; 
             //line.scale.z = 5;
         }
-    }
+    }*/
 
     function getIntersections(elements) {
         raycaster.setFromCamera({x: circleMarker.position.x, y: circleMarker.position.y}, cameraVR);
@@ -1024,26 +1038,23 @@ function main(language) {
 
     function checkRaycaster(){
         let intersects = getIntersections(objectRaycaster);
-        //console.log(intersects);
         if(intersects.length > 0){
             objectLooked = intersects[0].object;
-            //console.log(objectLooked);
-            pointCollisionRayCaster = intersects[0].point;
-            //console.log(pointCollisionRayCaster);
             if(!objectLooked.visible){ // Object is not visible
                 objectLooked = null;
-               //pointCollisionRayCaster = null;   
+                pointCollisionRayCaster = null;   
             }
             else{
-                objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
+                //objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
+                pointCollisionRayCaster = intersects[0].point;
             }
         }
         else{
             if(objectLooked != null){
-                objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
+                //objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
                 objectLooked = null;
+                pointCollisionRayCaster = null;
             }
-            //pointCollisionRayCaster = null;
         }
     }
 
@@ -1052,9 +1063,6 @@ function main(language) {
 
     function render(t) {
         dt = (t - timeAfter) / 1000;
-        //stats.update();
-        //orbitControls.update(clock.getDelta());
-        //orbitControls.update();
         checkRaycaster();
 
         //intersectObjects( controller1 );
