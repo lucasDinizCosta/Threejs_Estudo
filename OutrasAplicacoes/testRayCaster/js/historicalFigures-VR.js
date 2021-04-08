@@ -753,83 +753,8 @@ function main(language) {
 
     window.addEventListener('resize', onResize, false);         // Ouve os eventos de resize
 
-   /* clearPickPosition();
-    // Se o mouse sai da tela
-    function clearPickPosition() {
-        // unlike the mouse which always has a position
-        // if the user stops touching the screen we want
-        // to stop picking. For now we just pick a value
-        // unlikely to pick something
-        mouse.x = -100000;
-        mouse.y = -100000;
-    }
-
-    window.addEventListener( 'mousemove', onMouseMove, false );
-
-    function onMouseMove(event) {
-        event.preventDefault();
-        // calculate mouse position in normalized device coordinates
-        // (-1 to +1) for both components
-        mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-        mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-    }
-
-    window.addEventListener('mouseup', function up(event){
-        //console.log(event);
-        if(event.button == 0){              // Left Button
-            if(controls.cameraOption == 0){
-                if((objectLooked != null) && (objectLooked.objectType == 2)){
-                    if(selectedImage != null){
-                        if(objectLooked.indexPicture == selectedImage.indexPicture){
-                            objectLooked.material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane   
-                            controls.hits++;
-                            controls.removePictureFromWall(selectedImage, objectLooked);   // Remove imagePlane and picture of panel
-                            if(controls.pictures.length == 0){
-                                controls.state = 1;
-                                controls.messageVictory.visible = true;
-                            } 
-                        }
-                        else{
-                            controls.fails++;
-                            if(controls.fails > 2){
-                                controls.state = 2;
-                                //console.log("You lose");
-                                controls.removeAllPictures();
-                                controls.messageLoose.visible = true;
-                            } 
-                        }
-                        objectImagePlane.material.color = new THREE.Color("rgb(255,255,255)");
-                        objectImagePlane = null;
-                    }
-                }
-                if(selectedImage != null){       // Drop the picture
-                    selectedImage.visible = true;
-                    controls.imageClone.position.set(-100, -100, -100);
-                    controls.imageClone.rotateX(THREE.Math.degToRad(90));
-                }
-                selectedImage = null;
-                //orbitControls.enableRotate = true;      // Enable rotation on camera
-            }
-        }
-    });*/
-
-    /*function checkRaycaster(){
-        // update the picking ray with the camera and mouse position
-        raycaster.setFromCamera(mouse, defaultCamera);
-        let intersects = raycaster.intersectObjects(objectRaycaster);
-        if(intersects.length > 0){
-            objectLooked = intersects[0].object;
-            if(!objectLooked.visible){ // Object is not visible
-                objectLooked = null;
-            }
-        }
-        else{
-            objectLooked = null;
-        }
-    }*/
-
     //Only verify if has a collision with the pictures
-    function checkRaycasterClonePictures(){        
+    /*function checkRaycasterClonePictures(){        
         if(selectedImage == null){                       // FIX the bug of change the picture when moving above another picture
             raycasterPictures.setFromCamera(mouse, defaultCamera);
             let intersects = raycasterPictures.intersectObjects(objectRaycasterClonePictures);            
@@ -856,7 +781,7 @@ function main(language) {
                 objectImagePlane = null;
             }
         }
-    }
+    }*/
 
     // Adiciona o renderer no elemento de VR
     document.body.appendChild(VRButton.createButton( renderer ));
@@ -887,12 +812,13 @@ function main(language) {
     scene.add( controllerGrip2 );
 
     function onSelectStart( event ) {
-        /*const controller = event.target;
+        const controller = event.target;
         const intersections = getIntersections( controller );
         if(intersections.length > 0 ){
             //if(objectLooked != null) {
                 const intersection = intersections[ 0 ];
                 objectLooked = intersection.object;
+                controller.userData.selected = intersection.object;
                 //object.material.emissive.b = 1;
                 //object.material.color = new THREE.Color("rgb(180,0,0)");
                 switch(controls.cameraOption){
@@ -1016,11 +942,11 @@ function main(language) {
                         break;
                 }
             //}
-        }*/
+        }
     }
 
     function onSelectEnd( event ) {
-        /*const controller = event.target;
+        const controller = event.target;
         if ( controller.userData.selected !== undefined ) {
             const object = controller.userData.selected;
             //object.material.emissive.b = 0;
@@ -1053,14 +979,14 @@ function main(language) {
                     objectImagePlane = null;
                 }
             }
-            //objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
+            objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
             if(selectedImage != null){       // Drop the picture
                 selectedImage.visible = true;
                 controls.imageClone.position.set(-100, -100, -100);
                 controls.imageClone.rotateX(THREE.Math.degToRad(90));
             }
             selectedImage = null;
-        }*/
+        }
     }
 
     function getIntersections( controller ) {
@@ -1084,26 +1010,25 @@ function main(language) {
             }
             else{
                 objectLooked.material.color = new THREE.Color("rgb(180,0,0)");
+                const object = intersection.object;
+                intersected.push( object );
+                line.scale.z = intersection.distance;
             }
-
-
-            line.scale.z = intersection.distance;
         } else {
             objectLooked.material.color = new THREE.Color("rgb(255,255,255)");
             objectLooked = null;
             pointCollisionRayCaster = null; 
-
             line.scale.z = 5;
         }
     }
     
     function cleanIntersected() {
-        /*while ( intersected.length ) {
+        while ( intersected.length ) {
             const object = intersected.pop();
             //object.material.emissive.r = 0;
             
             object.material.color = new THREE.Color("rgb(255,255,255)");
-        }*/
+        }
     }
 
     const geometry = new THREE.BufferGeometry().setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 1 ) ] );
