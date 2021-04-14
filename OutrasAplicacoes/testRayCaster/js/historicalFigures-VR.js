@@ -27,13 +27,13 @@ function main(language) {
 	renderer.sortObjects = false; 
 
 	var rotationCamera = new THREE.PerspectiveCamera(
-		50,
+		45,
 		window.innerWidth / window.innerHeight,
 		0.1,
 		1000
 	); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
 	rotationCamera.up.set(0, 1, 0);
-	rotationCamera.position.set(0, 12, 12);
+	rotationCamera.position.set(0, 12, 17);
 	var bookCamera = new THREE.PerspectiveCamera(
 		50,
 		window.innerWidth / window.innerHeight,
@@ -55,7 +55,7 @@ function main(language) {
 	var defaultCamera = rotationCamera;
 
 	var cameraVR = new THREE.PerspectiveCamera(
-		50,
+		45,
 		window.innerWidth / window.innerHeight,
 		0.1,
 		1000
@@ -148,14 +148,7 @@ function main(language) {
 					this.ctx.fillText("FAILS: " + controls.fails, 30, 100);
 					this.ctx.fillText("HITS: " + controls.hits, 300, 100);
 					this.ctx.fillText(
-						"TIMER:  " +
-							controls.timer.minutes.toLocaleString(undefined, {
-								minimumIntegerDigits: 2,
-							}) +
-							" : " +
-							controls.timer.seconds
-								.toFixed(0)
-								.toLocaleString(undefined, { minimumIntegerDigits: 2 }),
+						`TIMER:  ${controls.timer.minutes.toLocaleString(undefined, {minimumIntegerDigits: 2,})} :  ${controls.timer.seconds.toFixed(0).toLocaleString(undefined, { minimumIntegerDigits: 2 })}`,
 						500,
 						100
 					);
@@ -187,6 +180,7 @@ function main(language) {
 			(this.buttons = []), // Read(Left sheet, Right sheet), Exit, ZoomIn, ZoomOut, Retry
 			(this.sizeButton = 1.75),
 			(this.cameraOption = 0), // 0 => rotationCamera, 1 => bookCamera, 2 => pictureCamera
+
 			// Functions
 			(this.adjustbuttons = function () {
 				if (this.cameraOption == 0) {
@@ -213,9 +207,7 @@ function main(language) {
 			(this.animationBook = function () {
 				for (let i = 0; i < animationList.length; i++) {
 					if (animationList[i].sideOption == 1) {
-						if (
-							animationList[i].animationAngle > animationList[i].angleFinish
-						) {
+						if ( animationList[i].animationAngle > animationList[i].angleFinish) {
 							animationList[i].animationAngle = 0;
 							animationList.splice(i, 1);
 							continue;
@@ -224,15 +216,12 @@ function main(language) {
 							animationList[i].animationAngle + speedAnimation;
 						animationList[i].rotateZ(THREE.Math.degToRad(speedAnimation));
 					} else {
-						if (
-							animationList[i].animationAngle < -animationList[i].angleFinish
-						) {
+						if ( animationList[i].animationAngle < -animationList[i].angleFinish) {
 							animationList[i].animationAngle = 0;
 							animationList.splice(i, 1);
 							continue;
 						}
-						animationList[i].animationAngle =
-							animationList[i].animationAngle - speedAnimation;
+						animationList[i].animationAngle = animationList[i].animationAngle - speedAnimation;
 						animationList[i].rotateZ(THREE.Math.degToRad(-speedAnimation));
 					}
 				}
@@ -1139,7 +1128,7 @@ function main(language) {
 								controls.buttons[2].position.y,
 								0
 							);
-							bookCamera.position.set(-controls.widthPage / 2, 17, 0); // Y = 25
+							bookCamera.position.set(-controls.widthPage / 2, 10, 1); // Y = 25
 							defaultCamera = bookCamera;
 							dolly.position.set(
 								defaultCamera.position.x,
@@ -1147,8 +1136,7 @@ function main(language) {
 								defaultCamera.position.z
 							); //dolly.position.set(5 , 10, 20);
 							//cameraVR.lookAt(0, 0, 0);
-							cameraVR.lookAt(0, 0, 0);
-							dolly.rotateX(THREE.Math.degToRad(-90));
+							cameraVR.rotateX(THREE.Math.degToRad(-90));
 							break;
 						case 4: // Read Right page Button
 							controls.cameraOption = 1; // Turn camera option
@@ -1159,15 +1147,19 @@ function main(language) {
 								controls.buttons[2].position.y,
 								0
 							);
-							bookCamera.position.set(controls.widthPage / 2, 17, 0);
+							bookCamera.position.set(controls.widthPage / 2 , 10, 1);
 							defaultCamera = bookCamera;
 							dolly.position.set(
 								defaultCamera.position.x,
 								defaultCamera.position.y,
 								defaultCamera.position.z
 							); //dolly.position.set(5 , 10, 20);
-							cameraVR.lookAt(0, 0, 0);
-							dolly.rotateX(-90);
+							//dolly.rotateX(THREE.Math.degToRad(-90));
+							cameraVR.rotateX(THREE.Math.degToRad(-90));
+							//cameraVR.lookAt(0, 0, 0);
+							//cameraVR.rotation.set(0,0,0);
+							//cameraVR.lookAt(0, 0, 0);
+							//cameraVR.lookAt(controls.widthPage / 2, 0, 0);
 							break;
 						case 6: // Zoom In
 							controls.cameraOption = 2;
@@ -1202,6 +1194,7 @@ function main(language) {
 								defaultCamera.position.z
 							); //dolly.position.set(5 , 10, 20);
 							controls.buttons[2].visible = false;
+							cameraVR.rotateX(0);
 							break;
 					}
 				}
