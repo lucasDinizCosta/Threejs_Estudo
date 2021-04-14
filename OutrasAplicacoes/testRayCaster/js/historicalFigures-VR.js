@@ -53,35 +53,9 @@ function main(language) {
 	pictureCamera.up.set(0, 1, 0);
 	pictureCamera.lookAt(0, 10.7, -12);
 	var defaultCamera = rotationCamera;
-	var cameraVR = new THREE.PerspectiveCamera(
-		50,
-		window.innerWidth / window.innerHeight,
-		0.1,
-		1000
-	);
-	cameraVR.position.set(0, 1.6, 0);
-	let dolly = new THREE.Group(); // This helps move the camera
-	dolly.position.set(
-		defaultCamera.position.x,
-		defaultCamera.position.y,
-		defaultCamera.position.z
-	);
-	scene.add(dolly);
-	dolly.add(cameraVR);
 
-	let geometryMarker = new THREE.RingGeometry(14 * 0.0025, 14 * 0.005, 64); //(0.0025, 0.005, 64);
-	let materialMarker = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-	let circleMarker = new THREE.Mesh(geometryMarker, materialMarker);
-	cameraVR.add(circleMarker);
-	circleMarker.position.set(0, 0, -5); // -0.2
-	geometryMarker = new THREE.RingGeometry(15 * 0.0025, 15 * 0.003, 64);//(0.0025, 0.005, 64);
-	materialMarker = new THREE.MeshBasicMaterial({ color: 0x00000 });
-	let circleBGMarker = new THREE.Mesh(geometryMarker, materialMarker);
-	cameraVR.add(circleBGMarker);
-	circleBGMarker.position.set(0, 0, -5); // -0.2
-	geometryMarker = new THREE.RingGeometry(14 * 0.005, 14 * 0.006, 64);//(0.0025, 0.005, 64);
-	materialMarker = new THREE.MeshBasicMaterial({ color: 0x00000 });
-	circleBGMarker.add(new THREE.Mesh(geometryMarker, materialMarker));
+	// VR camera variables
+	let cameraVR, dolly, geometryMarker, materialMarker, circleMarker, circleBGMarker;
 
 	const intersected = [];
 	const tempMatrix = new THREE.Matrix4();
@@ -775,6 +749,37 @@ function main(language) {
 				scene.add(nameBox);
 			}),
 			(this.createScenary = function () {
+				// VR cameras attributes
+				cameraVR = new THREE.PerspectiveCamera(
+					50,
+					window.innerWidth / window.innerHeight,
+					0.1,
+					1000
+				);
+				cameraVR.position.set(0, 1.6, 0);
+				dolly = new THREE.Group(); // This helps move the camera
+				dolly.position.set(
+					defaultCamera.position.x,
+					defaultCamera.position.y,
+					defaultCamera.position.z
+				);
+				scene.add(dolly);
+				dolly.add(cameraVR);
+			
+				geometryMarker = new THREE.RingGeometry(14 * 0.0025, 14 * 0.005, 64); //(0.0025, 0.005, 64);
+				materialMarker = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+				circleMarker = new THREE.Mesh(geometryMarker, materialMarker);
+				cameraVR.add(circleMarker);
+				circleMarker.position.set(0, 0, -5); // -0.2
+				geometryMarker = new THREE.RingGeometry(15 * 0.0025, 15 * 0.003, 64);//(0.0025, 0.005, 64);
+				materialMarker = new THREE.MeshBasicMaterial({ color: 0x00000 });
+				let circleBGMarker = new THREE.Mesh(geometryMarker, materialMarker);
+				cameraVR.add(circleBGMarker);
+				circleBGMarker.position.set(0, 0, -5); // -0.2
+				geometryMarker = new THREE.RingGeometry(14 * 0.005, 14 * 0.006, 64);//(0.0025, 0.005, 64);
+				materialMarker = new THREE.MeshBasicMaterial({ color: 0x00000 });
+				circleBGMarker.add(new THREE.Mesh(geometryMarker, materialMarker));
+
 				var spotLight = new THREE.SpotLight(0xffffff);
 				spotLight.position.copy(new THREE.Vector3(0, 15, 15));
 				spotLight.shadow.mapSize.width = 2048;
