@@ -21,6 +21,11 @@ function main(language) {
 	document.getElementById("webgl-output").appendChild(renderer.domElement);
 	renderer.xr.enabled = true; //tell your instance of WebGLRenderer to enable XR rendering
 
+	// FIX: TRANSPARENCY Problem
+	//  https://stackoverflow.com/questions/15994944/transparent-objects-in-threejs
+	// Em seguida, os objetos serão renderizados na ordem em que são adicionados à cena 
+	renderer.sortObjects = false; 
+
 	var rotationCamera = new THREE.PerspectiveCamera(
 		50,
 		window.innerWidth / window.innerHeight,
@@ -65,7 +70,7 @@ function main(language) {
 	scene.add(dolly);
 	dolly.add(cameraVR);
 
-	let geometryMarker = new THREE.RingGeometry(30 * 0.0025, 30 * 0.005, 64);//(0.0025, 0.005, 64);
+	let geometryMarker = new THREE.RingGeometry(30 * 0.0025, 30 * 0.005, 64); //(0.0025, 0.005, 64);
 	let materialMarker = new THREE.MeshBasicMaterial({ color: 0xffff00 });
 	let circleMarker = new THREE.Mesh(geometryMarker, materialMarker);
 	cameraVR.add(circleMarker);
@@ -115,7 +120,7 @@ function main(language) {
 			 *  0 => Game Running     *
 			 *  1 => Victory          *
 			 *  2 => Loose            *
-			 *                        *
+			 *                        						*
 			 **************************/
 			(this.state = 0),
 			(this.timer = {
@@ -473,27 +478,15 @@ function main(language) {
 					imagePlane.indexPicture = indexPicture;
 
 					// Informations block
-					let informationGeometry = new THREE.PlaneGeometry(
-						9.6,
-						6.08,
-						0.1,
-						0.1
-					);
+					let informationGeometry = new THREE.PlaneGeometry( 9.6, 6.08, 0.1, 0.1 );
 					let informationMaterial = new THREE.MeshBasicMaterial({
 						transparent: true,
 						side: THREE.DoubleSide,
 						map: textureLoader.load(
-							"../assets/pictures/information/" +
-								language +
-								"/" +
-								indexPicture +
-								".png"
+							"../assets/pictures/information/" + language + "/" + indexPicture +".png"
 						),
 					});
-					let informationPlane = new THREE.Mesh(
-						informationGeometry,
-						informationMaterial
-					);
+					let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
 					informationPlane.name = "informationBlock-Page_" + this.amountPages;
 					informationPlane.position.set(0, -this.lengthPage / 5, 0.025); //0.01
 					page.add(informationPlane);
@@ -511,7 +504,7 @@ function main(language) {
 					}
 				} else {
 					let sheet = this.book.children[this.book.children.length - 1]; // Take a sheet to insert a page on the book
-
+				
 					// Page Background
 					let pageGeometry = new THREE.PlaneGeometry(
 						this.widthPage,
@@ -565,11 +558,7 @@ function main(language) {
 						transparent: true /*opacity: 0.9,*/,
 						side: THREE.DoubleSide,
 						map: textureLoader.load(
-							"../assets/pictures/information/" +
-								language +
-								"/" +
-								indexPicture +
-								".png"
+							"../assets/pictures/information/" + language + "/" + indexPicture + ".png"
 						),
 					});
 					let informationPlane = new THREE.Mesh(
@@ -1157,7 +1146,9 @@ function main(language) {
 								defaultCamera.position.y,
 								defaultCamera.position.z
 							); //dolly.position.set(5 , 10, 20);
+							//cameraVR.lookAt(0, 0, 0);
 							cameraVR.lookAt(0, 0, 0);
+							dolly.rotateX(THREE.Math.degToRad(-90));
 							break;
 						case 4: // Read Right page Button
 							controls.cameraOption = 1; // Turn camera option
@@ -1176,6 +1167,7 @@ function main(language) {
 								defaultCamera.position.z
 							); //dolly.position.set(5 , 10, 20);
 							cameraVR.lookAt(0, 0, 0);
+							dolly.rotateX(-90);
 							break;
 						case 6: // Zoom In
 							controls.cameraOption = 2;
