@@ -171,7 +171,7 @@ function main(language) {
 			// bookAttributes
 			(this.angleBeginPage = 0),
 			(this.angleFinishPage = 180),
-			(this.angleRatePage = 1.12), //0.75
+			(this.angleRatePage = 1.8), //0.75
 			// page and sheet attributes
 			(this.widthPage = 12),
 			(this.lengthPage = 14),
@@ -179,8 +179,7 @@ function main(language) {
 			(this.amountSheets = 0),
 			(this.currentSheet = 0),
 			(this.amountPages = 0),
-			// Button Read / Exit
-			(this.buttons = []), // Read(Left sheet, Right sheet), Exit, ZoomIn, ZoomOut
+			(this.buttons = []), // Read(Left sheet, Right sheet), Exit, ZoomIn, ZoomOut, Retry
 			(this.sizeButton = 1.75),
 			(this.cameraOption = 0), // 0 => rotationCamera, 1 => bookCamera, 2 => pictureCamera
 			// Functions
