@@ -33,14 +33,14 @@ function main(language) {
 		1000
 	); 
 	rotationCamera.up.set(0, 1, 0);
-	rotationCamera.position.set(0, 12, 17);
+	rotationCamera.position.set(0, 12, 25);
 	var bookCamera = new THREE.PerspectiveCamera(
 		50,
 		window.innerWidth / window.innerHeight,
 		0.1,
 		1000
 	); 
-	bookCamera.position.set(0, 12, -1);
+	bookCamera.position.set(0, 12, 5);
 	bookCamera.up.set(0, 1, 0);
 	bookCamera.lookAt(0, 0, 0);
 	var pictureCamera = new THREE.PerspectiveCamera(
@@ -55,7 +55,7 @@ function main(language) {
 	var defaultCamera = rotationCamera;
 
 	// VR camera variables
-	let cameraVR, dolly, geometryMarker, materialMarker, circleMarker, circleBGMarker;
+	let cameraVR, user, geometryMarker, materialMarker, circleMarker, circleBGMarker;
 
 	const intersected = [];
 	const tempMatrix = new THREE.Matrix4();
@@ -757,14 +757,14 @@ function main(language) {
 					1000
 				);
 				cameraVR.position.set(0, 1.6, 0);
-				dolly = new THREE.Group(); // This helps move the camera
-				dolly.position.set(
+				user = new THREE.Group(); // This helps move the camera
+				user.position.set(
 					defaultCamera.position.x,
 					defaultCamera.position.y,
 					defaultCamera.position.z
 				);
-				scene.add(dolly);
-				dolly.add(cameraVR);
+				scene.add(user);
+				user.add(cameraVR);
 				geometryMarker = new THREE.RingGeometry(14 * 0.0025, 14 * 0.005, 64); //(0.0025, 0.005, 64);
 				materialMarker = new THREE.MeshBasicMaterial({ color: 0xffff00 });
 				circleMarker = new THREE.Mesh(geometryMarker, materialMarker);
@@ -841,15 +841,6 @@ function main(language) {
 				selectedImage = null;
 			}),
 			(this.emptyScene = function () {
-				// Recreate VR Camera
-
-				/*cameraVR = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-						cameraVR.position.set(0, 1.6, 0);
-						dolly = new THREE.Group();      // This helps move the camera
-						dolly.position.set(defaultCamera.position.x, defaultCamera.position.y, defaultCamera.position.z);
-						scene.add( dolly );*/
-
-				//console.log("Empty Scene");
 				while (scene.children.length > 0) {
 					//OU scene.remove.apply(scene, scene.children);
 					scene.remove(scene.children[0]);
@@ -886,9 +877,9 @@ function main(language) {
 				}
 
 				for (let j = 0; j < objectRaycaster.length; j++) {
-					if (objectRaycaster[j].objectType == 1) {
+					if (objectRaycaster[j].objectType === 1) {
 						// picture of the wall
-						if (objectRaycaster[j].indexPicture == image.indexPicture) {
+						if (objectRaycaster[j].indexPicture === image.indexPicture) {
 							objectRaycaster.splice(j, 1);
 							break;
 						}
@@ -903,9 +894,7 @@ function main(language) {
 				}
 
 				for (let j = 0; j < objectRaycasterClonePictures.length; j++) {
-					if (
-						objectRaycasterClonePictures[j].indexPicture == image.indexPicture
-					) {
+					if ( objectRaycasterClonePictures[j].indexPicture == image.indexPicture) {
 						objectRaycasterClonePictures.splice(j, 1);
 						break;
 					}
@@ -1133,13 +1122,13 @@ function main(language) {
 							);
 							bookCamera.position.set(-controls.widthPage / 2, 10, 1); // Y = 25
 							defaultCamera = bookCamera;
-							dolly.position.set(
+							user.position.set(
 								defaultCamera.position.x,
 								defaultCamera.position.y,
 								defaultCamera.position.z
-							); //dolly.position.set(5 , 10, 20);
+							); //user.position.set(5 , 10, 20);
 							//cameraVR.lookAt(0, 0, 0);
-							cameraVR.rotateX(THREE.Math.degToRad(-90));
+							user.rotateX(THREE.Math.degToRad(-90));
 							break;
 						case 4: // Read Right page Button
 							controls.cameraOption = 1; // Turn camera option
@@ -1150,15 +1139,15 @@ function main(language) {
 								controls.buttons[2].position.y,
 								0
 							);
-							bookCamera.position.set(controls.widthPage / 2 , 10, 1);
+							bookCamera.position.set(controls.widthPage / 2 , 10, 4);
 							defaultCamera = bookCamera;
-							dolly.position.set(
+							user.position.set(
 								defaultCamera.position.x,
 								defaultCamera.position.y,
 								defaultCamera.position.z
-							); //dolly.position.set(5 , 10, 20);
-							//dolly.rotateX(THREE.Math.degToRad(-90));
-							cameraVR.rotateX(THREE.Math.degToRad(-90));
+							); //user.position.set(5 , 10, 20);
+							//user.rotateX(THREE.Math.degToRad(-90));
+							user.rotateX(THREE.Math.degToRad(-90));
 							//cameraVR.lookAt(0, 0, 0);
 							//cameraVR.rotation.set(0,0,0);
 							//cameraVR.lookAt(0, 0, 0);
@@ -1167,11 +1156,11 @@ function main(language) {
 						case 6: // Zoom In
 							controls.cameraOption = 2;
 							defaultCamera = pictureCamera;
-							dolly.position.set(
+							user.position.set(
 								defaultCamera.position.x,
 								defaultCamera.position.y,
 								defaultCamera.position.z
-							); //dolly.position.set(5 , 10, 20);
+							); //user.position.set(5 , 10, 20);
 							controls.buttons[3].position.z = -11.9;
 							controls.buttons[4].position.z = -11.8;
 							controls.buttons[3].visible = false;
@@ -1191,13 +1180,14 @@ function main(language) {
 							controls.cameraOption = 0;
 							defaultCamera = rotationCamera;
 							controls.adjustbuttons();
-							dolly.position.set(
+							user.position.set(
 								defaultCamera.position.x,
 								defaultCamera.position.y,
 								defaultCamera.position.z
-							); //dolly.position.set(5 , 10, 20);
+							); //user.position.set(5 , 10, 20);
 							controls.buttons[2].visible = false;
-							cameraVR.rotateX(0);
+							//cameraVR.rotateX(0);
+							user.rotateX(THREE.Math.degToRad(90));
 							break;
 					}
 				}
@@ -1208,11 +1198,11 @@ function main(language) {
 						case 7: // Zoom Out
 							controls.cameraOption = 0;
 							defaultCamera = rotationCamera;
-							dolly.position.set(
+							user.position.set(
 								defaultCamera.position.x,
 								defaultCamera.position.y,
 								defaultCamera.position.z
-							); //dolly.position.set(5 , 10, 20);
+							); //user.position.set(5 , 10, 20);
 							controls.buttons[3].position.z = -11.8;
 							controls.buttons[4].position.z = -11.9;
 							controls.buttons[3].visible = true;
@@ -1222,11 +1212,11 @@ function main(language) {
 							controls.emptyScene();
 							controls.cameraOption = 0;
 							defaultCamera = rotationCamera;
-							dolly.position.set(
+							user.position.set(
 								defaultCamera.position.x,
 								defaultCamera.position.y,
 								defaultCamera.position.z
-							); //dolly.position.set(5 , 10, 20);
+							); //user.position.set(5 , 10, 20);
 							controls.createScenary();
 							break;
 					}
