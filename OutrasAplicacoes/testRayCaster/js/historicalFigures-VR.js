@@ -49,7 +49,7 @@ function main(language) {
 		0.1,
 		1000
 	); 
-	pictureCamera.position.set(0, 12, 8);
+	pictureCamera.position.set(0, 12, 6);
 	pictureCamera.up.set(0, 1, 0);
 	pictureCamera.lookAt(0, 10.7, -12);
 	var defaultCamera = rotationCamera;
@@ -765,7 +765,6 @@ function main(language) {
 				);
 				scene.add(dolly);
 				dolly.add(cameraVR);
-			
 				geometryMarker = new THREE.RingGeometry(14 * 0.0025, 14 * 0.005, 64); //(0.0025, 0.005, 64);
 				materialMarker = new THREE.MeshBasicMaterial({ color: 0xffff00 });
 				circleMarker = new THREE.Mesh(geometryMarker, materialMarker);
