@@ -27,11 +27,11 @@ function main(language) {
 	renderer.sortObjects = false; 
 
 	var rotationCamera = new THREE.PerspectiveCamera(
-		45,
+		50,
 		window.innerWidth / window.innerHeight,
 		0.1,
 		1000
-	); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
+	); 
 	rotationCamera.up.set(0, 1, 0);
 	rotationCamera.position.set(0, 12, 17);
 	var bookCamera = new THREE.PerspectiveCamera(
@@ -39,7 +39,7 @@ function main(language) {
 		window.innerWidth / window.innerHeight,
 		0.1,
 		1000
-	); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
+	); 
 	bookCamera.position.set(0, 12, -1);
 	bookCamera.up.set(0, 1, 0);
 	bookCamera.lookAt(0, 0, 0);
@@ -48,14 +48,13 @@ function main(language) {
 		window.innerWidth / window.innerHeight,
 		0.1,
 		1000
-	); //var camera = initCamera(new THREE.Vector3(0, 10, 20));
+	); 
 	pictureCamera.position.set(0, 12, 8);
 	pictureCamera.up.set(0, 1, 0);
 	pictureCamera.lookAt(0, 10.7, -12);
 	var defaultCamera = rotationCamera;
-
 	var cameraVR = new THREE.PerspectiveCamera(
-		45,
+		50,
 		window.innerWidth / window.innerHeight,
 		0.1,
 		1000
@@ -70,17 +69,17 @@ function main(language) {
 	scene.add(dolly);
 	dolly.add(cameraVR);
 
-	let geometryMarker = new THREE.RingGeometry(30 * 0.0025, 30 * 0.005, 64); //(0.0025, 0.005, 64);
+	let geometryMarker = new THREE.RingGeometry(14 * 0.0025, 14 * 0.005, 64); //(0.0025, 0.005, 64);
 	let materialMarker = new THREE.MeshBasicMaterial({ color: 0xffff00 });
 	let circleMarker = new THREE.Mesh(geometryMarker, materialMarker);
 	cameraVR.add(circleMarker);
 	circleMarker.position.set(0, 0, -5); // -0.2
-	geometryMarker = new THREE.RingGeometry(31 * 0.0025, 31 * 0.003, 64);//(0.0025, 0.005, 64);
+	geometryMarker = new THREE.RingGeometry(15 * 0.0025, 15 * 0.003, 64);//(0.0025, 0.005, 64);
 	materialMarker = new THREE.MeshBasicMaterial({ color: 0x00000 });
 	let circleBGMarker = new THREE.Mesh(geometryMarker, materialMarker);
 	cameraVR.add(circleBGMarker);
 	circleBGMarker.position.set(0, 0, -5); // -0.2
-	geometryMarker = new THREE.RingGeometry(30 * 0.005, 30 * 0.006, 64);//(0.0025, 0.005, 64);
+	geometryMarker = new THREE.RingGeometry(14 * 0.005, 14 * 0.006, 64);//(0.0025, 0.005, 64);
 	materialMarker = new THREE.MeshBasicMaterial({ color: 0x00000 });
 	circleBGMarker.add(new THREE.Mesh(geometryMarker, materialMarker));
 
