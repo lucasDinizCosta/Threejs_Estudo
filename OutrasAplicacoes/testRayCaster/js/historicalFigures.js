@@ -596,7 +596,6 @@ function main(language) {
             this.createButtons();
             this.createMessages();
 
-            pictureLooked = null;
             animationList = [];
             objectRaycaster = [];
             objectRaycasterClonePictures = [];
@@ -616,7 +615,6 @@ function main(language) {
             // Pages of book
             for (let i = 0; i < this.book.children.length; i++) {
                 let pageGroupRotation = this.book.children[i];
-                console.log(pageGroupRotation);
                 for(let j = 0; j < pageGroupRotation.children.length; j++){
                     objectRaycaster.push(pageGroupRotation.children[j]);        //Put inside only page without the group rotation
                     objectRaycaster.push(pageGroupRotation.children[j].children[0]);        // Image Block
@@ -656,7 +654,6 @@ function main(language) {
             this.orderPicturesBook = [];
             objectLooked = null;
             selectedImage = null;
-            pictureLooked = null;
             objectRaycaster = [];
             objectRaycasterClonePictures = [];
             this.imageClone = null;

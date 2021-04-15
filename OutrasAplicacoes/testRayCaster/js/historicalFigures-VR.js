@@ -24,7 +24,7 @@ function main(language) {
 	// FIX: TRANSPARENCY Problem
 	//  https://stackoverflow.com/questions/15994944/transparent-objects-in-threejs
 	// Em seguida, os objetos serão renderizados na ordem em que são adicionados à cena 
-	renderer.sortObjects = false; 
+	// renderer.sortObjects = false; 
 
 	var rotationCamera = new THREE.PerspectiveCamera(
 		50,
@@ -55,7 +55,7 @@ function main(language) {
 	var defaultCamera = rotationCamera;
 
 	// VR camera variables
-	let cameraVR, user, geometryMarker, materialMarker, circleMarker, circleBGMarker;
+	let cameraVR, user, geometryMarker, materialMarker, circleMarker, groupCenter, circleBGMarker;
 
 	const intersected = [];
 	const tempMatrix = new THREE.Matrix4();
@@ -80,7 +80,6 @@ function main(language) {
 		objectImagePlane = null,
 		selectedImage = null,
 		pointCollisionRayCaster = null;
-	let pictureLooked = null;
 
 	// Controls of sidebar
 	var controls = new (function () {
@@ -415,6 +414,8 @@ function main(language) {
 						map: textureLoader.load("../assets/parchment_alpha.png"),
 						side: THREE.DoubleSide,
 					});
+					//pageMaterial.depthWrite = false; 
+
 					let page = new THREE.Mesh(pageGeometry, pageMaterial);
 					page.name = "page_" + this.amountPages;
 					page.position.set(this.widthPage / 2, 0, 0);
@@ -448,6 +449,7 @@ function main(language) {
 							"../assets/pictures/information/" + language + "/" + indexPicture +".png"
 						),
 					});
+					//informationMaterial.depthTest = false; 
 					let informationPlane = new THREE.Mesh(informationGeometry, informationMaterial);
 					informationPlane.name = "informationBlock-Page_" + this.amountPages;
 					informationPlane.position.set(0, -this.lengthPage / 5, 0.025); //0.01
@@ -479,6 +481,7 @@ function main(language) {
 						map: textureLoader.load("../assets/parchment_alpha.png"),
 						side: THREE.DoubleSide, //side:THREE.DoubleSide,
 					});
+					//pageMaterial.depthWrite = false; 
 					let page = new THREE.Mesh(pageGeometry, pageMaterial);
 					page.name = "page_" + this.amountPages;
 					page.position.set(this.widthPage / 2, -0.005, 0);
@@ -750,6 +753,7 @@ function main(language) {
 			}),
 			(this.createScenary = function () {
 				// VR cameras attributes
+				groupCenter = new THREE.Group();
 				cameraVR = new THREE.PerspectiveCamera(
 					50,
 					window.innerWidth / window.innerHeight,
@@ -778,6 +782,14 @@ function main(language) {
 				geometryMarker = new THREE.RingGeometry(14 * 0.005, 14 * 0.006, 64);//(0.0025, 0.005, 64);
 				materialMarker = new THREE.MeshBasicMaterial({ color: 0x00000 });
 				circleBGMarker.add(new THREE.Mesh(geometryMarker, materialMarker));
+				groupCenter.position.set(0, 0, -5); // -0.2
+
+				/*const geometry = new THREE.SphereGeometry( 0.5, 32, 32 );
+				const material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+				const sphere = new THREE.Mesh( geometry, material );
+				groupCenter.add( sphere );*/
+
+				circleMarker.add(groupCenter);
 
 				var spotLight = new THREE.SpotLight(0xffffff);
 				spotLight.position.copy(new THREE.Vector3(0, 15, 15));
@@ -794,10 +806,10 @@ function main(language) {
 				scene.add(ambientLight);
 
 				// Show axes (parameter is size of each axis)
-				var axes = new THREE.AxesHelper(24);
-				axes.name = "AXES";
-				axes.visible = true;
-				scene.add(axes);
+				// var axes = new THREE.AxesHelper(24);
+				// axes.name = "AXES";
+				// axes.visible = true;
+				// scene.add(axes);
 
 				var groundPlane = createGroundPlane(30, 30); // width and height
 				groundPlane.rotateX(THREE.Math.degToRad(-90));
@@ -811,7 +823,6 @@ function main(language) {
 				this.createButtons();
 				this.createMessages();
 
-				pictureLooked = null;
 				animationList = [];
 				objectRaycaster = [];
 				objectRaycasterClonePictures = [];
@@ -858,7 +869,6 @@ function main(language) {
 				this.orderPicturesBook = [];
 				objectLooked = null;
 				selectedImage = null;
-				pictureLooked = null;
 				objectRaycaster = [];
 				objectRaycasterClonePictures = [];
 				this.imageClone = null;
@@ -941,52 +951,12 @@ function main(language) {
 		bookCamera.updateProjectionMatrix();
 		pictureCamera.aspect = window.innerWidth / window.innerHeight;
 		pictureCamera.updateProjectionMatrix();
+		cameraVR.aspect = window.innerWidth / window.innerHeight;
+		cameraVR.updateProjectionMatrix();
 		renderer.setSize(window.innerWidth, window.innerHeight); //Define os novos valores para o renderizador
 	}
 
 	window.addEventListener("resize", onResize, false); // Ouve os eventos de resize
-
-	//Only verify if has a collision with the pictures
-	function checkRaycasterClonePictures() {
-		if (selectedImage == null) {
-			// FIX the bug of change the picture when moving above another picture
-			raycasterPictures.setFromCamera(
-				{ x: circleMarker.position.x, y: circleMarker.position.y },
-				cameraVR
-			);
-			let intersects = raycasterPictures.intersectObjects(
-				objectRaycasterClonePictures
-			);
-			if (intersects.length > 0) {
-				let pictureLooked = intersects[0].object;
-				if (pictureLooked.visible && objectLooked.visible) {
-					// picture is not visible, only the clone it is
-					controls.imageClone.position.x = pictureLooked.position.x;
-					controls.imageClone.position.y = pictureLooked.position.y;
-					controls.imageClone.position.z = pictureLooked.position.z + 0.2;
-					controls.imageClone.material = pictureLooked.material.clone();
-				}
-			}
-		}
-	}
-
-	// A cor do espaço de imagem na pagina muda pra verde
-
-	function checkRaycasterOnImageAtPages() {
-		if (
-			objectLooked != null &&
-			selectedImage != null &&
-			objectLooked.objectType == 2
-		) {
-			objectImagePlane = objectLooked;
-			objectImagePlane.material.color = new THREE.Color("rgb(0,180,0)");
-		} else {
-			if (objectImagePlane != null) {
-				objectImagePlane.material.color = new THREE.Color("rgb(255,255,255)");
-				objectImagePlane = null;
-			}
-		}
-	}
 
 	// Adiciona o renderer no elemento de VR
 	document.body.appendChild(VRButton.createButton(renderer));
@@ -998,12 +968,20 @@ function main(language) {
 	 ************************************************/
 
 	let controller1 = renderer.xr.getController(0);
-	controller1.addEventListener("select", onSelect);
+	/** 
+	 * https://developer.mozilla.org/en-US/docs/Web/API/XRSession
+	 *  O evento select é enviado após o evento selectStart e imediatamente antes do evento 
+	 *  selectEnd ser enviado. Se o select nao for enviado, a ação de seleção termina antes de 
+	 *  ser concluída.
+	 *  Evento disparado depois do onSelectStart e antes do onSelectEnd
+	 *  Dispara no momento que o botão do controle é solto
+	 */
+	// controller1.addEventListener("select", onSelect);
 	controller1.addEventListener("selectstart", onSelectStart);
 	controller1.addEventListener("selectend", onSelectEnd);
 
 	let controller2 = renderer.xr.getController(1);
-	controller2.addEventListener("select", onSelect);
+	// controller2.addEventListener("select", onSelect);
 	controller2.addEventListener("selectstart", onSelectStart);
 	controller2.addEventListener("selectend", onSelectEnd);
 	scene.add(controller2);
@@ -1022,68 +1000,56 @@ function main(language) {
 	);
 	scene.add(controllerGrip2);
 
-	function onSelect() {
-		if (objectLooked != null) {
-			raycasterController();
-		}
-	}
-
+	// Dispara no momento que o botão do controle é pressionado
 	function onSelectStart(event) {
 		const controller = event.target;
-		if (controls.cameraOption == 0) {
-			if (selectedImage != null) {
-				if (selectedImage.objectType == 1) {
-					/*controls.imageClone.position.x = pointCollisionRayCaster.x;
-					controls.imageClone.position.y = pointCollisionRayCaster.y;
-					controls.imageClone.position.z = -3.35; //pointCollisionRayCaster.z;  
-					*/
-					controller.attach(controls.imageClone);
-					controller.userData.selected = controls.imageClone;
-				}
-			}
+		if (objectLooked != null) {
+			raycasterController(controller);
 		}
 	}
 
 	function onSelectEnd(event) {
-		const controller = event.target;
-		if (controller.userData.selected !== undefined) {
-			const object = controller.userData.selected;
-			if (controls.cameraOption == 0) {
-				if (objectLooked != null && objectLooked.objectType == 2) {
-					if (selectedImage != null) {
-						if (objectLooked.indexPicture == selectedImage.indexPicture) {
-							objectLooked.material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane
-							controls.hits++;
-							controls.removePictureFromWall(selectedImage, objectLooked); // Remove imagePlane and picture of panel
-							if (controls.pictures.length == 0) {
-								controls.state = 1;
-								controls.messageVictory.visible = true;
-							}
-						} else {
-							controls.fails++;
-							if (controls.fails > 2) {
-								controls.state = 2;
-								//console.log("You lose");
-								controls.removeAllPictures();
-								controls.messageLoose.visible = true;
-							}
-						}
-						objectImagePlane = null;
-					}
-				}
+		if (controls.cameraOption == 0) {
+			if (objectLooked != null && objectLooked.objectType == 2) {
 				if (selectedImage != null) {
-					// Drop the picture
-					selectedImage.visible = true;
+					if (objectLooked.indexPicture == selectedImage.indexPicture) {
+						objectLooked.material = selectedImage.material.clone(); // Generate a clone of material and replace on image plane
+						controls.hits++;
+						controls.removePictureFromWall(selectedImage, objectLooked); // Remove imagePlane and picture of panel
+						if (controls.pictures.length == 0) {
+							controls.state = 1;
+							controls.messageVictory.visible = true;
+						}
+					} else {
+						controls.fails++;
+						if (controls.fails > 2) {
+							controls.state = 2;
+							//console.log("You lose");
+							controls.removeAllPictures();
+							controls.messageLoose.visible = true;
+						}
+					}
+					objectImagePlane.material.color = new THREE.Color("rgb(255,255,255)");
+					objectImagePlane = null;
 					controls.imageClone.position.set(-100, -100, -100);
-					controls.imageClone.rotateX(THREE.Math.degToRad(90));
+					controls.imageClone.rotation.set(0,0,0);
+					// controls.imageClone.rotateX(THREE.Math.degToRad(90));
+					groupCenter.children = [];
 				}
-				selectedImage = null;
 			}
-			controller.userData.selected = undefined;
+			if (selectedImage != null) {
+				// Drop the picture
+				selectedImage.visible = true;
+				controls.imageClone.position.set(-100, -100, -100);
+				controls.imageClone.rotation.set(0,0,0);
+				// controls.imageClone.rotateX(THREE.Math.degToRad(90));
+				groupCenter.children = [];
+			}
+			selectedImage = null;
 		}
 	}
 
-	function raycasterController() {
+	function raycasterController(controller) {
 		switch (controls.cameraOption) {
 			case 0: // rotationCamera
 				{
@@ -1105,7 +1071,26 @@ function main(language) {
 						case 1: // Collide with image
 							selectedImage = objectLooked;
 							selectedImage.visible = false;
+							// controls.imageClone.position.x = pointCollisionRayCaster.x;
+							// controls.imageClone.position.y = pointCollisionRayCaster.y;
+							// controls.imageClone.position.z = -3.35; //pointCollisionRayCaster.z;  
+							 controls.imageClone.position.x = circleMarker.position.x;
+							 controls.imageClone.position.y = 0.1;
+							 controls.imageClone.position.z =  -6.35;//circleMarker.position.z;//pointCollisionRayCaster.z;  
 							controls.imageClone.rotateX(THREE.Math.degToRad(-90));
+							groupCenter.add(controls.imageClone);
+							controls.imageClone.rotateX(THREE.Math.degToRad(35));
+							let materialAux = controls.imageClone.material.clone();
+							controls.imageClone.material = new THREE.MeshBasicMaterial({
+								transparent: true, opacity: 0.5,
+								map: materialAux.map,
+								side: THREE.DoubleSide,
+							});
+							//controls.imageClone.position.y = -4;
+							// controller.attach(controls.imageClone);
+							// controller.userData.selected = controls.imageClone;
+							
+							//circleMarker.attach(controls.imageClone);
 							break;
 						case 2: // Collide with imagePlane on Page
 							//
@@ -1197,7 +1182,7 @@ function main(language) {
 								defaultCamera.position.x,
 								defaultCamera.position.y,
 								defaultCamera.position.z
-							); //user.position.set(5 , 10, 20);
+							); 
 							controls.buttons[3].position.z = -11.8;
 							controls.buttons[4].position.z = -11.9;
 							controls.buttons[3].visible = true;
@@ -1211,7 +1196,7 @@ function main(language) {
 								defaultCamera.position.x,
 								defaultCamera.position.y,
 								defaultCamera.position.z
-							); //user.position.set(5 , 10, 20);
+							);
 							controls.createScenary();
 							break;
 					}
@@ -1222,7 +1207,7 @@ function main(language) {
 
 	function getIntersections(elements) {
 		raycaster.setFromCamera(
-			{ x: circleMarker.position.x, y: circleMarker.position.y },
+			{ x: circleMarker.position.x, y: circleMarker.position.y},
 			cameraVR
 		);
 		return raycaster.intersectObjects(elements);
@@ -1232,19 +1217,67 @@ function main(language) {
 		let intersects = getIntersections(objectRaycaster);
 		if (intersects.length > 0) {
 			objectLooked = intersects[0].object;
+			pointCollisionRayCaster = intersects[0].point;
 			if (!objectLooked.visible) {
-				// Object is not visible
 				objectLooked = null;
 				pointCollisionRayCaster = null;
-			} else {
-				pointCollisionRayCaster = intersects[0].point;
 			}
 		} else {
-			if (objectLooked != null) {
-				objectLooked = null;
-				pointCollisionRayCaster = null;
+			objectLooked = null;
+			pointCollisionRayCaster = null;
+		}
+	}
+
+	// Only verify if has a collision with the pictures
+	function checkRaycasterClonePictures() {
+		if (selectedImage == null && controls.cameraOption == 0) {
+			// console.log("Linha 1229", selectedImage, objectLooked);
+			// FIX the bug of change the picture when moving above another picture
+			raycasterPictures.setFromCamera(
+				{ x: circleMarker.position.x, y: circleMarker.position.y },
+				cameraVR
+			);
+			let intersects = raycasterPictures.intersectObjects(
+				objectRaycasterClonePictures
+			);
+			if (intersects.length > 0) {
+				let pictureLooked = intersects[0].object;
+				if (pictureLooked.visible && objectLooked.visible) {					
+					// picture is not visible, only the clone it is
+					controls.imageClone.position.x = pictureLooked.position.x;
+					controls.imageClone.position.y = pictureLooked.position.y;
+					controls.imageClone.position.z = pictureLooked.position.z  + 0.2;
+					// controls.imageClone.position.x = 0
+					// controls.imageClone.position.y = 2
+					// controls.imageClone.position.z = 0;
+					controls.imageClone.material = pictureLooked.material.clone();
+				}
 			}
 		}
+	}
+
+	// A cor do espaço de imagem na pagina muda pra verde
+
+	function checkRaycasterOnImageAtPages() {
+		if (
+			objectLooked != null &&
+			selectedImage != null &&
+			objectLooked.objectType == 2
+		) {
+			objectImagePlane = objectLooked;
+			objectImagePlane.material.color = new THREE.Color("rgb(0,180,0)");
+		} else {
+			if (objectImagePlane != null) {
+				objectImagePlane.material.color = new THREE.Color("rgb(255,255,255)");
+				objectImagePlane = null;
+			}
+		}
+	}
+
+	function movePictureFromPanel(){
+		// if(selectedImage != null){
+			// circleMarker
+		// }
 	}
 
 	renderer.setAnimationLoop(render);
@@ -1259,6 +1292,7 @@ function main(language) {
 				if (controls.cameraOption == 0) {
 					checkRaycasterOnImageAtPages();
 					checkRaycasterClonePictures();
+					movePictureFromPanel();
 				}
 				break;
 			case 1: // Victory
