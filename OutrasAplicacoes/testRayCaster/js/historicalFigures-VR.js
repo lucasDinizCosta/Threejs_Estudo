@@ -1120,14 +1120,13 @@ function main(language) {
 								controls.buttons[2].position.y,
 								0
 							);
-							bookCamera.position.set(-controls.widthPage / 2, 10, 1); // Y = 25
+							bookCamera.position.set(-controls.widthPage / 2, 10, 4); 
 							defaultCamera = bookCamera;
 							user.position.set(
 								defaultCamera.position.x,
 								defaultCamera.position.y,
 								defaultCamera.position.z
-							); //user.position.set(5 , 10, 20);
-							//cameraVR.lookAt(0, 0, 0);
+							); 
 							user.rotateX(THREE.Math.degToRad(-90));
 							break;
 						case 4: // Read Right page Button
@@ -1145,13 +1144,10 @@ function main(language) {
 								defaultCamera.position.x,
 								defaultCamera.position.y,
 								defaultCamera.position.z
-							); //user.position.set(5 , 10, 20);
-							//user.rotateX(THREE.Math.degToRad(-90));
+							);
 							user.rotateX(THREE.Math.degToRad(-90));
 							//cameraVR.lookAt(0, 0, 0);
 							//cameraVR.rotation.set(0,0,0);
-							//cameraVR.lookAt(0, 0, 0);
-							//cameraVR.lookAt(controls.widthPage / 2, 0, 0);
 							break;
 						case 6: // Zoom In
 							controls.cameraOption = 2;
@@ -1160,7 +1156,7 @@ function main(language) {
 								defaultCamera.position.x,
 								defaultCamera.position.y,
 								defaultCamera.position.z
-							); //user.position.set(5 , 10, 20);
+							); 
 							controls.buttons[3].position.z = -11.9;
 							controls.buttons[4].position.z = -11.8;
 							controls.buttons[3].visible = false;
@@ -1186,7 +1182,6 @@ function main(language) {
 								defaultCamera.position.z
 							); //user.position.set(5 , 10, 20);
 							controls.buttons[2].visible = false;
-							//cameraVR.rotateX(0);
 							user.rotateX(THREE.Math.degToRad(90));
 							break;
 					}
