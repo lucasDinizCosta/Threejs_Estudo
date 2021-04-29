@@ -1,8 +1,6 @@
 // Importando módulos
 import * as THREE from "../../../libs/build/three.module.js";
 import { VRButton } from "../../../libs/three/jsm/webxr/VRButton.js";
-import { DragControls } from "../../../libs/three/jsm/controls/DragControls.js";
-//import { OrbitControls } from '../../../libs/three/jsm/controls/OrbitControls.js';
 import { XRControllerModelFactory } from "../../../libs/three/jsm/webxr/XRControllerModelFactory.js";
 
 function main(language) {
@@ -19,7 +17,9 @@ function main(language) {
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.shadowMap.enabled = true;
 	document.getElementById("webgl-output").appendChild(renderer.domElement);
-	renderer.xr.enabled = true; //tell your instance of WebGLRenderer to enable XR rendering
+	
+	//tell your instance of WebGLRenderer to enable XR rendering
+	renderer.xr.enabled = true; 
 
 	// FIX: TRANSPARENCY Problem
 	//  https://stackoverflow.com/questions/15994944/transparent-objects-in-threejs
@@ -56,7 +56,7 @@ function main(language) {
 
 	// VR camera variables
 	let cameraVR, user, geometryMarker, materialMarker, circleMarker;
-	let groupCenter, circleBGMarker;
+	let groupCenter;
 
 	// Time controller
 	let timeAfter = 0;
@@ -74,7 +74,7 @@ function main(language) {
 	// Raycaster and mouse Controllers
 	let objectRaycaster = [], objectRaycasterClonePictures = [];
 	let objectLooked = null, objectImagePlane = null, selectedImage = null;
-	let pointCollisionRayCaster = null;
+	let pointCollisionRayCaster;
 
 	// Controls of sidebar
 	const controls = {
@@ -1015,7 +1015,6 @@ function main(language) {
 						controls.fails++;
 						if (controls.fails > 2) {
 							controls.state = 2;
-							//console.log("You lose");
 							controls.removeAllPictures();
 							controls.messageLoose.visible = true;
 						}
@@ -1024,7 +1023,6 @@ function main(language) {
 					objectImagePlane = null;
 					controls.imageClone.position.set(-100, -100, -100);
 					controls.imageClone.rotation.set(0,0,0);
-					// controls.imageClone.rotateX(THREE.Math.degToRad(90));
 					groupCenter.children = [];
 				}
 			}
@@ -1033,7 +1031,6 @@ function main(language) {
 				selectedImage.visible = true;
 				controls.imageClone.position.set(-100, -100, -100);
 				controls.imageClone.rotation.set(0,0,0);
-				// controls.imageClone.rotateX(THREE.Math.degToRad(90));
 				groupCenter.children = [];
 			}
 			selectedImage = null;
@@ -1062,12 +1059,9 @@ function main(language) {
 						case 1: // Collide with image
 							selectedImage = objectLooked;
 							selectedImage.visible = false;
-							// controls.imageClone.position.x = pointCollisionRayCaster.x;
-							// controls.imageClone.position.y = pointCollisionRayCaster.y;
-							// controls.imageClone.position.z = -3.35; //pointCollisionRayCaster.z;  
 							controls.imageClone.position.x = circleMarker.position.x;
 							controls.imageClone.position.y = 0.1;
-							controls.imageClone.position.z =  -6.35;//circleMarker.position.z;//pointCollisionRayCaster.z;  
+							controls.imageClone.position.z = -6.35;
 							controls.imageClone.rotateX(THREE.Math.degToRad(-90));
 							groupCenter.add(controls.imageClone);
 							controls.imageClone.rotateX(THREE.Math.degToRad(35));
@@ -1077,11 +1071,6 @@ function main(language) {
 								map: materialAux.map,
 								side: THREE.DoubleSide,
 							});
-							//controls.imageClone.position.y = -4;
-							// controller.attach(controls.imageClone);
-							// controller.userData.selected = controls.imageClone;
-							
-							//circleMarker.attach(controls.imageClone);
 							break;
 						case 2: // Collide with imagePlane on Page
 							//
@@ -1122,8 +1111,6 @@ function main(language) {
 								defaultCamera.position.z
 							);
 							user.rotateX(THREE.Math.degToRad(-90));
-							//cameraVR.lookAt(0, 0, 0);
-							//cameraVR.rotation.set(0,0,0);
 							break;
 						case 6: // Zoom In
 							controls.cameraOption = 2;
@@ -1238,9 +1225,6 @@ function main(language) {
 					controls.imageClone.position.x = pictureLooked.position.x;
 					controls.imageClone.position.y = pictureLooked.position.y;
 					controls.imageClone.position.z = pictureLooked.position.z  + 0.2;
-					// controls.imageClone.position.x = 0
-					// controls.imageClone.position.y = 2
-					// controls.imageClone.position.z = 0;
 					controls.imageClone.material = pictureLooked.material.clone();
 				}
 			}
